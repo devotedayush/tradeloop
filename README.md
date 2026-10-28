@@ -1,8 +1,10 @@
 # TradeLoop
 
-**Customer follow-ups and delivery issues, connected through one accountable workflow.**
+**Ask about the next delivery, understand why orders slowed, and give the team a next action.**
 
-TradeLoop is an AWS-hosted prototype for distributors. It captures repeat-order requests, records why a customer stopped ordering, connects delivery complaints to shipment evidence, and routes the next action to authorized staff.
+TradeLoop is an AWS-hosted distributor prototype. A dedicated **Sales follow-ups** tab lists due check-ins: staff ask whether the next delivery is needed and why a customer is waiting. The customer's exact statement stays beside a categorized reason, responsible owner and suggested next action. Workspace counts help the brand team review recorded feedback. Factual order context, repeat-order requests and delivery complaints share the same customer record.
+
+Current application source is [`a91fdd2`](https://github.com/devotedayush/tradeloop/commit/a91fdd2). Local `npm run verify` passed **109 tests**, type checking, production build and Lambda bundle. Fresh deployment verification and a new filmed rehearsal of the sales/context additions are pending; the live evidence below records earlier snapshots.
 
 **Operational demo records are synthetic.** A separate private source-review case contains an owner-authorized original invoice, excluded from repository fixtures. The deployed dashboard uses real Cognito, DynamoDB, Bedrock, S3 and Textract. **Live WhatsApp text replies and PDF evidence processing were verified on 28 October 2026.** The active AWS End User Messaging Social account is in Mumbai; the application runs in Virginia. Three real inbound texts (two status enquiries and a shortage complaint) traversed SNS, cross-region ingestion, SQS FIFO, the worker, Bedrock and DynamoDB, and three text replies were visually confirmed in desktop WhatsApp. One incoming forwarded synthetic PDF was retrieved, stored privately and extracted by Textract; the linked case moved to staff review with 20 expected and 18 reported cartons. POD remains missing and follow-ups remain paused. The document acknowledgement was also visually confirmed in WhatsApp at 22:45 IST. See the sanitized [WhatsApp verification record](docs/whatsapp-verification.json). Approved-template delivery remains unverified, and SES is disabled. This verifies actual CDS runtime use; it does not establish hackathon eligibility or completed submission.
 
@@ -10,21 +12,21 @@ TradeLoop is an AWS-hosted prototype for distributors. It captures repeat-order 
 
 Dashboard: https://lhswn6utwl.execute-api.us-east-1.amazonaws.com
 
-Staff data requires authentication. A dedicated `judgedemo` workspace has been provisioned with freshly seeded synthetic data only. It contains no original invoice or live WhatsApp contact binding. Its credentials are stored privately in the gitignored `.runtime/judge-access.json`; supply them through private judge testing instructions, never this README. Judge sign-in and the separate workspace were verified in the live browser; cloud tests also verified isolation from the owner workspace. The public URL alone does not expose customer records or credentials.
+Staff data requires authentication. A dedicated `judgedemo` workspace has been provisioned with synthetic data only. It contains no original invoice or live WhatsApp contact binding. Its credentials are stored privately in the gitignored `.runtime/judge-access.json`; supply them through private judge testing instructions, never this README. Judge sign-in and the separate workspace were verified in the live browser; cloud tests also verified isolation from the owner workspace. The public URL alone does not expose customer records or credentials.
 
 Start with the [judge guide](docs/judge-guide.md) for exact workflow inputs, expected states, verification evidence and reproducibility commands.
 
 ## Interface
 
-The CRM workspace uses a neutral canvas, black navigation, lime accents, a record-backed resolution gauge, owner workload and delivery-document cards. Header search finds customers by name, shipment, carrier or invoice reference. The layouts adapt to desktop, tablet and mobile. Manrope is bundled locally under its included OFL license.
+The CRM workspace has Sales follow-ups, customer conversations, a factual latest-recorded-purchase summary, a record-backed resolution gauge, owner workload and delivery-document cards. Sales follow-ups shows due dates, blocked check-ins, exact customer feedback and one latest categorized reason per customer for the brand team. Header search finds customers by name, shipment, carrier or invoice reference. The layouts adapt to desktop, tablet and mobile. Manrope is bundled locally under its included OFL license.
 
 ![CRM overview using synthetic local rehearsal records](docs/screenshots/crm-overview-desktop.jpg)
 
-These screenshots show local synthetic workflow records; live AWS/WhatsApp evidence is recorded separately in the verification files.
+These earlier screenshots show local synthetic workflow records and predate the latest sales/context additions. Live AWS/WhatsApp evidence is recorded separately in the verification files.
 
 ## Run locally
 
-Requires Node.js 22 or newer and npm.
+Requires Node.js 22.12 or newer and npm.
 
 ```sh
 npm ci
@@ -48,9 +50,9 @@ npm run bundle
 npm run synth
 ```
 
-The current suite has **66 passing tests**, covering workflow permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, business isolation, reset protection and WhatsApp handling. [Final readiness verification](docs/final-readiness-verification.json) records 12 passing read-only cloud checks. The isolated judge workspace also passed the live browser sign-in check. These are functional checks, not customer-impact or scale benchmarks.
+At source `a91fdd2`, local `npm run verify` passed **109 tests**, type checking, production React build and Lambda bundle. Coverage includes sales-feedback distinctions, seven-day deferral, factual order updates, unique shipment context, permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, isolation and reset protection. This does not establish customer impact, load capacity or fresh cloud verification of the new features.
 
-[Cloud verification](docs/cloud-verification.json) records the live isolated judge workflow rehearsal. [WhatsApp verification](docs/whatsapp-verification.json) preserves the live text/PDF checks and the 33-test regression snapshot recorded at that time. [CI run 40733361890](https://github.com/devotedayush/tradeloop/actions/runs/40733361890) succeeded at historical commit `7d62e4c`; that run does not attest to every subsequent change.
+Earlier evidence remains available: [cloud workflow rehearsal](docs/cloud-verification.json), [16 read-only judge rehearsal checks](docs/judge-rehearsal-verification.json), [12 read-only owner-cloud checks](docs/final-readiness-verification.json), and [live WhatsApp/PDF checks](docs/whatsapp-verification.json). These predate the latest sales/context work. [CI run 40748471874](https://github.com/devotedayush/tradeloop/actions/runs/40748471874) passed the earlier 66-test snapshot at `5ecb6a3`; current-source CI evidence is pending. The WhatsApp file's 33-test count is historical.
 
 For current deployed checks, run `npx tsx scripts/check-readiness.ts`. It reads the authenticated cloud state without resetting records, sending messages or changing cases.
 
@@ -74,6 +76,12 @@ Follow [docs/messaging-setup.md](docs/messaging-setup.md). The current authorize
 
 ## Product boundaries
 
+- Check-ins and recorded-purchase updates are queued by staff. The authenticated `POST /api/order-updates/:customerId` helper queues a factual summary; it does not observe a new order event or prove message delivery.
+- Remaining stock and low demand defer follow-up by seven days. A price enquiry does not establish a price concern; saying that orders stopped does not by itself opt the customer out of messages.
+- Feedback counts cover one latest categorized reason per customer in this workspace, not market research or measured churn. Category and next action are workflow interpretation for staff review; the exact customer statement remains visible.
+- Status replies use the authorized shipment directly when it is unique. Ambiguous records require a reference. Recorded status is not live tracking or confirmed receipt.
+- Production order-event automation and a business-specific inactivity cadence need a real business feed and agreed operating rules. Automatic campaigns and a production Kaysons connection are not implemented; approved proactive template delivery remains unverified.
+
 - Repeat-order requests copy the latest recorded purchase and require a fresh customer confirmation plus staff approval for processing. New combinations go to staff clarification.
 - No actual invoice, credit, replacement shipment, stock reservation, or live GPS update is created.
 - Evidence upload does not accept a POD or release freight payment.
@@ -88,6 +96,6 @@ See [architecture notes](docs/architecture.md), the upload-ready [architecture P
 
 Include the repository, deployed app and private judge access, architecture diagram, approximately three-minute public working-demo video, and ACE opportunity ID. Confirm APN eligibility and the required campaign tag. These are account/submission requirements, not features this code can fabricate.
 
-The GitHub repository is private; organizer access is required. The [submission-readiness checklist and paste-ready project text](docs/submission-readiness.md) track the remaining external gates. A dedicated judge workspace is provisioned, but the ACE opportunity, organizer repository access, video publication and final submission remain outstanding.
+The GitHub repository is private; organizer access is required. The [submission-readiness checklist and paste-ready project text](docs/submission-readiness.md) track the remaining external gates. A dedicated judge workspace is provisioned. ACE opportunity **O30532571** exists with the exact campaign tag and is pending approval; its MRR is an estimate, not actual revenue. See [ACE verification](docs/ace-verification.json). APN eligibility, organizer repository access, public video publication and final submission remain separate gates.
 
 The demo script must distinguish implemented-and-verified behaviour from configured-but-untested integrations. No business adoption, recovered revenue or production impact is claimed.

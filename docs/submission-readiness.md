@@ -34,40 +34,44 @@ Multiple well-integrated CDS services are considered under technical execution, 
 
 **Title:** TradeLoop
 
-**Tagline:** Connect WhatsApp delivery complaints, shipment evidence and repeat-order requests in one accountable distributor workflow.
+**Tagline:** Ask about the next delivery, understand why customers are waiting, and connect the next sales action to order and service context.
 
 **Description:**
 
-Distributor teams often have to reconnect a customer's WhatsApp complaint with purchase history, delivery records and the staff member responsible for the next action. TradeLoop keeps that context together.
+Distributors need to know whether a customer wants the next delivery and why orders have slowed. TradeLoop gives staff a dedicated Sales follow-ups tab with due check-ins, customer conversations and a next action for the responsible salesperson.
 
-When a customer reports missing cartons, TradeLoop interprets the message, links the complaint to the recorded shipment, opens a service case and pauses sales follow-ups. An incoming document is stored privately and extracted for staff review. Authorized staff propose, approve and record the next action. A later repeat-order request requires customer confirmation and staff approval for processing.
+A check-in asks about delivery needs and reasons for waiting. The customer's exact statement stays beside a categorized reason, owner and suggested next action. Remaining stock or low demand defers follow-up seven days. A price enquiry is distinct from a price concern, and stopped ordering is not automatically treated as an opt-out. Brand-team counts summarize one latest categorized reason per customer in the workspace, not the wider market.
 
-The AWS-hosted prototype has verified real WhatsApp text replies and incoming synthetic PDF processing through AWS End User Messaging Social. Operational demonstration records are fictional. The workflow distinguishes customer claims, extracted evidence and staff decisions: uploading a document does not accept delivery, and approving an order request does not create an invoice or shipment.
+A factual latest-recorded-purchase summary provides invoice, items and available shipment context. Staff can queue that update; an unambiguous authorized shipment can answer a status question without repeatedly demanding its ID. The prototype does not ingest production order events or infer a business-specific reorder cadence. Those require a real business feed and agreed operating rules.
 
-TradeLoop aims to reduce manual context gathering and missed ownership during complaint-to-reorder coordination. Customer adoption, time savings and recovered revenue have not been measured. A pilot would measure time from complaint to assigned action, manual record lookups and unresolved cases receiving inappropriate follow-ups.
+Delivery complaints pause sales follow-ups and link shipment evidence for staff review. Proposal, approval and recorded completion remain separate. A later repeat order requires customer confirmation and staff processing approval; it does not create an invoice, reservation, fulfilled order or sale.
+
+Operational demo records are fictional. Historical real WhatsApp replies and incoming synthetic PDF processing verify AWS End User Messaging Social runtime use. The latest sales/context additions have 109 passing local tests; fresh cloud rehearsal is pending. No customer adoption, time savings or recovered revenue has been measured. A pilot would measure answered check-ins, documented reasons, assigned next actions and manual record lookups.
 
 **Technical implementation / WhatsApp usage:**
 
 AWS End User Messaging Social in Mumbai receives the authorized test customer's messages. SNS forwards events to the Virginia application; SQS FIFO queues conversation work. Amazon Bedrock proposes a typed business intent, while deterministic application checks enforce permissions and workflow transitions. DynamoDB stores records and the audit trail. Incoming synthetic PDF evidence passes through private S3 storage and Textract extraction. Staff use a Cognito-authenticated React dashboard served by API Gateway and Lambda.
 
-The outbox sender actually invokes `SendWhatsAppMessageCommand` from `@aws-sdk/client-socialmessaging`. Recorded verification covers three inbound texts, three text replies and one document acknowledgement observed in WhatsApp, plus one incoming synthetic PDF processed into staff review. The current suite has 66 passing tests, and [final readiness verification](final-readiness-verification.json) records 12 passing read-only cloud checks. The earlier WhatsApp verification file preserves its historical 33-test snapshot. These are functional checks, not impact or load benchmarks.
+The outbox sender actually invokes `SendWhatsAppMessageCommand` from `@aws-sdk/client-socialmessaging`. Recorded verification covers three inbound texts, three text replies and one document acknowledgement observed in WhatsApp, plus one incoming synthetic PDF processed into staff review. At current application source `a91fdd2`, local `npm run verify` passed **109 tests**, type checking, production build and Lambda bundle. Fresh cloud verification and current-source CI evidence for sales/context additions are pending. Historical [final readiness verification](final-readiness-verification.json) records 12 passing read-only cloud checks. The earlier WhatsApp verification file preserves its historical 33-test snapshot. These are functional checks, not impact or load benchmarks.
 
-Proactive approved-template delivery remains unverified. SES is disabled. The Kaysons connector is an unconfigured integration contract. This is bounded AI workflow orchestration, with staff approval for consequential actions. See [architecture](architecture.md), [verification](whatsapp-verification.json), and [existing-work disclosure](existing-work.md).
+Check-ins and recorded-purchase updates are staff-queued. Production order-event automation, an inactivity cadence grounded in a business feed and automatic campaigns are not implemented. Proactive approved-template delivery remains unverified. SES is disabled. The Kaysons connector is an unconfigured integration contract. This is bounded AI workflow orchestration, with staff approval for consequential actions. See [architecture](architecture.md), [verification](whatsapp-verification.json), and [existing-work disclosure](existing-work.md).
 
 ## Current review artifacts and workspace
 
 - Upload-ready architecture: [PNG](architecture.png) and editable [SVG](architecture.svg).
-- A dedicated `judgedemo` tenant contains freshly seeded synthetic records only, with no original invoice or live WhatsApp binding. Credentials stay in private, gitignored `.runtime/judge-access.json`. Its actual login was verified in the live browser.
+- A dedicated `judgedemo` tenant contains synthetic records only, with no original invoice or live WhatsApp binding. Credentials stay in private, gitignored `.runtime/judge-access.json`. Its actual login was verified in the live browser.
 - Run `npx tsx scripts/check-readiness.ts` for read-only cloud checks. The mutating `cloud-smoke.ts` begins with a reset; resetting a workspace containing live or imported evidence is blocked.
 
 ## Three-minute recording checklist
 
-1. Show the dedicated synthetic judge dashboard and synthetic-data label. Explain the distributor's problem and customer context.
-2. Send a real authorized WhatsApp shortage complaint. Show its received reply, linked shipment/case and paused follow-ups.
-3. Attach the synthetic PDF. Show extraction and staff review, keeping delivery acceptance separate.
-4. Show staff proposal and approval. Label any demonstrated completion explicitly as a fictional test outcome.
-5. Show a customer-confirmed reorder request awaiting staff processing approval.
-6. Finish with the architecture, audit trail and concise limitations. Use [the detailed walkthrough](demo-walkthrough.md).
+1. Lead with **Sales follow-ups**: due check-ins, the next-delivery question and responsible owner.
+2. Demonstrate exact customer feedback, seven-day deferral and workspace category counts for the brand team.
+3. Show factual latest-recorded-purchase context, a unique-shipment status answer and a staff-queued order update. Queueing is not delivery.
+4. Clearly label a separate historical real WhatsApp text/PDF test, then return to the synthetic judge simulator.
+5. Show a complaint pausing sales follow-ups, private synthetic evidence and separate proposal, approval and fictional completion.
+6. Show a repeat-order draft, customer confirmation and staff processing approval, then architecture and honest limits. Follow the [180-second walkthrough](demo-walkthrough.md).
+
+The older local demo is a pre-improvement draft, not the current final video. A replacement rehearsal/capture is planned under ignored `.runtime/demo-film-large/`; an export does not establish publication or verified public playback.
 
 The judge tenant has no live WhatsApp binding. Label its simulator clearly; demonstrate live WhatsApp separately through a sanitized authorized test recording that shows only fictional records. Record dashboard footage only from the dedicated synthetic workspace. Keep private contacts, authentication secrets and original documents out of the footage. Do not present a queued proactive follow-up as delivered or the simulator as WhatsApp.
 

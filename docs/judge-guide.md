@@ -1,10 +1,29 @@
 # TradeLoop judge guide
 
-Open the [deployed application](https://lhswn6utwl.execute-api.us-east-1.amazonaws.com/) and sign in using the credentials supplied privately with the entry. Confirm the workspace is **TradeLoop Judge Demo**, then open **Sunrise Café** or search for **SHP-101**. This is a fictional distributor scenario: 20 cartons were expected and the customer reports receiving 18. The useful outcome is to pause sales reminders, collect evidence and give staff an accountable next action.
+Open the [deployed application](https://lhswn6utwl.execute-api.us-east-1.amazonaws.com/) and sign in using the credentials supplied privately with the entry. Confirm **TradeLoop Judge Demo**, then start with **Sales follow-ups**. Staff ask whether the next delivery is needed, preserve why a customer is waiting, and give the responsible salesperson a next action. Order context and delivery complaints remain connected to that conversation.
+
+Current application source is [`a91fdd2`](https://github.com/devotedayush/tradeloop/commit/a91fdd2), with **109 local tests**, type checking, production build and Lambda bundle passing. Fresh cloud verification and a replacement demo for these sales/context additions are pending. Earlier cloud and WhatsApp records below remain historical evidence, not verification of the additions.
 
 The dedicated `judgedemo` workspace has no live WhatsApp contact binding and contains no original business invoice. Its private provisioning file is `.runtime/judge-access.json`, excluded from Git; credentials must be supplied through private testing instructions. The public URL alone does not grant access. **POD means proof of delivery.** A received document is evidence for review, not accepted POD.
 
-## Try the synthetic workflow
+## Try sales follow-ups and order context
+
+These are current-source expected results, pending fresh cloud rehearsal. Use an eligible due customer for queue actions. A queued item does not establish WhatsApp delivery, and the judge workspace has no live contact binding.
+
+| Step | Input or staff action | Expected result |
+| --- | --- | --- |
+| Due check-in | Open **Sales follow-ups**, inspect the due date and owner, then **Queue check-in** for an eligible due customer. | Staff queue a question about the next delivery and the reason for waiting. Consent, service cases, due dates and duplicate checks apply. |
+| Remaining stock | In the labelled simulator, send `I still have stock left`. Return to Sales follow-ups. | The exact statement is saved in `Customer.retention`, with category **Stock still left**, existing customer owner and suggested action. Next follow-up moves seven days; pending check-ins are suppressed. |
+| Low demand | Send `Demand is low` to another fictional customer if demonstrating a second category. | Records customer-stated low demand and defers seven days; no order is inferred. |
+| Careful interpretation | Compare `What is the price?` with `The price is too high`. | A pricing enquiry does not itself become a reason for stopped orders. A stated concern goes to the salesperson without a promised discount. `I stopped ordering` alone is not an opt-out. |
+| Brand feedback | Inspect **Customer feedback for the brand team**. | Counts use one latest categorized reason per customer in this workspace. The exact statement, owner and suggested next action are reviewable; counts do not represent the wider market. |
+| Latest recorded purchase | Open a customer and send `What did I order?`, or inspect their purchase card. | Invoice/date/items and available recorded shipment status are factual context. Pending requests are separate from recorded purchases. |
+| Shipment context | Send `Where is my delivery?` for a customer with exactly one authorized shipment. | Replies using that unique shipment without asking repeatedly for its ID. Multiple possible shipments require a reference; status is recorded, not live tracking. |
+| Staff order update | Select **Queue order update** on the purchase card. | `POST /api/order-updates/:customerId` queues the recorded-purchase summary. Consent/session/template checks still govern any delivery; this is not automatic order-event integration. |
+
+Due dates reflect the existing staff schedule, not a learned reorder interval. Production order-event automation and inactivity cadence need an actual business feed and agreed rules. Approved proactive templates remain unverified. The simulator does not send WhatsApp.
+
+## Try complaint handling and repeat orders
 
 Use the labelled customer-message simulator in the judge workspace. These actions change only its demonstration records and do not send WhatsApp messages. Inspect the current case first, since a previous rehearsal may already have advanced it; do not reset a connected workspace.
 
@@ -23,16 +42,16 @@ Staff case actions require an admin or logistics role; request approval requires
 
 ## Evidence and reproducibility
 
-Application source verified by the recorded deployment: [`f237e81`](https://github.com/devotedayush/tradeloop/commit/f237e81). Documentation baseline before this guide: [`76704fc`](https://github.com/devotedayush/tradeloop/commit/76704fc). [CI run 40744000597](https://github.com/devotedayush/tradeloop/actions/runs/40744000597) succeeded for source `f237e81`; [UI verification](ui-redesign-verification.json) records the deployed HTML match and browser checks. These references identify the tested snapshot, not a claim that every later change is covered by that run.
+Current-source local verification: **109 tests**, type checking, production build and Lambda bundle at `a91fdd2`. Fresh cloud rehearsal and current-source CI evidence are pending. Historical [CI run 40744000597](https://github.com/devotedayush/tradeloop/actions/runs/40744000597) succeeded for `f237e81`; [UI verification](ui-redesign-verification.json) records that earlier deployed HTML match and browser checks. These snapshots do not attest to subsequent sales/context changes.
 
 | Evidence | What it establishes | Boundary |
 | --- | --- | --- |
-| [Final test report](final-test-report.md), CI above | 66 automated tests, type checking, production build and Lambda bundle passed. | Functional/regression evidence, not customer impact or load testing. |
+| [Final test report](final-test-report.md) | Current source: 109 local tests, type checking, production build and Lambda bundle passed. Earlier CI and cloud records remain dated separately. | Fresh cloud verification of sales/context additions is pending; no impact or load benchmark. |
 | [Cloud workflow rehearsal](cloud-verification.json) | 16 passing checks in isolated synthetic `judgedemo`: Cognito, Bedrock, DynamoDB, private S3/Textract, permissions and approval states. | Mutating rehearsal; zero WhatsApp sends. |
 | [Fresh judge rehearsal verification](judge-rehearsal-verification.json) | 16 passing read-only checks after a fresh-login GUI rehearsal on 29 October: synthetic case, private evidence, separate approvals, confirmed five-carton request and zero outbox items. | Fictional completion; no real correction, sale or WhatsApp send. |
 | [Read-only cloud verification](final-readiness-verification.json) | 12 passing checks of deployed authentication, preserved live evidence and review boundaries. | Separate owner-workspace checks, not the synthetic rehearsal. |
 | [Live WhatsApp/PDF verification](whatsapp-verification.json) | Real inbound texts, observed text replies and a forwarded synthetic PDF processed through private storage and Textract into review; document acknowledgement observed at 22:45 IST on 28 October. | Sanitized observation record. Its 33-test count is historical. No original invoice or private contact details are included. |
-| [Final live WhatsApp check](final-live-whatsapp-verification.json) | Fresh SHP-101 status reply observed in desktop WhatsApp at 23:21 IST on 28 October, after final deployment. | Receipt is supported by direct UI observation; provider delivery-status reconciliation is not implemented. |
+| [Final live WhatsApp check](final-live-whatsapp-verification.json) | Fresh SHP-101 status reply observed in desktop WhatsApp at 23:21 IST on 28 October, after the deployment tested at that time. | Receipt is supported by direct UI observation; provider delivery-status reconciliation is not implemented. |
 
 The simulator demonstrates workflow state transitions. Actual WhatsApp runtime proof comes from the separate authorized test connection above. `sent` means provider acceptance; recipient receipt additionally requires observation. Approved proactive template delivery is unverified. There is one active qualifying CDS service, AWS End User Messaging Social; SES is disabled.
 
@@ -59,9 +78,9 @@ View the [architecture PNG](architecture.png), [editable SVG](architecture.svg) 
 
 The [official rubric](https://aws-cds-partner.devpost.com/) weights Potential Value/Impact **20%**, Creativity **10%**, Technical Execution **40%**, Functionality **10%**, and Demo Presentation **20%**. The workflow and evidence above support inspection against those criteria; they are not official scores. No adoption, time savings or recovered revenue has been measured. Whole-business reads and business-wide revision locking are prototype choices, with no scale benchmark. The Kaysons production connector is not configured.
 
-Current readability source is [`5ecb6a3`](https://github.com/devotedayush/tradeloop/commit/5ecb6a3); [CI run 40748471874](https://github.com/devotedayush/tradeloop/actions/runs/40748471874) passed all 66 tests, type checking and production build.
+Historical readability source is [`5ecb6a3`](https://github.com/devotedayush/tradeloop/commit/5ecb6a3); [CI run 40748471874](https://github.com/devotedayush/tradeloop/actions/runs/40748471874) passed all 66 tests, type checking and production build.
 
-The subsequent [text readability update](text-readability-verification.json) changed CSS only: near-black text, stronger body weight and larger small labels. It was deployed with all four Lambda environments unchanged. [Desktop](screenshots/crm-contrast-desktop.jpg) and [mobile](screenshots/crm-contrast-mobile.jpg) screenshots show the updated text. The local captioned demo draft was captured before this CSS update and is not yet published.
+The subsequent [text readability update](text-readability-verification.json) changed CSS only: near-black text, stronger body weight and larger small labels. It was deployed with all four Lambda environments unchanged. [Desktop](screenshots/crm-contrast-desktop.jpg) and [mobile](screenshots/crm-contrast-mobile.jpg) screenshots show the updated text. The older local captioned draft predates the sales/context additions and is not the current final demo. Replacement capture is planned in ignored `.runtime/demo-film-large/`; publication and playback must be verified separately.
 
 ## Submission gates, separate from software evidence
 
