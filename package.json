@@ -1,6 +1,6 @@
 {
   "name": "tradeloop",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Sales follow-up and delivery issue coordination through AWS WhatsApp",
   "main": "index.js",
   "scripts": {
@@ -11,11 +11,12 @@
     "build": "vite build",
     "bundle": "node scripts/build.mjs",
     "synth": "cdk synth --app \"npx tsx infra/app.ts\"",
-    "deploy": "cdk deploy --app \"npx tsx infra/app.ts\" --require-approval never --outputs-file .runtime/outputs.json"
+    "deploy": "cdk deploy --app \"npx tsx infra/app.ts\" --require-approval never --outputs-file .runtime/outputs.json",
+    "format": "prettier --write src infra tests scripts *.ts package.json tsconfig.json"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1158.0",
@@ -46,10 +47,14 @@
     "@vitejs/plugin-react": "^6.1.2",
     "aws-cdk": "^2.1146.1",
     "esbuild": "^0.28.2",
+    "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^4.1.12"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  }
 }
