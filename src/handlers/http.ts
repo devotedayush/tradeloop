@@ -101,7 +101,9 @@ export async function dispatch(req: Input): Promise<Output> {
             ? "text/css"
             : file.endsWith(".svg")
               ? "image/svg+xml"
-              : "text/html";
+              : file.endsWith(".ttf")
+                ? "font/ttf"
+                : "text/html";
         return {
           statusCode: 200,
           headers: {

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import type { State, Actor, Customer, ServiceCase } from "../core/types";
+import type { State, Actor } from "../core/types";
 import { hasImportedRecords, hasProtectedActivity } from "../core/provenance";
+import Icon from "./Icon";
+import Overview from "./Overview";
 import "./style.css";
 type Config = {
   region: string;
@@ -16,12 +18,12 @@ type Config = {
 };
 type Workspace = State & { actor: Actor };
 const nav = [
-  ["today", "◫", "Today"],
-  ["customers", "◎", "Customers"],
-  ["cases", "▱", "Delivery cases"],
-  ["orders", "▤", "Order requests"],
-  ["activity", "↗", "Activity"],
-  ["settings", "⚙", "Connections"],
+  ["today", "overview", "Overview"],
+  ["customers", "customers", "Customers"],
+  ["cases", "cases", "Delivery cases"],
+  ["orders", "orders", "Order requests"],
+  ["activity", "activity", "Activity"],
+  ["settings", "settings", "Connections"],
 ];
 const money = (minor: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -35,6 +37,8 @@ function App() {
   const [config, setConfig] = useState<Config>();
   const [state, setState] = useState<Workspace>();
   const [tab, setTab] = useState("today");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [selected, setSelected] = useState("C001");
   const [token, setToken] = useState(
     () => sessionStorage.getItem("tradeloop-token") ?? "",
@@ -134,13 +138,6 @@ function App() {
   const c = state?.customers.find((x) => x.id === selected);
   const cases = state?.cases.filter((x) => x.customerId === selected) ?? [];
   const current = cases.find((x) => x.status !== "resolved") ?? cases.at(-1);
-  const due =
-    state?.customers.filter(
-      (c) =>
-        c.consent &&
-        !c.paused &&
-        new Date(c.nextFollowupAt).getTime() <= Date.now(),
-    ) ?? [];
   const open = state?.cases.filter((c) => c.status !== "resolved") ?? [];
   const requests = state?.requests ?? [];
   const importedCustomer = state ? hasImportedRecords(state, selected) : false;
@@ -159,8 +156,30 @@ function App() {
   const canApproveOrder = state
     ? ["admin", "sales"].includes(state.actor.role)
     : false;
+  const normalizedSearch = searchQuery.trim().toLowerCase();
+  const searchMatches =
+    state?.customers
+      .filter((customer) => {
+        const shipments = state.shipments.filter(
+          (shipment) => shipment.customerId === customer.id,
+        );
+        const orders = state.orders.filter(
+          (order) => order.customerId === customer.id,
+        );
+        return [
+          customer.id,
+          customer.name,
+          customer.city,
+          customer.owner,
+          ...shipments.flatMap((shipment) => [shipment.id, shipment.lr]),
+          ...orders.map((order) => order.invoice),
+        ].some((value) => value.toLowerCase().includes(normalizedSearch));
+      })
+      .slice(0, 5) ?? [];
   const openCustomer = (cid: string) => {
     setSelected(cid);
+    setSearchQuery("");
+    setSearchOpen(false);
     setTab("customers");
     setNote("");
     setDraft("");
@@ -342,9 +361,13 @@ function App() {
               onClick={() => {
                 setTab(key);
                 setError("");
+                setSearchOpen(false);
+                setSearchQuery("");
               }}
             >
-              <span>{icon}</span>
+              <span>
+                <Icon name={icon} />
+              </span>
               {label}
               {key === "cases" && open.length ? <b>{open.length}</b> : null}
             </button>
@@ -368,13 +391,14 @@ function App() {
             {token ? (
               <button
                 aria-label="Sign out"
+                title={`Sign out, ${state.actor.role} access`}
                 onClick={() => {
                   sessionStorage.removeItem("tradeloop-token");
                   setToken("");
                   setState(undefined);
                 }}
               >
-                ↪
+                <Icon name="logout" size={18} />
               </button>
             ) : null}
           </div>
@@ -382,29 +406,87 @@ function App() {
       </aside>
       <div className="shell">
         <header className="topbar">
-          <span>
-            Workspace <span className="slash">/</span>{" "}
-            <strong>{nav.find((n) => n[0] === tab)?.[2]}</strong>
-          </span>
-          <div>
-            <span
-              className={
-                "status-dot " +
-                (config.interpreter === "bedrock" ? "green" : "amber")
-              }
+          <form
+            className="global-search"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (normalizedSearch && searchMatches[0])
+                openCustomer(searchMatches[0].id);
+            }}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget))
+                setSearchOpen(false);
+            }}
+          >
+            <Icon name="search" size={21} />
+            <input
+              type="search"
+              aria-label="Search customers and references"
+              placeholder="Search customers, shipments, invoices..."
+              value={searchQuery}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setSearchOpen(true);
+              }}
+              onFocus={() => setSearchOpen(true)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setSearchQuery("");
+                  setSearchOpen(false);
+                }
+              }}
             />
-            <span>
-              {config.interpreter === "bedrock"
-                ? "Bedrock configured"
-                : "Demo rules interpreter"}
-            </span>
-            <span className="top-date">
-              {new Date().toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
+            {normalizedSearch && searchOpen ? (
+              <div className="search-results" aria-label="Matching customers">
+                <h3>Matching customers</h3>
+                {searchMatches.length ? (
+                  searchMatches.map((match) => (
+                    <button
+                      type="button"
+                      key={match.id}
+                      onClick={() => openCustomer(match.id)}
+                    >
+                      <strong>{match.name}</strong>
+                      <small>
+                        {match.id} · {match.city} · {match.owner}
+                      </small>
+                      <Icon name="arrow" size={17} />
+                    </button>
+                  ))
+                ) : (
+                  <p>
+                    No matching records. Try a customer or shipment reference.
+                  </p>
+                )}
+              </div>
+            ) : null}
+          </form>
+          <div className="header-actions">
+            <button
+              className="primary"
+              aria-label="View order requests"
+              onClick={() => {
+                setTab("orders");
+                setSearchOpen(false);
+                setSearchQuery("");
+              }}
+            >
+              <Icon name="orders" size={21} />
+              <span className="header-action-label">View order requests</span>
+            </button>
+            <button
+              className="icon-button"
+              aria-label={`View ${open.length} open delivery cases`}
+              onClick={() => {
+                setTab("cases");
+                setSearchOpen(false);
+                setSearchQuery("");
+              }}
+            >
+              <Icon name="bell" size={23} />
+              {open.length ? <span className="notification-dot" /> : null}
+            </button>
           </div>
         </header>
         <main className="main">
@@ -437,192 +519,13 @@ function App() {
             </div>
           ) : null}
           {tab === "today" ? (
-            <>
-              <div className="page-heading">
-                <div>
-                  <span className="eyebrow">YOUR DAILY OPERATING VIEW</span>
-                  <h1>Let’s close the loop.</h1>
-                  <p>
-                    A clearer view of your customers, conversations, and next
-                    steps.
-                  </p>
-                </div>
-                <button
-                  className="outline"
-                  disabled={busy}
-                  onClick={() => act(refresh, "Workspace refreshed")}
-                >
-                  ↻ Refresh
-                </button>
-              </div>
-              <div className="metrics">
-                <Metric
-                  icon="↗"
-                  label="Follow-ups due"
-                  value={due.length}
-                  detail="Ready for a thoughtful check-in"
-                />
-                <Metric
-                  icon="▱"
-                  label="Open delivery cases"
-                  value={open.length}
-                  detail="Every issue has a next step"
-                  tone="warm"
-                />
-                <Metric
-                  icon="▤"
-                  label="Order requests"
-                  value={requests.filter((r) => r.status !== "declined").length}
-                  detail="Requests, not fulfilled sales"
-                />
-                <Metric
-                  icon="✓"
-                  label="Resolved cases"
-                  value={
-                    state.cases.filter((c) => c.status === "resolved").length
-                  }
-                  detail="Completion recorded by staff"
-                />
-              </div>
-              <div className="overview-grid">
-                <section className="card">
-                  <div className="card-title">
-                    <div>
-                      <h2>Customers to reconnect with</h2>
-                      <p>Based on recorded purchases and follow-up dates.</p>
-                    </div>
-                    <span className="pill">{due.length} DUE</span>
-                  </div>
-                  <div className="table-wrap">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Customer</th>
-                          <th>Last order</th>
-                          <th>Owner</th>
-                          <th>Next step</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {state.customers.map((c) => (
-                          <tr key={c.id}>
-                            <td>
-                              <button
-                                className="customer-link"
-                                onClick={() => openCustomer(c.id)}
-                              >
-                                <span className="avatar mini">
-                                  {c.name
-                                    .split(" ")
-                                    .map((x) => x[0])
-                                    .join("")
-                                    .slice(0, 2)}
-                                </span>
-                                <span>
-                                  <strong>{c.name}</strong>
-                                  <small>{c.city}</small>
-                                </span>
-                              </button>
-                            </td>
-                            <td>{date(c.lastOrderAt)}</td>
-                            <td>{c.owner}</td>
-                            <td>
-                              <button
-                                className={
-                                  "text-button " + (c.paused ? "orange" : "")
-                                }
-                                onClick={() => openCustomer(c.id)}
-                              >
-                                {!c.consent
-                                  ? "Opted out"
-                                  : c.paused
-                                    ? "Review issue →"
-                                    : new Date(c.nextFollowupAt).getTime() >
-                                        Date.now()
-                                      ? "Scheduled →"
-                                      : "Open customer →"}
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <section className="card journey">
-                  <span className="eyebrow">ONE CONNECTED WORKFLOW</span>
-                  <h2>
-                    The next order starts
-                    <br />
-                    with the last experience.
-                  </h2>
-                  <p>
-                    When a follow-up uncovers a delivery problem, resolve the
-                    issue before continuing the sales conversation.
-                  </p>
-                  <ol>
-                    <li>
-                      <b>01</b>
-                      <span>Check in with the customer</span>
-                    </li>
-                    <li>
-                      <b>02</b>
-                      <span>Understand what’s holding them back</span>
-                    </li>
-                    <li>
-                      <b>03</b>
-                      <span>Gather evidence and assign a reviewer</span>
-                    </li>
-                    <li>
-                      <b>04</b>
-                      <span>Complete the next approved action</span>
-                    </li>
-                  </ol>
-                  <button
-                    className="primary"
-                    onClick={() => openCustomer("C001")}
-                  >
-                    Explore the customer workspace →
-                  </button>
-                </section>
-              </div>
-              <section className="card activity-preview">
-                <div className="card-title">
-                  <h2>Latest activity</h2>
-                  <button
-                    className="text-button"
-                    onClick={() => setTab("activity")}
-                  >
-                    View timeline ↗
-                  </button>
-                </div>
-                {state.audit.length ? (
-                  state.audit
-                    .slice(-4)
-                    .reverse()
-                    .map((e) => (
-                      <div className="event" key={e.id}>
-                        <span className="event-mark">↗</span>
-                        <div>
-                          <strong>{e.action.replaceAll(".", " · ")}</strong>
-                          <p>{e.detail}</p>
-                        </div>
-                        <time>
-                          {new Date(e.at).toLocaleTimeString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </time>
-                      </div>
-                    ))
-                ) : (
-                  <div className="empty-inline">
-                    Your workspace is ready. Open a customer to begin the first
-                    conversation.
-                  </div>
-                )}
-              </section>
-            </>
+            <Overview
+              state={state}
+              onOpenCustomer={openCustomer}
+              onViewEvidence={viewEvidence}
+              onOpenActivity={() => setTab("activity")}
+              searchQuery={searchQuery}
+            />
           ) : null}
           {tab === "customers" && c ? (
             <>
@@ -1352,43 +1255,20 @@ function Brand() {
   return (
     <div className="brand">
       <svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="19" fill="#b8e637" />
         <path
           d="M7 14h18a8 8 0 0 1 0 16H14m0 0 5-5m-5 5 5 5M31 12l-5-5m5 5-5 5"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
+          stroke="#161816"
+          strokeWidth="2.6"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
       <span>
-        TradeLoop<span className="brand-dot">.</span>
+        Trade<span className="brand-loop">Loop</span>
       </span>
     </div>
-  );
-}
-function Metric({
-  icon,
-  label,
-  value,
-  detail,
-  tone = "",
-}: {
-  icon: string;
-  label: string;
-  value: number;
-  detail: string;
-  tone?: string;
-}) {
-  return (
-    <section className={"metric " + tone}>
-      <div>
-        <span>{label}</span>
-        <span className="metric-icon">{icon}</span>
-      </div>
-      <strong>{String(value).padStart(2, "0")}</strong>
-      <small>{detail}</small>
-    </section>
   );
 }
 function Detail({ label, value }: { label: string; value: string }) {

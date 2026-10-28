@@ -12,6 +12,14 @@ Dashboard: https://lhswn6utwl.execute-api.us-east-1.amazonaws.com
 
 Staff data requires authentication. A dedicated `judgedemo` workspace has been provisioned with freshly seeded synthetic data only. It contains no original invoice or live WhatsApp contact binding. Its credentials are stored privately in the gitignored `.runtime/judge-access.json`; supply them through private judge testing instructions, never this README. Judge sign-in and the separate workspace were verified in the live browser; cloud tests also verified isolation from the owner workspace. The public URL alone does not expose customer records or credentials.
 
+## Interface
+
+The CRM workspace uses a neutral canvas, black navigation, lime accents, a record-backed resolution gauge, owner workload and delivery-document cards. Header search finds customers by name, shipment, carrier or invoice reference. The layouts adapt to desktop, tablet and mobile. Manrope is bundled locally under its included OFL license.
+
+![CRM overview using synthetic local rehearsal records](docs/screenshots/crm-overview-desktop.jpg)
+
+These screenshots show local synthetic workflow records; live AWS/WhatsApp evidence is recorded separately in the verification files.
+
 ## Run locally
 
 Requires Node.js 22 or newer and npm.
