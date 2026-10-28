@@ -12,7 +12,7 @@ import {
   approveRequest,
 } from "../src/core/engine";
 import { Store } from "../src/adapters/store";
-import { normalize } from "../src/handlers/messaging";
+import { normalize, matchesPhoneIdentity } from "../src/handlers/messaging";
 import type { Actor, Evidence, State } from "../src/core/types";
 const admin: Actor = { id: "reviewer", tenantId: "demofoods", role: "admin" };
 const incoming = (
@@ -338,5 +338,26 @@ describe("AWS WhatsApp event normalization", () => {
         }),
       }),
     ).toEqual([]);
+  });
+});
+
+describe("AWS origination identity formats", () => {
+  const arn =
+    "arn:aws:social-messaging:us-east-1:123456789012:phone-number-id/abc123";
+  it("matches the AWS event ARN to the SDK phone-number ID", () => {
+    expect(matchesPhoneIdentity(arn, "phone-number-id-abc123")).toBe(true);
+  });
+  it("matches a configured full ARN exactly", () => {
+    expect(matchesPhoneIdentity(arn, arn)).toBe(true);
+    expect(
+      matchesPhoneIdentity(arn, arn.replace("123456789012", "999999999999")),
+    ).toBe(false);
+  });
+  it("rejects a different or malformed origination identity", () => {
+    expect(matchesPhoneIdentity(arn, "phone-number-id-other")).toBe(false);
+    expect(matchesPhoneIdentity("abc123", "phone-number-id-abc123")).toBe(
+      false,
+    );
+    expect(matchesPhoneIdentity(arn, "")).toBe(false);
   });
 });

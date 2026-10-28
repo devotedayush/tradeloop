@@ -24,6 +24,14 @@ type Binding = {
 const bindings = (): Record<string, Binding> =>
   JSON.parse(process.env.CONTACT_BINDINGS_JSON ?? "{}");
 const social = new SocialMessagingClient({ maxAttempts: 1 });
+export function matchesPhoneIdentity(arn: string, configured: string): boolean {
+  if (!configured) return false;
+  if (configured.startsWith("arn:")) return arn === configured;
+  const match = arn.match(
+    /^arn:[^:]+:social-messaging:[^:]+:\d{12}:phone-number-id\/([a-zA-Z0-9-]+)$/,
+  );
+  return !!match && match[1] === configured.replace(/^phone-number-id-/, "");
+}
 export function normalize(envelope: any) {
   const entry =
     typeof envelope.whatsAppWebhookEntry === "string"
@@ -58,10 +66,8 @@ export async function ingest(event: any) {
     for (const m of normalize(envelope)) {
       if (
         !process.env.WHATSAPP_PHONE_ID ||
-        !m.phoneArns.some(
-          (a: string) =>
-            a.endsWith("/" + process.env.WHATSAPP_PHONE_ID) ||
-            a === process.env.WHATSAPP_PHONE_ID,
+        !m.phoneArns.some((a: string) =>
+          matchesPhoneIdentity(a, process.env.WHATSAPP_PHONE_ID!),
         )
       )
         throw new Error("Unconfigured WhatsApp origination identity");

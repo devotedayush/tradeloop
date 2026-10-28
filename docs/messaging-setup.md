@@ -12,6 +12,18 @@
 8. Set the environment values listed in `.env.example` in your shell or private deployment configuration and rerun deployment. Never commit phone mappings or access tokens.
 9. From the mapped test handset, send an enquiry. Confirm the event, persisted message, reply, and actual handset receipt. Then test an attachment on a uniquely matched open case.
 
+### Finish wiring an existing linked account
+
+After AWS has saved the account, create an owner-only, ignored `.runtime/whatsapp-setup.json` with `senderNumber`, `testCustomerNumber` (both E.164), and `metaApiVersion`. Only include a test customer who explicitly opted in. Do not commit this file.
+
+Run `npx tsx scripts/connect-whatsapp.ts` to inspect the matching account. Then build and bundle, and run `npx tsx scripts/connect-whatsapp.ts --apply` to set the SNS destination and deploy the contact binding. The script requires complete AWS registration and refuses to overwrite a different event destination. It does not create an account, request an OTP, or complete embedded signup. A handset round-trip remains required afterward.
+
+### Current account-side blocker, 28 October 2026
+
+Meta confirmed the existing Ments connection, using the previously verified number. The AWS callback then displayed `An internal failure has occurred`, HTTP 500, request ID `23b600f0-c7c5-4e97-b490-9bfd0d3067d7`, and `Link failed, try again` in us-east-1. AWS still listed no linked accounts. Screenshots and diagnostics are saved privately under `.runtime/`.
+
+IAM simulation allowed the caller's association and tagging actions. This does not identify the cause of the internal failure. Preserve the existing Meta record and provide the request ID to AWS Support for investigation. Do not repeatedly delete the number or create another account. AWS documents association as a console sign-up operation; the wiring script is not a bypass for a failed callback.
+
 Contact binding shape (fictional placeholders, not real destinations):
 
 ```json
