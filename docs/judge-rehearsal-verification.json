@@ -1,0 +1,203 @@
+{
+  "checkedAt": "2026-10-28T18:41:17.301Z",
+  "mode": "read-only cloud verification after separate GUI rehearsal",
+  "source": {
+    "tenant": "judgedemo",
+    "authentication": "Cognito USER_PASSWORD_AUTH in us-east-1 using private gitignored judge access file; credentials omitted",
+    "applicationReads": [
+      "GET /api/state (twice)",
+      "GET /api/config",
+      "GET /api/evidence/<synthetic-document-id>",
+      "authorized signed synthetic PDF GET",
+      "unsigned synthetic object GET for access-denial check",
+      "unauthenticated synthetic evidence endpoint GET"
+    ],
+    "infrastructureReads": "CloudFormation stack resource list and Lambda contact-binding configuration only; private bindings never printed",
+    "localSourceReviewed": [
+      "src/adapters/evidence.ts",
+      "src/core/engine.ts",
+      "src/handlers/http.ts"
+    ]
+  },
+  "applicationMutations": false,
+  "messagesSent": 0,
+  "resetsPerformed": 0,
+  "ownerWorkspace": {
+    "accessed": false,
+    "mutatedByThisVerification": false,
+    "note": "No owner credentials, API records or original documents were read. No assertion of unchanged owner state beyond this verification making no owner mutations."
+  },
+  "observed": {
+    "businessName": "TradeLoop Judge Demo",
+    "revision": 46,
+    "shipmentId": "SHP-101",
+    "shipmentSource": "synthetic",
+    "podStatus": "missing",
+    "case": {
+      "status": "resolved",
+      "expected": 20,
+      "reported": 18,
+      "origin": "simulator",
+      "proposal": "DEMO: Dispatch to verify shortage and contact the customer with an approved arrangement.",
+      "resolution": "DEMO ONLY: Fictional staff completion recorded for this test. No real correction or customer acceptance verified."
+    },
+    "syntheticEvidence": {
+      "name": "synthetic-bilty-pod-shortage.pdf",
+      "mime": "application/pdf",
+      "extraction": "extracted",
+      "privatePdfRead": true,
+      "unsignedAccessDenied": true,
+      "textractAttribution": "In deployed source, extraction=extracted is written after Textract DetectDocumentText succeeds; current state alone is not a new Textract invocation.",
+      "extractedTextContainsSyntheticLabel": true
+    },
+    "orderRequest": {
+      "status": "approved",
+      "items": [
+        {
+          "productId": "P01",
+          "quantity": 5
+        }
+      ],
+      "quantityTotal": 5
+    },
+    "outboxCount": 0,
+    "contactBindings": {
+      "verified": true,
+      "functionsChecked": 4,
+      "judgeBindings": 0
+    },
+    "auditSequence": [
+      {
+        "at": "2026-10-28T18:36:29.963Z",
+        "action": "message.received",
+        "detail": "Intent: complaint; interpreter: bedrock"
+      },
+      {
+        "at": "2026-10-28T18:36:29.964Z",
+        "action": "case.opened",
+        "detail": "Customer claim recorded separately from accepted delivery facts; sales follow-up paused"
+      },
+      {
+        "at": "2026-10-28T18:36:48.921Z",
+        "action": "evidence.received",
+        "detail": "Document is evidence pending review, not delivery acceptance"
+      },
+      {
+        "at": "2026-10-28T18:39:15.886Z",
+        "action": "case.propose",
+        "detail": "DEMO: Dispatch to verify shortage and contact the customer with an approved arrangement."
+      },
+      {
+        "at": "2026-10-28T18:39:24.124Z",
+        "action": "case.approve",
+        "detail": "Approved: DEMO: Dispatch to verify shortage and contact the customer with an approved arrangement."
+      },
+      {
+        "at": "2026-10-28T18:39:33.539Z",
+        "action": "case.resolve",
+        "detail": "DEMO ONLY: Fictional staff completion recorded for this test. No real correction or customer acceptance verified."
+      },
+      {
+        "at": "2026-10-28T18:39:38.073Z",
+        "action": "message.received",
+        "detail": "Intent: reorder; interpreter: bedrock"
+      },
+      {
+        "at": "2026-10-28T18:39:38.074Z",
+        "action": "order.drafted",
+        "detail": "Copied latest recorded purchase; stock and delivery not confirmed"
+      },
+      {
+        "at": "2026-10-28T18:39:45.824Z",
+        "action": "order.customer_confirmed",
+        "detail": "Request sent to sales review; not a fulfilled order"
+      },
+      {
+        "at": "2026-10-28T18:39:45.824Z",
+        "action": "message.received",
+        "detail": "Intent: confirm; interpreter: rules"
+      },
+      {
+        "at": "2026-10-28T18:39:54.590Z",
+        "action": "order.approved",
+        "detail": "Approved for processing; invoicing, reservation and fulfillment remain in the selling system"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "authenticated dedicated synthetic judge tenant",
+      "passed": true
+    },
+    {
+      "check": "SHP-101 resolved as explicit fictional demo outcome",
+      "passed": true
+    },
+    {
+      "check": "expected 20 and reported 18 remain distinct",
+      "passed": true
+    },
+    {
+      "check": "synthetic PDF extracted through deployed cloud evidence path",
+      "passed": true
+    },
+    {
+      "check": "private synthetic PDF reads successfully with authorization",
+      "passed": true
+    },
+    {
+      "check": "document API requires authentication",
+      "passed": true
+    },
+    {
+      "check": "unsigned S3 access denied",
+      "passed": true
+    },
+    {
+      "check": "POD remains missing",
+      "passed": true
+    },
+    {
+      "check": "five carton request approved",
+      "passed": true
+    },
+    {
+      "check": "customer confirmation precedes staff processing approval",
+      "passed": true
+    },
+    {
+      "check": "proposal approval completion are distinct ordered audit events",
+      "passed": true
+    },
+    {
+      "check": "zero outbox items",
+      "passed": true
+    },
+    {
+      "check": "no WhatsApp messages or imported shipment records",
+      "passed": true
+    },
+    {
+      "check": "no deployed live contact binding for judge tenant",
+      "passed": true
+    },
+    {
+      "check": "judge revision unchanged during read-only verification",
+      "passed": true
+    },
+    {
+      "check": "local documentation links resolve",
+      "passed": true
+    }
+  ],
+  "documentation": {
+    "localLinksChecked": 49,
+    "brokenLinks": []
+  },
+  "limitations": [
+    "This records current state and its audit trail after a separate GUI rehearsal, not direct observation of every GUI action.",
+    "The resolved case is explicitly DEMO ONLY; no real shortage correction, customer acceptance, sale, invoice, stock reservation or shipment is claimed.",
+    "The judge tenant has no live WhatsApp binding; real WhatsApp runtime evidence is separately documented.",
+    "Eligibility, video publication and final submission are outside this check."
+  ]
+}

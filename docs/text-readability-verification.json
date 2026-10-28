@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-10-28T18:47:02.439687+00:00",
+  "change": "Near-black text on light surfaces; body font weight 500; readable placeholders and disabled controls; white text retained on dark surfaces.",
+  "buildPassed": true,
+  "lambdaBundlePassed": true,
+  "cdkDeploymentPassed": true,
+  "allFourLambdaEnvironmentsPreserved": true,
+  "liveBrowser": {
+    "bodyColor": "rgb(23, 23, 23)",
+    "fontWeight": "500",
+    "mobileViewport": {
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390
+    },
+    "screenshots": [
+      "screenshots/crm-contrast-desktop.jpg",
+      "screenshots/crm-contrast-mobile.jpg"
+    ]
+  },
+  "workflowChange": false,
+  "publicVideo": false
+}
