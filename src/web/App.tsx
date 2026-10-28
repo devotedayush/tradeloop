@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import type { State, Actor, Customer, ServiceCase } from "../core/types";
 import { hasImportedRecords, hasProtectedActivity } from "../core/provenance";
@@ -46,6 +46,7 @@ function App() {
   const [note, setNote] = useState("");
   const [user, setUser] = useState("reviewer");
   const [password, setPassword] = useState("");
+  const chatLog = useRef<HTMLDivElement>(null);
   async function api(route: string, body?: unknown) {
     const r = await fetch("/api/" + route, {
       method: body === undefined ? "GET" : "POST",
@@ -148,6 +149,10 @@ function App() {
     state?.messages.filter((m) => m.customerId === selected) ?? [];
   const customerOutbox =
     state?.outbox.filter((m) => m.customerId === selected) ?? [];
+  useEffect(() => {
+    if (chatLog.current)
+      chatLog.current.scrollTop = chatLog.current.scrollHeight;
+  }, [selected, customerMessages.length, tab]);
   const canReview = state
     ? ["admin", "logistics"].includes(state.actor.role)
     : false;
@@ -672,7 +677,7 @@ function App() {
                           : "SIMULATOR"}
                     </span>
                   </div>
-                  <div className="chat-log" aria-live="polite">
+                  <div className="chat-log" aria-live="polite" ref={chatLog}>
                     {customerMessages.length ? (
                       customerMessages.map((m) => (
                         <div className={"bubble " + m.direction} key={m.id}>
