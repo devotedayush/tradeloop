@@ -59,6 +59,6 @@ The user explicitly attests legal age, no conflict of interest, authority to rep
 
 The repository is **public**, with default branch **main** and the existing **MIT** license; this was verified with GitHub CLI and the local license file. Organizer access to a private repository is no longer a gate.
 
-Devpost draft **1269677-tradeloop** has Overview, Story/video and Additional Info saved (**4/5**). ACE **O30532571**, the architecture PNG and source ZIP are attached. The private judge package is prepared for upload with authorized synthetic-workspace access. Final legal agreement and submission remain pending; no submitted entry is claimed.
+TradeLoop was **submitted** to the AWS CDS Agentic AI Partner Hackathon on 29 October 2026. Devpost displayed **Project submitted!** and **SUBMITTED TO** the hackathon. [Project page](https://devpost.com/software/tradeloop). The saved entry includes public demo video, three screenshots, public MIT repository, architecture PNG, ACE **O30532571**, entrant attestations and the private judge package with authorized synthetic-workspace credentials.
 
 Current screenshots: [Sales follow-ups](screenshots/sales-followups-desktop.jpg), [Customer feedback](screenshots/sales-feedback-desktop.jpg), [Recorded order context](screenshots/order-context-desktop.jpg).

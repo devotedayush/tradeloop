@@ -86,13 +86,13 @@ The subsequent [text readability update](text-readability-verification.json) cha
 
 ## Submission gates, separate from software evidence
 
-Recorded preparation status, with ACE updated from a signed-in Partner Central observation on 29 October 2026. These records do not establish final submission:
+Submission status was confirmed in the signed-in Devpost UI on 29 October 2026. See [submission verification](submission-verification.json).
 
 - **Eligibility attestations:** The user explicitly attests legal age, no conflict of interest, authority to represent **MENTS**, and signed APN Terms & Conditions. These are user attestations, not an independent audit of APN membership records or the contract.
 - **ACE opportunity `O30532571` exists** for Kay Sons Oils Pvt Ltd / Dr Smith. Signed-in Partner Central UI showed stage **Prospect**, status **Pending approval**, **$50 estimated MRR**, and Social among six selected products, with exact marketing campaign `AWS CDS Agentic AI Hackathon -Sept. 2026.`. The user reports creating it on 29 October 2026; the creation timestamp was not directly observed. This preliminary estimate does not establish actual revenue, a customer contract or AWS approval. See the [sanitized ACE verification](ace-verification.json).
 - **Repository:** The repository is **public**, with default branch **main** and the existing **MIT** license; this was verified with GitHub CLI and the local license file. Organizer access to a private repository is no longer a gate.
 - **Video:** The [180-second public demo](https://www.youtube.com/watch?v=ROkGlIfyKMk) is published on the Ayushman channel. The local H.264 export played to completion without error; signed-out public playback started successfully at 3:00 duration. English captions are burned into the video. See [video verification](demo-video-verification.json).
-- **Devpost draft:** Devpost draft **1269677-tradeloop** has Overview, Story/video and Additional Info saved (**4/5**). ACE **O30532571**, the architecture PNG and source ZIP are attached. The private judge package is prepared for upload with authorized synthetic-workspace access. Final legal agreement and submission remain pending; no submitted entry is claimed.
+- **Devpost submission:** TradeLoop was **submitted** to the AWS CDS Agentic AI Partner Hackathon on 29 October 2026. Devpost displayed **Project submitted!** and **SUBMITTED TO** the hackathon. [Project page](https://devpost.com/software/tradeloop). The saved entry includes public demo video, three screenshots, public MIT repository, architecture PNG, ACE **O30532571**, entrant attestations and the private judge package with authorized synthetic-workspace credentials.
 
 See the [official rules](https://aws-cds-partner.devpost.com/rules), [official FAQ](https://aws-cds-partner.devpost.com/details/faq), [submission checklist](submission-readiness.md) and [existing-work disclosure](existing-work.md). Working software does not establish eligibility or submission.
 
