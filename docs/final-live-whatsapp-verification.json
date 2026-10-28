@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-28",
+  "scope": "Authorized test customer, synthetic shipment status, final deployed build",
+  "inboundText": "Final demo check: please show the latest recorded status for shipment SHP-101.",
+  "receiptObservedInDesktopWhatsApp": true,
+  "receiptDisplayedTime": "11:21 PM",
+  "timezone": "Asia/Kolkata",
+  "replyContainedRecordedShipmentStatus": true,
+  "replyDistinguishedRecordedStatusFromLiveLocation": true,
+  "limitations": [
+    "Recipient receipt is supported by desktop WhatsApp observation, not implemented provider delivery-status reconciliation."
+  ]
+}

@@ -14,6 +14,7 @@ import {
   audit,
 } from "../core/engine";
 import { DomainError, id, type Actor } from "../core/types";
+import { hasImportedRecords, hasProtectedActivity } from "../core/provenance";
 export type Input = {
   method: string;
   path: string;
@@ -80,6 +81,8 @@ export async function dispatch(req: Input): Promise<Output> {
         interpreter: process.env.BEDROCK_MODEL_ID ? "bedrock" : "rules",
         model: process.env.BEDROCK_MODEL_ID ?? null,
         whatsapp: !!process.env.WHATSAPP_PHONE_ID,
+        whatsappRegion:
+          process.env.WHATSAPP_REGION ?? process.env.AWS_REGION ?? null,
         storage: process.env.TABLE_NAME ? "dynamodb" : "local",
         kaysons: false,
         version: "0.1.0",
@@ -131,6 +134,11 @@ export async function dispatch(req: Input): Promise<Output> {
         );
       if (!s.customers.some((c) => c.id === input.customerId))
         throw new DomainError(404, "Customer not found");
+      if (hasImportedRecords(s, input.customerId))
+        throw new DomainError(
+          403,
+          "Imported records are for staff review. Use a fictional customer in the test console.",
+        );
       const mid = input.messageId ?? id("sim");
       if (s.processed.some((p) => p.id === mid))
         return json({ duplicate: true });
@@ -228,6 +236,11 @@ export async function dispatch(req: Input): Promise<Output> {
       await store.change(tenant, (s) => {
         if (!s.business.synthetic)
           throw new DomainError(403, "Only synthetic workspaces can reset");
+        if (hasProtectedActivity(s))
+          throw new DomainError(
+            409,
+            "Reset is disabled because this workspace contains imported records or live WhatsApp evidence. Use a separate local workspace to rehearse.",
+          );
         const revision = s.revision;
         Object.assign(s, seed(tenant), { revision });
         audit(s, actor.id, "demo.reset", "Synthetic workspace reset");
@@ -238,7 +251,7 @@ export async function dispatch(req: Input): Promise<Output> {
       const s = await store.load(tenant);
       return json({
         business: s.business,
-        synthetic: true,
+        synthetic: s.business.synthetic && !hasImportedRecords(s),
         exportedAt: new Date().toISOString(),
         audit: s.audit,
         cases: s.cases,

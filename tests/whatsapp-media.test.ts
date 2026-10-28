@@ -260,5 +260,121 @@ describe("WhatsApp regional inbound media", () => {
     expect(
       state.processed.some((message) => message.id === "wamid-media-1"),
     ).toBe(true);
+    expect(state.outbox[0].text).toContain("was not retained");
+    expect(state.outbox[0].text).toContain("resend the attachment");
+  });
+
+  it("does not attach a caption for another shipment to the only open case", async () => {
+    receive(state, {
+      customerId: "C001",
+      text: "2 cartons missing from SHP-101",
+      messageId: "case-fixture",
+      channel: "simulator",
+      intent: ruleIntent("2 cartons missing from SHP-101"),
+      engine: "rules",
+    });
+    state.shipments.push({
+      ...state.shipments[0],
+      id: "SHP-104",
+      lr: "LR-504",
+    });
+    const inbound = event();
+    inbound.Records[0].body = JSON.stringify({
+      ...JSON.parse(inbound.Records[0].body),
+      text: "POD for SHP-104",
+    });
+    const { worker } = await import("../src/handlers/messaging");
+
+    expect(await worker(inbound)).toEqual({ batchItemFailures: [] });
+    expect(mocks.socialSend).not.toHaveBeenCalled();
+    expect(mocks.saveEvidence).not.toHaveBeenCalled();
+    expect(state.cases[0].evidence).toEqual([]);
+    expect(state.messages.at(-1)?.text).toContain("POD for SHP-104");
+    expect(state.outbox.at(-1)?.text).toContain("resend the attachment");
+  });
+
+  it("uses an authorized caption reference to choose the matching open case", async () => {
+    receive(state, {
+      customerId: "C001",
+      text: "2 cartons missing from SHP-101",
+      messageId: "case-fixture",
+      channel: "simulator",
+      intent: ruleIntent("2 cartons missing from SHP-101"),
+      engine: "rules",
+    });
+    state.shipments.push({
+      ...state.shipments[0],
+      id: "SHP-104",
+      lr: "LR-504",
+    });
+    state.cases.push({
+      ...structuredClone(state.cases[0]),
+      id: "CASE-second",
+      shipmentId: "SHP-104",
+    });
+    const inbound = event();
+    inbound.Records[0].body = JSON.stringify({
+      ...JSON.parse(inbound.Records[0].body),
+      text: "POD for LR-504",
+    });
+    const evidence: Evidence = {
+      id: "DOC-caption",
+      name: "pod.png",
+      mime: "image/png",
+      key: "demofoods/DOC-caption",
+      sha256: "caption-hash",
+      size: 3,
+      extraction: "manual",
+      kind: "attachment",
+      createdAt: inboundAt,
+    };
+    mocks.saveEvidence.mockResolvedValue(evidence);
+    mocks.s3Send.mockImplementation(async (command) =>
+      command.constructor.name === "GetObjectCommand"
+        ? {
+            ContentLength: 3,
+            Body: { transformToByteArray: async () => Buffer.from("pod") },
+          }
+        : {},
+    );
+    const { worker } = await import("../src/handlers/messaging");
+
+    expect(await worker(inbound)).toEqual({ batchItemFailures: [] });
+    expect(state.cases[0].evidence).toEqual([]);
+    expect(state.cases[1].evidence).toEqual([evidence]);
+    expect(state.shipments[0].podStatus).toBe("missing");
+    expect(state.shipments.at(-1)?.podStatus).toBe("missing");
+  });
+
+  it("does not use a caption to bypass transporter shipment authorization", async () => {
+    receive(state, {
+      customerId: "C001",
+      text: "2 cartons missing from SHP-101",
+      messageId: "case-fixture",
+      channel: "simulator",
+      intent: ruleIntent("2 cartons missing from SHP-101"),
+      engine: "rules",
+    });
+    const restrictedBinding = {
+      ...binding,
+      kind: "transporter",
+      shipmentIds: ["SHP-104"],
+    };
+    vi.stubEnv(
+      "CONTACT_BINDINGS_JSON",
+      JSON.stringify({ "15555550123": restrictedBinding }),
+    );
+    const inbound = event();
+    inbound.Records[0].body = JSON.stringify({
+      ...JSON.parse(inbound.Records[0].body),
+      binding: restrictedBinding,
+      text: "POD for SHP-101",
+    });
+    const { worker } = await import("../src/handlers/messaging");
+
+    expect(await worker(inbound)).toEqual({ batchItemFailures: [] });
+    expect(mocks.socialSend).not.toHaveBeenCalled();
+    expect(mocks.saveEvidence).not.toHaveBeenCalled();
+    expect(state.cases[0].evidence).toEqual([]);
   });
 });

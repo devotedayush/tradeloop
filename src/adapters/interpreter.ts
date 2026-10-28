@@ -25,10 +25,25 @@ export async function interpret(
   s: State,
   cid: string,
 ): Promise<{ intent: Intent; engine: "rules" | "bedrock" }> {
+  const deterministic = ruleIntent(text);
   if (!process.env.BEDROCK_MODEL_ID)
-    return { intent: ruleIntent(text), engine: "rules" };
+    return { intent: deterministic, engine: "rules" };
+  // Confirmation wording is evaluated by the backend's amendment and negation
+  // guards. The model must not turn a negated confirmation into an opt-out.
+  if (deterministic.kind === "confirm")
+    return { intent: deterministic, engine: "rules" };
+  // Preserve explicitly invalid reorder quantities for the backend's safe
+  // validation reply rather than asking the model to omit or repair them.
+  if (
+    deterministic.kind === "reorder" &&
+    deterministic.quantity !== undefined &&
+    (!Number.isInteger(deterministic.quantity) ||
+      deterministic.quantity < 1 ||
+      deterministic.quantity > 10000)
+  )
+    return { intent: deterministic, engine: "rules" };
   // Opt-out is enforced before model interpretation; it must survive a provider outage.
-  if (ruleIntent(text).kind === "optout")
+  if (deterministic.kind === "optout")
     return { intent: { kind: "optout" }, engine: "rules" };
   const model = process.env.BEDROCK_MODEL_ID;
   const customer = s.customers.find((c) => c.id === cid);

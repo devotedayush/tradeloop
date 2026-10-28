@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">TradeLoop AWS architecture</title><desc id="desc">Live WhatsApp communication in Mumbai connects to a bounded AI and staff approval workflow in Virginia. Synthetic operational demonstration records.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#162c45}.title{font-size:38px;font-weight:700}.sub{font-size:19px;fill:#52667a}.region{font-size:23px;font-weight:700}.nt{font-size:20px;font-weight:700}.body{font-size:16px;fill:#52667a}.label{font-size:15px;font-weight:600;paint-order:stroke;stroke:#f6f9fd;stroke-width:6px;stroke-linejoin:round}.foot{font-size:17px;fill:#455c72}</style>
+<rect width="1600" height="1120" fill="#f6f9fd"/>
+<text class="title" x="40" y="55">TradeLoop</text><text class="sub" x="40" y="87">WhatsApp complaint → shipment evidence → staff decision → repeat-order request</text>
+<rect x="40" y="190" width="370" height="560" rx="20" fill="#eaf4fa" stroke="#afcddd" stroke-width="2"/>
+<text class="region" x="65" y="226">AWS Mumbai</text><text class="body" x="65" y="251">ap-south-1 · communication + retrieval</text>
+<rect x="450" y="190" width="1110" height="815" rx="20" fill="#fff" stroke="#c9d4e0" stroke-width="2"/>
+<text class="region" x="480" y="226">AWS Virginia</text><text class="body" x="480" y="251">us-east-1 · authenticated application + bounded workflow</text>
+
+<rect x="65" y="105" width="320" height="65" rx="13" fill="#e5f3ed" stroke="#6ca08a" stroke-width="2"/>
+<text class="nt" x="82" y="134">Customer WhatsApp</text>
+<text class="body" x="82" y="159">Authorized test contact</text>
+<rect x="65" y="280" width="320" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="82" y="309">End User Messaging Social</text>
+<text class="body" x="82" y="334">WhatsApp inbound + replies</text>
+<rect x="65" y="420" width="320" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="82" y="449">Amazon SNS</text>
+<text class="body" x="82" y="474">Regional event destination</text>
+<rect x="65" y="585" width="320" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="82" y="614">Private S3 quarantine</text>
+<text class="body" x="82" y="639">Temporary inbound media</text>
+<text class="body" x="82" y="660">Exact signed key; cleanup</text>
+<rect x="490" y="280" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="507" y="309">Ingestion Lambda</text>
+<text class="body" x="507" y="334">Validate identity + normalize</text>
+<text class="body" x="507" y="355">Server-side contact binding</text>
+<rect x="820" y="280" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="837" y="309">Amazon SQS FIFO</text>
+<text class="body" x="837" y="334">Business / customer ordering</text>
+<text class="body" x="837" y="355">Duplicate-event protection</text>
+<rect x="1150" y="280" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="1167" y="309">Worker Lambda</text>
+<text class="body" x="1167" y="334">Interpret customer message</text>
+<text class="body" x="1167" y="355">Process linked evidence</text>
+<rect x="820" y="460" width="270" height="90" rx="13" fill="#f1ecfc" stroke="#b9a6d5" stroke-width="2"/>
+<text class="nt" x="837" y="489">Amazon Bedrock</text>
+<text class="body" x="837" y="514">Typed intent proposal</text>
+<text class="body" x="837" y="535">No arbitrary execution</text>
+<rect x="1150" y="460" width="270" height="90" rx="13" fill="#e6f3ee" stroke="#77a992" stroke-width="2"/>
+<text class="nt" x="1167" y="489">Workflow checks</text>
+<text class="body" x="1167" y="514">Permissions + current revision</text>
+<text class="body" x="1167" y="535">Staff approval boundary</text>
+<rect x="490" y="620" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="507" y="649">Private S3 evidence</text>
+<text class="body" x="507" y="674">Persist linked documents</text>
+<text class="body" x="507" y="695">No public evidence bucket</text>
+<rect x="820" y="620" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="837" y="649">Amazon Textract</text>
+<text class="body" x="837" y="674">Extract supported documents</text>
+<text class="body" x="837" y="695">Uncertainty → staff review</text>
+<rect x="1150" y="650" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="1167" y="679">Amazon DynamoDB</text>
+<text class="body" x="1167" y="704">Records + audit + outbox</text>
+<text class="body" x="1167" y="725">Transactional revisions</text>
+<rect x="820" y="810" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="837" y="839">Sender Lambda</text>
+<text class="body" x="837" y="864">Scheduled every minute</text>
+<text class="body" x="837" y="885">Consent / case / session checks</text>
+<rect x="490" y="810" width="270" height="90" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="507" y="839">API Gateway + Lambda</text>
+<text class="body" x="507" y="864">Verify Cognito identity</text>
+<text class="body" x="507" y="885">Enforce staff business / role</text>
+<rect x="65" y="810" width="320" height="90" rx="13" fill="#e6f3ee" stroke="#77a992" stroke-width="2"/>
+<text class="nt" x="82" y="839">Staff React dashboard</text>
+<text class="body" x="82" y="864">Review, propose, approve</text>
+<text class="body" x="82" y="885">Record completion separately</text>
+<rect x="490" y="925" width="270" height="70" rx="13" fill="#fff" stroke="#a9bed1" stroke-width="2"/>
+<text class="nt" x="507" y="954">Amazon Cognito</text>
+<text class="body" x="507" y="979">Staff login + role groups</text>
+<path d="M 385 138 H 400 V 325 H 385" marker-start="url(#arrow)" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="410" y="158" fill="#356987">Messages / replies</text>
+<path d="M 225 370 V 420" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="240" y="399" fill="#356987">Inbound events</text>
+<path d="M 385 465 H 425 V 325 H 490" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="445" y="460" fill="#356987">Cross-region SNS delivery</text>
+<path d="M 760 325 H 820" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="767" y="387" fill="#356987">Enqueue</text>
+<path d="M 1090 325 H 1150" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="1095" y="387" fill="#356987">Consume</text>
+<path d="M 1285 370 V 405 H 425 V 630 H 385" fill="none" stroke="#9b6b2c" stroke-width="2.5" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<text class="label" x="595" y="399" fill="#9b6b2c">Retrieve inbound media</text>
+<path d="M 1150 345 H 1110 V 435 H 955 V 460" marker-start="url(#arrow)" fill="none" stroke="#795797" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="825" y="435" fill="#795797">Intent proposal ↔ worker</text>
+<path d="M 1285 370 V 460" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="1300" y="443" fill="#356987">Validated intent</text>
+<path d="M 385 675 H 490" fill="none" stroke="#9b6b2c" stroke-width="2.5" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<text class="label" x="405" y="663" fill="#9b6b2c">Persist</text>
+<path d="M 760 665 H 820" fill="none" stroke="#9b6b2c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="766" y="610" fill="#9b6b2c">Extract</text>
+<path d="M 1090 665 H 1120 V 525 H 1150" fill="none" stroke="#9b6b2c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="1130" y="602" fill="#9b6b2c">Readings for review</text>
+<path d="M 1285 550 V 650" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="1300" y="607" fill="#356987">Commit records</text>
+<path d="M 1150 695 H 1135 V 855 H 1090" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="1145" y="786" fill="#356987">Read / claim outbox</text>
+<path d="M 955 900 V 1025 H 20 V 325 H 65" fill="none" stroke="#278465" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="485" y="1017" fill="#278465">SendWhatsAppMessage · service replies / eligible follow-ups</text>
+<path d="M 385 855 H 490" fill="none" stroke="#356987" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="401" y="843" fill="#356987">ID token</text>
+<path d="M 225 900 V 960 H 490" marker-start="url(#arrow)" fill="none" stroke="#278465" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="300" y="949" fill="#278465">Login / tokens</text>
+<path d="M 760 855 H 785 V 575 H 1285 V 550" fill="none" stroke="#278465" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text class="label" x="825" y="568" fill="#278465">Authorized staff actions</text>
+<rect x="800" y="925" width="720" height="65" rx="9" fill="#f0f5f8"/><text class="body" x="820" y="951">AI proposes. Application checks authority.</text><text class="body" x="820" y="975">Staff approve consequential actions.</text>
+<text class="foot" x="40" y="1070">Synthetic operational demo. Document receipt ≠ accepted POD. Order request ≠ invoice, stock reservation or shipment.</text>
+<text class="foot" x="40" y="1097">Verified: live WhatsApp text + incoming synthetic PDF. Templates unverified. SES disabled. Kaysons connector unconfigured.</text>
+</svg>

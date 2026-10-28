@@ -4,7 +4,7 @@ export function seed(tenantId = "demofoods"): State {
   const ago = (days: number) =>
     new Date(now.getTime() - days * 86400000).toISOString();
   const names =
-    tenantId === "demofoods"
+    tenantId === "demofoods" || tenantId === "judgedemo"
       ? [
           "Sunrise Café",
           "Baker Street",
@@ -29,9 +29,11 @@ export function seed(tenantId = "demofoods"): State {
     revision: 0,
     business: {
       name:
-        tenantId === "demofoods"
-          ? "Demo Foods Distribution"
-          : "Northstar Isolation Fixture",
+        tenantId === "judgedemo"
+          ? "TradeLoop Judge Demo"
+          : tenantId === "demofoods"
+            ? "Demo Foods Distribution"
+            : "Northstar Isolation Fixture",
       synthetic: true,
       timezone: "Asia/Kolkata",
     },

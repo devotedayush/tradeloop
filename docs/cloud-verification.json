@@ -1,13 +1,32 @@
 {
-  "at": "2026-10-28T10:58:38.840Z",
+  "at": "2026-10-28T17:50:44.004Z",
+  "tenant": "judgedemo",
   "synthetic": true,
+  "ownerAccess": "read-only evidence isolation probe",
+  "whatsappSends": 0,
   "checks": [
+    {
+      "check": "Reset preflight restricts writes to isolated synthetic judgedemo with no imported or WhatsApp records",
+      "passed": true
+    },
     {
       "check": "Cloud uses DynamoDB and Bedrock",
       "passed": true
     },
     {
       "check": "Unauthenticated business data access denied",
+      "passed": true
+    },
+    {
+      "check": "X-Tenant-ID cannot select another tenant",
+      "passed": true
+    },
+    {
+      "check": "Judge cannot fetch original workspace evidence even with a tenant header",
+      "passed": true
+    },
+    {
+      "check": "Zero-quantity reorder creates no draft",
       "passed": true
     },
     {
@@ -24,7 +43,19 @@
       "detail": "extracted"
     },
     {
+      "check": "Authorized private S3 evidence can be retrieved",
+      "passed": true
+    },
+    {
       "check": "Approval keeps case action pending",
+      "passed": true
+    },
+    {
+      "check": "Conditional confirmation does not confirm a draft",
+      "passed": true
+    },
+    {
+      "check": "Negated confirmation does not confirm a draft",
       "passed": true
     },
     {
@@ -36,11 +67,7 @@
       "passed": true
     },
     {
-      "check": "Conditional confirmation does not approve a draft",
-      "passed": true
-    },
-    {
-      "check": "Different quantity units are not silently equated",
+      "check": "Cloud smoke queued no WhatsApp messages",
       "passed": true
     }
   ],

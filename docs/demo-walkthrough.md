@@ -2,13 +2,17 @@
 
 Use the actual deployed application. Keep the synthetic-data banner and connection status visible. Do not imply the simulator is WhatsApp.
 
+Use the dedicated `judgedemo` workspace for dashboard footage. It contains freshly seeded synthetic data only, with no original invoice or live WhatsApp binding. Its credentials remain private in `.runtime/judge-access.json`; the actual judge login was verified in the live browser. Live WhatsApp steps below require a separate sanitized recording of the authorized test connection. When showing the judge-workspace simulator, label it explicitly as a simulator and do not claim that its messages reach WhatsApp.
+
 1. **0:00–0:20 — Problem.** Distributor staff manually reconnect customer conversations, previous purchases and delivery evidence. TradeLoop gives each next step an owner.
 2. **0:20–0:45 — Customer context.** Open Sunrise Café. Show previous purchase, SHP-101 and a due follow-up. Queue a follow-up, explaining whether it is actually delivered through an approved WhatsApp template or remains queued.
 3. **0:45–1:15 — Service issue.** From the authorized WhatsApp test customer, send `DEMO: I received 18 of the 20 cartons in shipment SHP-101. Two cartons are missing.` Show the real reply, the case linked to SHP-101 and sales follow-ups paused.
 4. **1:15–1:45 — Evidence.** Attach `demo-data/synthetic-bilty-pod-shortage.pdf` through the channel verified for the recording. The matching fictional invoice is `demo-data/synthetic-invoice-shortage.pdf`. Show the document, extracted text when available, expected 20 and customer-reported 18. Document receipt is not POD acceptance. Original business scans are not public demo assets.
 5. **1:45–2:10 — Staff action.** Save a proposal such as `Dispatch to verify shortage and contact the customer with an approved arrangement`. Approve the next action. Show `action pending`. Record completion only as a visibly fictional test outcome, e.g. `DEMO: staff verified correction and customer accepted the outcome`.
 6. **2:10–2:35 — Next order.** Customer requests `Same order again, 5 cartons`, then `Confirm`. Show the request awaiting review and staff approval for processing. No invoice, stock reservation or actual shipment is created.
-7. **2:35–3:00 — Technical evidence.** Show the audit trail, connection status, AWS architecture and actual test results. WhatsApp is active in Mumbai and the application is in Virginia. Disclose synthetic data, the disconnected Kaysons connector and unverified approved-template delivery.
+7. **2:35–3:00 — Technical evidence.** Show the audit trail, connection status, [architecture PNG](architecture.png) and actual test results: 66 passing tests and [12 read-only cloud checks](final-readiness-verification.json). WhatsApp is active in Mumbai and the application is in Virginia. Disclose synthetic data, the disconnected Kaysons connector and unverified approved-template delivery. The 33-test count in the WhatsApp verification record is a historical snapshot.
+
+For a current cloud check, run `npx tsx scripts/check-readiness.ts`. Do not use the mutating `cloud-smoke.ts` on the connected workspace: its initial reset is blocked if live or imported evidence is present. Keep original documents, private contacts and credentials out of all public footage.
 
 ## Pitch
 

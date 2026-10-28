@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-28T17:53:23.088Z",
+  "mode": "read-only",
+  "changesMade": false,
+  "checks": [
+    {
+      "check": "Cognito staff sign-in and authenticated workspace read",
+      "passed": true
+    },
+    {
+      "check": "DynamoDB, Bedrock and WhatsApp configured",
+      "passed": true
+    },
+    {
+      "check": "Business records require authentication",
+      "passed": true
+    },
+    {
+      "check": "Audit export requires authentication",
+      "passed": true
+    },
+    {
+      "check": "Evidence requires authentication",
+      "passed": true
+    },
+    {
+      "check": "Invalid staff tokens are rejected",
+      "passed": true
+    },
+    {
+      "check": "Live WhatsApp PDF evidence remains linked to its review case",
+      "passed": true
+    },
+    {
+      "check": "Complaint follow-ups remain paused",
+      "passed": true
+    },
+    {
+      "check": "Document receipt has not accepted delivery",
+      "passed": true
+    },
+    {
+      "check": "Authorized private evidence opens as a valid PDF",
+      "passed": true
+    },
+    {
+      "check": "No live outbound messages are awaiting processing",
+      "passed": true
+    },
+    {
+      "check": "Private original review remains separate and unconfirmed",
+      "passed": true
+    }
+  ]
+}

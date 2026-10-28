@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-28T17:49:47.033Z",
+  "mode": "read-only",
+  "queues": [
+    {
+      "kind": "conversation",
+      "ApproximateNumberOfMessages": "0",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    },
+    {
+      "kind": "dead-letter",
+      "ApproximateNumberOfMessages": "0",
+      "ApproximateNumberOfMessagesNotVisible": "0",
+      "ApproximateNumberOfMessagesDelayed": "0"
+    }
+  ],
+  "alarms": [
+    {
+      "kind": "dead-letter",
+      "state": "OK"
+    },
+    {
+      "kind": "worker-errors",
+      "state": "INSUFFICIENT_DATA"
+    }
+  ]
+}

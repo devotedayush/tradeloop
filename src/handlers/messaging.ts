@@ -115,12 +115,35 @@ export async function worker(event: any) {
       if (!state.customers.some((c) => c.id === b.customerId))
         throw new Error("Bound customer not found");
       if (m.media) {
+        const references = (
+          String(m.text ?? "").match(/SHP-\d+|LR-\d+|INV-\d+/gi) ?? []
+        ).map((reference) => reference.toUpperCase());
+        const authorizedShipments = state.shipments.filter(
+          (shipment) =>
+            shipment.customerId === b.customerId &&
+            (b.kind === "customer" || b.shipmentIds?.includes(shipment.id)),
+        );
         const candidates = state.cases.filter(
           (c) =>
             c.customerId === b.customerId &&
             c.status !== "resolved" &&
             (b.kind === "customer" ||
-              (c.shipmentId && b.shipmentIds?.includes(c.shipmentId))),
+              (c.shipmentId && b.shipmentIds?.includes(c.shipmentId))) &&
+            (!references.length ||
+              authorizedShipments.some(
+                (shipment) =>
+                  shipment.id === c.shipmentId &&
+                  references.every(
+                    (reference) =>
+                      shipment.id === reference ||
+                      shipment.lr === reference ||
+                      state.orders.some(
+                        (order) =>
+                          order.id === shipment.orderId &&
+                          order.invoice === reference,
+                      ),
+                  ),
+              )),
         );
         if (candidates.length !== 1) {
           await store.change(b.tenantId, (s) => {
@@ -135,7 +158,7 @@ export async function worker(event: any) {
               id: m.messageId,
               customerId: b.customerId,
               direction: "inbound",
-              text: "[Attachment received; matching needs staff review]",
+              text: `[Attachment not assigned; resend required]${m.text ? ` ${String(m.text).slice(0, 2000)}` : ""}`,
               at: new Date().toISOString(),
               channel: "whatsapp",
             });
@@ -143,13 +166,13 @@ export async function worker(event: any) {
               s,
               "whatsapp",
               "evidence.unmatched",
-              "No unique authorized open case; attachment not auto-assigned",
+              "No unique authorized case matching the caption references; attachment not retained or auto-assigned",
               b.customerId,
             );
             s.outbox.push({
               id: id("send"),
               customerId: b.customerId,
-              text: "The team needs a shipment reference to match this attachment. Please provide it; it has not been accepted as POD.",
+              text: "This attachment could not be assigned and was not retained. Please resend the attachment with its shipment or invoice reference in the caption, or ask the office to link the correct case first. It has not been accepted as POD.",
               status: "pending",
               kind: "service",
               createdAt: new Date().toISOString(),
@@ -308,12 +331,11 @@ export async function sender() {
     for (const queued of state.outbox
       .filter((o) => o.status === "pending")
       .slice(0, 10)) {
-      let claimed = false;
-      let destination = "";
-      let template = "";
-      await store.change(tenant, (s) => {
-        const o = s.outbox.find((x) => x.id === queued.id)!;
-        if (o.status !== "pending") return;
+      // Only the result of the committed attempt may authorize a provider send.
+      // Store.change can rerun this callback after a DynamoDB conflict.
+      const claim = await store.change(tenant, (s) => {
+        const o = s.outbox.find((x) => x.id === queued.id);
+        if (!o || o.status !== "pending") return;
         const c = s.customers.find((x) => x.id === o.customerId)!;
         if (
           o.kind === "followup" &&
@@ -333,7 +355,7 @@ export async function sender() {
           );
           return;
         }
-        destination =
+        const destination =
           Object.entries(map).find(
             ([, b]) =>
               b.kind === "customer" &&
@@ -341,6 +363,7 @@ export async function sender() {
               b.customerId === c.id,
           )?.[0] ?? "";
         if (!destination) return;
+        let template = "";
         const windowOpen =
           c.lastInboundAt &&
           Date.now() - Date.parse(c.lastInboundAt) < 24 * 3600000;
@@ -352,9 +375,10 @@ export async function sender() {
           if (!template || !c.consent) return;
         }
         o.status = "sending";
-        claimed = true;
+        return { destination, template, text: o.text };
       });
-      if (!claimed) continue;
+      if (!claim) continue;
+      const { destination, template } = claim;
       try {
         const payload = {
           messaging_product: "whatsapp",
@@ -368,12 +392,12 @@ export async function sender() {
                   components: [
                     {
                       type: "body",
-                      parameters: [{ type: "text", text: queued.text }],
+                      parameters: [{ type: "text", text: claim.text }],
                     },
                   ],
                 },
               }
-            : { type: "text", text: { body: queued.text } }),
+            : { type: "text", text: { body: claim.text } }),
         };
         const response = await social.send(
           new SendWhatsAppMessageCommand({
@@ -400,7 +424,10 @@ export async function sender() {
         await store.change(tenant, (s) => {
           const o = s.outbox.find((x) => x.id === queued.id)!;
           o.status = "uncertain";
-          o.error = `${(e as Error).name}: ${(e as Error).message}`.slice(0, 1000);
+          o.error = `${(e as Error).name}: ${(e as Error).message}`.slice(
+            0,
+            1000,
+          );
           audit(
             s,
             "sender",

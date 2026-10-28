@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import type { State, Actor, Customer, ServiceCase } from "../core/types";
+import { hasImportedRecords, hasProtectedActivity } from "../core/provenance";
 import "./style.css";
 type Config = {
   region: string;
@@ -9,6 +10,7 @@ type Config = {
   interpreter: string;
   model: string | null;
   whatsapp: boolean;
+  whatsappRegion: string | null;
   storage: string;
   kaysons: boolean;
 };
@@ -35,7 +37,7 @@ function App() {
   const [tab, setTab] = useState("today");
   const [selected, setSelected] = useState("C001");
   const [token, setToken] = useState(
-    sessionStorage.getItem("tradeloop-token") ?? "",
+    () => sessionStorage.getItem("tradeloop-token") ?? "",
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -140,14 +142,27 @@ function App() {
     ) ?? [];
   const open = state?.cases.filter((c) => c.status !== "resolved") ?? [];
   const requests = state?.requests ?? [];
+  const importedCustomer = state ? hasImportedRecords(state, selected) : false;
+  const importedWorkspace = state ? hasImportedRecords(state) : false;
+  const customerMessages =
+    state?.messages.filter((m) => m.customerId === selected) ?? [];
+  const customerOutbox =
+    state?.outbox.filter((m) => m.customerId === selected) ?? [];
+  const canReview = state
+    ? ["admin", "logistics"].includes(state.actor.role)
+    : false;
+  const canApproveOrder = state
+    ? ["admin", "sales"].includes(state.actor.role)
+    : false;
   const openCustomer = (cid: string) => {
     setSelected(cid);
     setTab("customers");
     setNote("");
+    setDraft("");
     setError("");
   };
   async function send(text = draft) {
-    if (!text.trim() || !c) return;
+    if (!text.trim() || !c || importedCustomer) return;
     await act(async () => {
       await api("messages", {
         customerId: c.id,
@@ -210,7 +225,17 @@ function App() {
         ? "Next action approved. The case stays open until completion is recorded."
         : undefined,
     );
-  if (!config) return <div className="loading">Opening your workspace…</div>;
+  if (!config)
+    return (
+      <div className="loading" role={error ? "alert" : "status"}>
+        {error || "Opening your workspace…"}
+        {error ? (
+          <button className="outline" onClick={() => window.location.reload()}>
+            Retry connection
+          </button>
+        ) : null}
+      </div>
+    );
   if (config.poolId && !token)
     return (
       <main className="login">
@@ -266,8 +291,8 @@ function App() {
             {busy ? "Signing in…" : "Open workspace →"}
           </button>
           <p className="micro">
-            Access is restricted to authorized reviewers. Customer records shown
-            here are fictional.
+            Access is restricted to authorized reviewers. Demo customers are
+            fictional; imported documents are labelled separately.
           </p>
         </form>
       </main>
@@ -288,9 +313,15 @@ function App() {
       <aside className="sidebar">
         <Brand />
         <div className="workspace-name">
-          <span className="avatar">DF</span>
+          <span className="avatar">
+            {state.business.name
+              .split(" ")
+              .map((word) => word[0])
+              .join("")
+              .slice(0, 2)}
+          </span>
           <div>
-            <strong>Demo Foods</strong>
+            <strong>{state.business.name}</strong>
             <small>Distribution workspace</small>
           </div>
           <span>⌄</span>
@@ -300,6 +331,8 @@ function App() {
           {nav.map(([key, icon, label]) => (
             <button
               key={key}
+              aria-label={label}
+              aria-current={tab === key ? "page" : undefined}
               className={tab === key ? "active" : ""}
               onClick={() => {
                 setTab(key);
@@ -316,7 +349,7 @@ function App() {
           <div className="demo-note">
             <span className="dot" /> Demonstration workspace
             <p>
-              Fictional records.
+              Labelled demo records.
               <br />
               Real workflow controls.
             </p>
@@ -357,7 +390,7 @@ function App() {
             />
             <span>
               {config.interpreter === "bedrock"
-                ? "Bedrock connected"
+                ? "Bedrock configured"
                 : "Demo rules interpreter"}
             </span>
             <span className="top-date">
@@ -372,9 +405,13 @@ function App() {
         <main className="main">
           <div className="demo-banner">
             <span>◈</span>
-            <strong>Synthetic business data</strong>
+            <strong>
+              {importedWorkspace
+                ? "Demo + private source review"
+                : "Synthetic business data"}
+            </strong>
             <span>
-              Conversations in the test console are simulated. WhatsApp:{" "}
+              Test console messages are simulated. WhatsApp:{" "}
               {config.whatsapp ? "configured" : "not connected"}.
             </span>
             <button onClick={() => setTab("settings")}>
@@ -618,37 +655,43 @@ function App() {
                     <div>
                       <h2>Conversation</h2>
                       <p>
-                        Staff test console ·{" "}
+                        {importedCustomer
+                          ? "Private document review"
+                          : "Customer messages + staff test console"}{" "}
+                        ·{" "}
                         {config.interpreter === "bedrock"
                           ? "Bedrock interpretation"
                           : "deterministic demo interpretation"}
                       </p>
                     </div>
-                    <span className="pill">SIMULATOR</span>
+                    <span className="pill">
+                      {importedCustomer
+                        ? "IMPORTED SOURCE"
+                        : customerMessages.some((m) => m.channel === "whatsapp")
+                          ? "WHATSAPP + SIMULATOR"
+                          : "SIMULATOR"}
+                    </span>
                   </div>
                   <div className="chat-log" aria-live="polite">
-                    {state.messages.filter((m) => m.customerId === c.id)
-                      .length ? (
-                      state.messages
-                        .filter((m) => m.customerId === c.id)
-                        .map((m) => (
-                          <div className={"bubble " + m.direction} key={m.id}>
-                            <small>
-                              {m.direction === "inbound" ? c.name : "TradeLoop"}{" "}
-                              <span>
-                                · {m.channel}
-                                {m.engine ? " · " + m.engine : ""}
-                              </span>
-                            </small>
-                            <p>{m.text}</p>
-                            <time>
-                              {new Date(m.at).toLocaleTimeString("en-IN", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </time>
-                          </div>
-                        ))
+                    {customerMessages.length ? (
+                      customerMessages.map((m) => (
+                        <div className={"bubble " + m.direction} key={m.id}>
+                          <small>
+                            {m.direction === "inbound" ? c.name : "TradeLoop"}{" "}
+                            <span>
+                              · {m.channel}
+                              {m.engine ? " · " + m.engine : ""}
+                            </span>
+                          </small>
+                          <p>{m.text}</p>
+                          <time>
+                            {new Date(m.at).toLocaleTimeString("en-IN", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </time>
+                        </div>
+                      ))
                     ) : (
                       <div className="chat-empty">
                         <div>↔</div>
@@ -661,45 +704,60 @@ function App() {
                       </div>
                     )}
                   </div>
-                  <div className="suggestions">
-                    <span>TRY A CUSTOMER MESSAGE</span>
-                    {[
-                      "Where is my delivery?",
-                      "2 cartons missing from my last delivery",
-                      "Same order again, 5 cartons",
-                      "Confirm",
-                      "Stop messages",
-                    ].map((t) => (
-                      <button key={t} disabled={busy} onClick={() => send(t)}>
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                  <form
-                    className="composer"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      send();
-                    }}
-                  >
-                    <label className="sr-only" htmlFor="message">
-                      Customer message
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={2}
-                      value={draft}
-                      onChange={(e) => setDraft(e.target.value)}
-                      placeholder="Type as this customer… Hindi / English"
-                      maxLength={2000}
-                    />
-                    <button
-                      className="primary"
-                      disabled={busy || !draft.trim()}
-                    >
-                      {busy ? "Processing…" : "Send test message ↑"}
-                    </button>
-                  </form>
+                  {importedCustomer ? (
+                    <p className="source-note">
+                      Original document review only. Customer identity, delivery
+                      acceptance and matching carrier receipt require
+                      verification. Use a fictional customer to rehearse
+                      conversations.
+                    </p>
+                  ) : (
+                    <>
+                      <div className="suggestions">
+                        <span>TRY A CUSTOMER MESSAGE</span>
+                        {[
+                          "Where is my delivery?",
+                          "2 cartons missing from my last delivery",
+                          "Same order again, 5 cartons",
+                          "Confirm",
+                          "Stop messages",
+                        ].map((t) => (
+                          <button
+                            key={t}
+                            disabled={busy}
+                            onClick={() => send(t)}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                      <form
+                        className="composer"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          send();
+                        }}
+                      >
+                        <label className="sr-only" htmlFor="message">
+                          Customer message
+                        </label>
+                        <textarea
+                          id="message"
+                          rows={2}
+                          value={draft}
+                          onChange={(e) => setDraft(e.target.value)}
+                          placeholder="Type as this customer… Hindi / English"
+                          maxLength={2000}
+                        />
+                        <button
+                          className="primary"
+                          disabled={busy || !draft.trim()}
+                        >
+                          {busy ? "Processing…" : "Send test message ↑"}
+                        </button>
+                      </form>
+                    </>
+                  )}
                 </section>
                 <div className="context-stack">
                   <section className="card">
@@ -728,7 +786,11 @@ function App() {
                       />
                       <Detail
                         label="Data source"
-                        value="Synthetic demonstration"
+                        value={
+                          importedCustomer
+                            ? "Imported original document, private review"
+                            : "Synthetic demonstration"
+                        }
                       />
                     </div>
                     {c.reason ? (
@@ -739,7 +801,13 @@ function App() {
                     ) : null}
                     <button
                       className="outline full"
-                      disabled={busy || c.paused || !c.consent}
+                      disabled={
+                        busy ||
+                        !canApproveOrder ||
+                        c.paused ||
+                        !c.consent ||
+                        Date.parse(c.nextFollowupAt) > Date.now()
+                      }
                       onClick={() =>
                         act(
                           () => api("followups/" + c.id, {}),
@@ -747,9 +815,51 @@ function App() {
                         )
                       }
                     >
-                      Queue sales follow-up
+                      {Date.parse(c.nextFollowupAt) > Date.now() && !c.paused
+                        ? "Follow-up scheduled"
+                        : "Queue sales follow-up"}
                     </button>
                   </section>
+                  {customerOutbox.length ? (
+                    <section className="card delivery-log">
+                      <div className="card-title">
+                        <h2>WhatsApp reply status</h2>
+                        <span className="pill">LIVE CHANNEL</span>
+                      </div>
+                      {customerOutbox
+                        .slice(-4)
+                        .reverse()
+                        .map((outbound) => (
+                          <div className="delivery-item" key={outbound.id}>
+                            <span
+                              className={
+                                "pill " +
+                                (["uncertain", "failed"].includes(
+                                  outbound.status,
+                                )
+                                  ? "orange"
+                                  : "")
+                              }
+                            >
+                              {outbound.status === "sent"
+                                ? "PROVIDER ACCEPTED"
+                                : outbound.status.toUpperCase()}
+                            </span>
+                            <p>{outbound.text}</p>
+                            {outbound.error ? (
+                              <small>
+                                Staff should inspect provider status before
+                                retrying.
+                              </small>
+                            ) : null}
+                          </div>
+                        ))}
+                      <p className="micro">
+                        Provider acceptance is recorded here. Confirm receipt in
+                        the recipient’s WhatsApp.
+                      </p>
+                    </section>
+                  ) : null}
                   {state.shipments
                     .filter((sh) => sh.customerId === c.id)
                     .map((sh) => (
@@ -787,7 +897,7 @@ function App() {
                     <div>
                       <span className="eyebrow">DELIVERY ISSUE</span>
                       <h2>
-                        {current.type}{" "}
+                        {current.type.replaceAll("_", " ")}{" "}
                         <span className="pill orange">
                           {current.status.replaceAll("_", " ").toUpperCase()}
                         </span>
@@ -830,7 +940,9 @@ function App() {
                           aria-label="Attach evidence"
                           type="file"
                           accept="image/png,image/jpeg,application/pdf"
-                          disabled={busy || current.status === "resolved"}
+                          disabled={
+                            busy || !canReview || current.status === "resolved"
+                          }
                           onChange={(e) => {
                             if (e.target.files?.[0]) upload(e.target.files[0]);
                             e.target.value = "";
@@ -884,13 +996,16 @@ function App() {
                         placeholder="Describe the proposed action, or evidence that it was completed."
                         rows={3}
                         maxLength={1000}
-                        disabled={current.status === "resolved"}
+                        disabled={!canReview || current.status === "resolved"}
                       />
                       <div className="button-row">
                         <button
                           className="outline"
                           disabled={
-                            busy || current.status !== "review" || !note.trim()
+                            busy ||
+                            !canReview ||
+                            current.status !== "review" ||
+                            !note.trim()
                           }
                           onClick={() => review("propose")}
                         >
@@ -900,6 +1015,7 @@ function App() {
                           className="primary"
                           disabled={
                             busy ||
+                            !canReview ||
                             current.status !== "review" ||
                             !current.proposal
                           }
@@ -911,6 +1027,7 @@ function App() {
                           className="primary"
                           disabled={
                             busy ||
+                            !canReview ||
                             current.status !== "action_pending" ||
                             !note.trim()
                           }
@@ -956,7 +1073,11 @@ function App() {
                     ))}
                     <button
                       className="primary"
-                      disabled={busy || r.status !== "customer_confirmed"}
+                      disabled={
+                        busy ||
+                        !canApproveOrder ||
+                        r.status !== "customer_confirmed"
+                      }
                       onClick={() =>
                         act(
                           () =>
@@ -1156,12 +1277,16 @@ function App() {
                     config.storage === "dynamodb"
                       ? "DynamoDB"
                       : "Local file store",
-                    "Synthetic customers, products, purchase history, and shipments.",
+                    importedWorkspace
+                      ? "Fictional operational demo plus a separately labelled private original-document review."
+                      : "Synthetic customers, products, purchase history, and shipments.",
                   ],
                   [
                     "WhatsApp",
                     config.whatsapp ? "Configured" : "Setup required",
-                    "A WhatsApp Business account and dedicated number must be linked to AWS.",
+                    config.whatsapp
+                      ? `AWS End User Messaging Social configured in ${config.whatsappRegion ?? config.region}. Check each reply's provider status in the customer workspace.`
+                      : "A WhatsApp Business account and dedicated number must be linked to AWS.",
                   ],
                   [
                     "Kaysons integration",
@@ -1181,12 +1306,17 @@ function App() {
               <section className="card">
                 <h2>Demonstration controls</h2>
                 <p>
-                  Reset only this synthetic workspace. This removes its
-                  conversations, requests, and cases.
+                  {hasProtectedActivity(state)
+                    ? "Reset is locked to preserve live WhatsApp evidence and imported documents. Rehearse in a separate local workspace."
+                    : "Reset only this synthetic workspace. This removes its conversations, requests, and cases."}
                 </p>
                 <button
                   className="outline danger"
-                  disabled={busy}
+                  disabled={
+                    busy ||
+                    state.actor.role !== "admin" ||
+                    hasProtectedActivity(state)
+                  }
                   onClick={() => {
                     if (
                       window.confirm(
@@ -1204,7 +1334,8 @@ function App() {
           <footer>
             TradeLoop <span>·</span> Conversations with a next step.
             <span className="footer-right">
-              AWS CDS prototype · Synthetic data
+              AWS CDS prototype ·{" "}
+              {importedWorkspace ? "Labelled data sources" : "Synthetic data"}
             </span>
           </footer>
         </main>

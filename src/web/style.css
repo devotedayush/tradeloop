@@ -990,6 +990,26 @@ tr:last-child td {
   font-size: 12px;
   overflow-wrap: anywhere;
 }
+.source-note {
+  font-size: 12px;
+  padding: 15px;
+  background: #f8f1e7;
+  border-radius: 8px;
+}
+.delivery-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.delivery-item p {
+  font-size: 11px;
+  margin: 8px 0;
+}
+.delivery-item small {
+  color: var(--orange);
+}
+.delivery-log > .micro {
+  margin-top: 14px;
+}
 .connections .card {
   margin-bottom: 0;
 }

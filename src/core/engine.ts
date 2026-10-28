@@ -8,6 +8,27 @@ import {
   type ServiceCase,
 } from "./types";
 const stamp = () => new Date().toISOString();
+function statedQuantity(text: string) {
+  // Keep signs, zero and fractions so validation can reject them rather than
+  // silently copying a previous quantity or treating -5 as 5.
+  const token = text.match(
+    /(?:^|[\s,(])([+-]?(?:\d+(?:[.,]\d+)*|\.\d+))(?=\s|$|[,;)])/,
+  );
+  if (!token) return undefined;
+  const value = /^[+-]?\d{1,3}(?:,\d{3})+$/.test(token[1])
+    ? token[1].replaceAll(",", "")
+    : token[1];
+  return Number(value);
+}
+function invalidateCaseDecision(c: ServiceCase) {
+  delete c.proposal;
+  delete c.approvedBy;
+  c.status = c.shipmentId
+    ? c.evidence.length
+      ? "review"
+      : "awaiting_evidence"
+    : "awaiting_details";
+}
 export function audit(
   s: State,
   actor: string,
@@ -90,9 +111,13 @@ export function ruleIntent(text: string): Intent {
   if (/same|reorder|order|bhej|भेज|ऑर्डर/.test(t))
     return {
       kind: "reorder",
-      quantity: Number(t.match(/\b(\d+)\b/)?.[1]) || undefined,
+      quantity: statedQuantity(t),
     };
-  if (/where|status|track|delivery kab|कहाँ|कब/.test(t))
+  if (
+    /where|status|track|delivery kab|कहाँ|कब|\b(?:shp|lr|inv)-[a-z0-9-]+\b/.test(
+      t,
+    )
+  )
     return { kind: "status" };
   if (/later|stock|next week|baad|अगले/.test(t))
     return { kind: "defer", days: /week|अगले/.test(t) ? 7 : 14 };
@@ -158,7 +183,9 @@ export function receive(
     );
   }
   if (active?.status === "awaiting_details") {
-    const reference = text.match(/SHP-\d+|LR-\d+|INV-\d+/i)?.[0].toUpperCase();
+    const reference = text
+      .match(/\b(?:SHP|LR|INV)-[A-Z0-9-]+\b/i)?.[0]
+      .toUpperCase();
     if (reference) {
       const sh = s.shipments.find(
         (x) =>
@@ -195,7 +222,9 @@ export function receive(
   if (intent.kind === "complaint") {
     c.paused = true;
     c.reason = text;
-    const explicit = text.match(/SHP-\d+|LR-\d+|INV-\d+/i)?.[0].toUpperCase();
+    const explicit = text
+      .match(/\b(?:SHP|LR|INV)-[A-Z0-9-]+\b/i)?.[0]
+      .toUpperCase();
     const allowed = s.shipments.filter((x) => x.customerId === cid);
     const ship = explicit
       ? allowed.find(
@@ -209,6 +238,11 @@ export function receive(
         : undefined;
     if (active) {
       active.claim = text;
+      // A changed claim must be reviewed against the evidence again. Preserve
+      // the history in audit, but do not retain an approval or receipt quantity
+      // that was established for the previous claim.
+      active.reported = undefined;
+      invalidateCaseDecision(active);
       active.version++;
       active.updatedAt = stamp();
       audit(
@@ -303,7 +337,8 @@ export function receive(
       return reply(
         "Your previous order uses cartons. Please confirm the product, pack size, and quantity in cartons so we do not confuse selling units.",
       );
-    const qty = intent.quantity;
+    const explicitQuantity = statedQuantity(text);
+    const qty = explicitQuantity ?? intent.quantity;
     if (qty !== undefined && (!Number.isInteger(qty) || qty < 1 || qty > 10000))
       return reply(
         "Please provide a whole number of cartons between 1 and 10,000.",
@@ -351,7 +386,9 @@ export function receive(
   }
   if (intent.kind === "confirm") {
     if (
-      /\d|\b(but|if|unless|provided)\b|change|instead|discount|बदल/i.test(text)
+      /\d|\b(but|if|unless|provided|not|no|never|don't|dont|cancel|nahi|mat)\b|change|instead|discount|बदल|नहीं|मत/i.test(
+        text,
+      )
     )
       return reply(
         "Your confirmation includes a possible amendment. Please restate the repeat order and quantity first, then confirm the updated draft.",
@@ -379,11 +416,29 @@ export function receive(
   }
   if (intent.kind === "status") {
     const ships = s.shipments.filter((x) => x.customerId === cid);
-    if (ships.length !== 1)
+    const reference = (
+      text.match(/\b(?:SHP|LR|INV)-[A-Z0-9-]+\b/i)?.[0] ?? intent.shipmentId
+    )?.toUpperCase();
+    const matched = reference
+      ? ships.filter(
+          (x) =>
+            x.id.toUpperCase() === reference ||
+            x.lr?.toUpperCase() === reference ||
+            s.orders.some(
+              (o) =>
+                o.customerId === cid &&
+                o.id === x.orderId &&
+                o.invoice?.toUpperCase() === reference,
+            ),
+        )
+      : ships;
+    if (matched.length !== 1)
       return reply(
-        "Please share the shipment reference so I can find the right authorized record.",
+        reference
+          ? "I could not match that reference to one authorized shipment. Please check the shipment or invoice reference."
+          : "Please share the shipment reference so I can find the right authorized record.",
       );
-    const sh = ships[0];
+    const sh = matched[0];
     return reply(
       `${sh.id}: ${sh.status}. Last recorded update: ${new Date(sh.updatedAt).toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })} IST. This is a recorded status, not a live vehicle location.`,
     );
@@ -393,6 +448,13 @@ export function receive(
       Date.now() + (intent.days ?? 7) * 86400000,
     ).toISOString();
     c.reason = text;
+    for (const o of s.outbox)
+      if (
+        o.customerId === cid &&
+        o.kind === "followup" &&
+        o.status === "pending"
+      )
+        o.status = "suppressed";
     audit(
       s,
       `customer:${cid}`,
@@ -481,7 +543,7 @@ export function attach(
     throw new DomainError(409, "Resolved case cannot accept evidence");
   if (c.evidence.some((x) => x.sha256 === e.sha256)) return;
   c.evidence.push(e);
-  c.status = c.shipmentId ? "review" : "awaiting_details";
+  invalidateCaseDecision(c);
   c.version++;
   c.updatedAt = stamp();
   audit(

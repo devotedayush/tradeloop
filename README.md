@@ -10,7 +10,7 @@ TradeLoop is an AWS-hosted prototype for distributors. It captures repeat-order 
 
 Dashboard: https://lhswn6utwl.execute-api.us-east-1.amazonaws.com
 
-Staff data requires authentication. The repository owner has a private, gitignored `.runtime/reviewer-access.json` file with the synthetic workspace login. Judge access should be supplied privately after the user chooses whom to authorize. The public URL alone does not expose customer records or credentials.
+Staff data requires authentication. A dedicated `judgedemo` workspace has been provisioned with freshly seeded synthetic data only. It contains no original invoice or live WhatsApp contact binding. Its credentials are stored privately in the gitignored `.runtime/judge-access.json`; supply them through private judge testing instructions, never this README. Judge sign-in and the separate workspace were verified in the live browser; cloud tests also verified isolation from the owner workspace. The public URL alone does not expose customer records or credentials.
 
 ## Run locally
 
@@ -38,9 +38,13 @@ npm run bundle
 npm run synth
 ```
 
-`tests/workflow.test.ts` covers workflow permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, business isolation, and the documented AWS event envelope. The suite has 33 passing tests, including three mocked WhatsApp regressions for regional media handling, the E.164 outbound destination and unmatched attachments. Type checking also passes. [CI run 40733361890](https://github.com/devotedayush/tradeloop/actions/runs/40733361890) succeeded at commit `7d62e4c`. [Cloud verification](docs/cloud-verification.json) records cloud workflow checks, and [WhatsApp verification](docs/whatsapp-verification.json) records the separate live text and PDF evidence checks. These are not customer-impact or scale benchmarks.
+The current suite has **66 passing tests**, covering workflow permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, business isolation, reset protection and WhatsApp handling. [Final readiness verification](docs/final-readiness-verification.json) records 12 passing read-only cloud checks. The isolated judge workspace also passed the live browser sign-in check. These are functional checks, not customer-impact or scale benchmarks.
 
-After deploying and creating a private reviewer, `npx tsx scripts/cloud-smoke.ts` resets **only the synthetic workspace**, runs the connected workflow against AWS, uploads labelled synthetic evidence, and records results. Do not run it against real business data.
+[Cloud verification](docs/cloud-verification.json) records the live isolated judge workflow rehearsal. [WhatsApp verification](docs/whatsapp-verification.json) preserves the live text/PDF checks and the 33-test regression snapshot recorded at that time. [CI run 40733361890](https://github.com/devotedayush/tradeloop/actions/runs/40733361890) succeeded at historical commit `7d62e4c`; that run does not attest to every subsequent change.
+
+For current deployed checks, run `npx tsx scripts/check-readiness.ts`. It reads the authenticated cloud state without resetting records, sending messages or changing cases.
+
+`npx tsx scripts/cloud-smoke.ts` is a mutating synthetic-workflow test that starts with a reset. The reset is now blocked when the workspace contains live or imported evidence. Use it only in a disposable synthetic workspace; use the read-only readiness script for the connected workspace.
 
 ## Deploy to your AWS account
 
@@ -68,10 +72,12 @@ Follow [docs/messaging-setup.md](docs/messaging-setup.md). The current authorize
 - Only printed supported documents are evaluated automatically; uncertain/unsupported extraction stays for staff review.
 - Original source documents can be reviewed privately with the owner's authorization, separately from the synthetic demonstration case. They are not included in this repository or its public evidence.
 
-See [architecture](docs/architecture.md), [demo walkthrough](docs/demo-walkthrough.md), and [existing-work disclosure](docs/existing-work.md).
+See [architecture notes](docs/architecture.md), the upload-ready [architecture PNG](docs/architecture.png) or [SVG](docs/architecture.svg), [demo walkthrough](docs/demo-walkthrough.md), and [existing-work disclosure](docs/existing-work.md).
 
 ## Submission preparation
 
 Include the repository, deployed app and private judge access, architecture diagram, approximately three-minute public working-demo video, and ACE opportunity ID. Confirm APN eligibility and the required campaign tag. These are account/submission requirements, not features this code can fabricate.
+
+The GitHub repository is private; organizer access is required. The [submission-readiness checklist and paste-ready project text](docs/submission-readiness.md) track the remaining external gates. A dedicated judge workspace is provisioned, but the ACE opportunity, organizer repository access, video publication and final submission remain outstanding.
 
 The demo script must distinguish implemented-and-verified behaviour from configured-but-untested integrations. No business adoption, recovered revenue or production impact is claimed.

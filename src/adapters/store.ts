@@ -25,6 +25,25 @@ const db = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: { removeUndefinedValues: true },
 });
 const locks = new Map<string, Promise<unknown>>();
+function chronological(state: State): State {
+  const time = (value: string) => {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const sort = <T extends { id: string }>(
+    items: T[],
+    timestamp: (item: T) => string,
+  ) =>
+    items.sort((a, b) => {
+      const difference = time(timestamp(a)) - time(timestamp(b));
+      return difference || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+    });
+  for (const key of ["messages", "audit", "processed"] as const)
+    sort<{ id: string; at: string }>(state[key], (item) => item.at);
+  for (const key of ["cases", "requests", "outbox"] as const)
+    sort<{ id: string; createdAt: string }>(state[key], (item) => item.createdAt);
+  return state;
+}
 function rows(s: State) {
   const result = new Map<string, unknown>();
   for (const key of collections)
@@ -41,8 +60,10 @@ export class Store {
       throw new DomainError(400, "Invalid business identifier");
     if (!this.table) {
       try {
-        return JSON.parse(
-          await readFile(path.join(this.directory, tenant + ".json"), "utf8"),
+        return chronological(
+          JSON.parse(
+            await readFile(path.join(this.directory, tenant + ".json"), "utf8"),
+          ),
         );
       } catch (e) {
         if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
@@ -101,7 +122,7 @@ export class Store {
         (state as unknown as Record<string, unknown>)[key] = items
           .filter((x) => String(x.SK).startsWith(key + "#"))
           .map((x) => x.value);
-      return state;
+      return chronological(state);
     }
     throw new DomainError(
       409,
