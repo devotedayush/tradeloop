@@ -20,7 +20,10 @@
   "publicPlayback": {
     "titleAndChannelVerified": true,
     "playbackStarted": true,
-    "error": null
+    "error": null,
+    "ended": true,
+    "currentTimeSeconds": 180.021,
+    "durationSeconds": 180.021
   },
   "youtubeChecks": "Complete, no issues",
   "capture": {

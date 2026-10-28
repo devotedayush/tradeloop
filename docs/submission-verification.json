@@ -18,5 +18,7 @@
   "judgeCredentials": "Authorized isolated synthetic workspace access included only in private package; not in public Git",
   "eligibility": "User attested legal age, no conflict, MENTS representation authority and signed APN terms. Not an independent contract audit.",
   "finalAgreement": "User explicitly authorized accepting Official Rules and Devpost Terms and submitting; checked and submitted in UI.",
-  "latestVerifiedCI": "https://github.com/devotedayush/tradeloop/actions/runs/40756491549"
+  "latestVerifiedCI": "https://github.com/devotedayush/tradeloop/actions/runs/40756491549",
+  "signedOutPublicPageVerified": true,
+  "signedOutSidebar": "SUBMITTED TO"
 }
