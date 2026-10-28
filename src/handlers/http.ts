@@ -124,6 +124,11 @@ export async function dispatch(req: Input): Promise<Output> {
     if (req.method === "POST" && route === "/api/messages") {
       const input = messageSchema.parse(data);
       const s = await store.load(tenant);
+      if (!s.business.synthetic)
+        throw new DomainError(
+          403,
+          "The test console is restricted to synthetic business data",
+        );
       if (!s.customers.some((c) => c.id === input.customerId))
         throw new DomainError(404, "Customer not found");
       const mid = input.messageId ?? id("sim");

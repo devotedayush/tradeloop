@@ -257,6 +257,20 @@ describe("Customer and delivery workflow invariants", () => {
     expect(s.messages.at(-1)?.text).toContain("not a live vehicle");
   });
 });
+describe("Ambiguous business instructions", () => {
+  it("does not equate missing boxes with the recorded carton unit", () => {
+    const s = seed();
+    incoming(s, "2 boxes missing");
+    expect(s.cases[0].reported).toBeUndefined();
+    expect(s.messages.at(-1)?.text).toContain("cannot equate");
+  });
+  it("does not treat conditional confirmation as unconditional consent", () => {
+    const s = seed();
+    incoming(s, "same order again, 5 cartons");
+    incoming(s, "confirm if the price is discounted");
+    expect(s.requests[0].status).toBe("draft");
+  });
+});
 describe("Persistent state isolation and concurrency", () => {
   const dirs: string[] = [];
   afterEach(async () => {

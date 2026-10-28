@@ -223,9 +223,14 @@ export function receive(
         "I have added that to your open case. Sales follow-ups remain paused while the team investigates. Please share any supporting photo or delivery reference.",
       );
     }
-    let reported = intent.reported;
+    const ambiguousUnit =
+      /\b(box(?:es)?|pieces?|cases?|kg|kilograms?|litres?|liters?)\b/i.test(
+        text,
+      );
+    let reported = ambiguousUnit ? undefined : intent.reported;
     if (
       reported === undefined &&
+      !ambiguousUnit &&
       ship &&
       intent.quantity !== undefined &&
       /missing|short/i.test(text)
@@ -274,7 +279,7 @@ export function receive(
     );
     return reply(
       ship
-        ? `I have opened a delivery case for ${ship.id} (${ship.expected} ${ship.unit}s expected${reported !== undefined ? `, ${reported} reported received` : ""}). Please share a photo or POD. The dispatch team will review; no credit or replacement has been promised.`
+        ? `I have opened a delivery case for ${ship.id} (${ship.expected} ${ship.unit}s expected${reported !== undefined ? `, ${reported} reported received` : ""}). ${ambiguousUnit ? `Please clarify the quantity in ${ship.unit}s; I cannot equate different units. ` : ""}Please share a photo or POD. The dispatch team will review; no credit or replacement has been promised.`
         : "I have opened a case and paused sales reminders. Which shipment or invoice is this about? Please share its reference; I will not guess.",
     );
   }
@@ -345,7 +350,9 @@ export function receive(
     );
   }
   if (intent.kind === "confirm") {
-    if (/\d|\bbut\b|change|instead|बदल/i.test(text))
+    if (
+      /\d|\b(but|if|unless|provided)\b|change|instead|discount|बदल/i.test(text)
+    )
       return reply(
         "Your confirmation includes a possible amendment. Please restate the repeat order and quantity first, then confirm the updated draft.",
       );
