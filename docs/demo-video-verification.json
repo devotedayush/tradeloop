@@ -1,0 +1,37 @@
+{
+  "applicationSource": "935e60799b5ef7f64857bab32647d016fd971a73",
+  "publicUrl": "https://www.youtube.com/watch?v=ROkGlIfyKMk",
+  "title": "TradeLoop | Know Why Customers Stop Reordering | AWS CDS Demo",
+  "visibility": "Public",
+  "durationSeconds": 180.0,
+  "publicPlayerDurationSeconds": 180.021,
+  "width": 1920,
+  "height": 1080,
+  "codec": "H.264",
+  "framesPerSecond": 24,
+  "audio": false,
+  "englishCaptions": "Burned into video",
+  "sha256": "53258e761f5cb433112684c9318bb6e01c3cdb95ff8ac9e19ec1046dbfc16939",
+  "localPlayback": {
+    "ended": true,
+    "duration": 180,
+    "error": null
+  },
+  "publicPlayback": {
+    "titleAndChannelVerified": true,
+    "playbackStarted": true,
+    "error": null
+  },
+  "youtubeChecks": "Complete, no issues",
+  "capture": {
+    "steps": 23,
+    "allExpectedStatesMatched": true,
+    "browserErrors": 0
+  },
+  "privacy": "Synthetic judge workspace and cropped authorized WhatsApp tests. No original invoices, credentials or private customer phone numbers.",
+  "limitations": [
+    "Staff-queued updates, no automatic production order feed",
+    "Approved proactive-template delivery unverified",
+    "No measured adoption or revenue impact"
+  ]
+}
