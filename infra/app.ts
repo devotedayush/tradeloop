@@ -65,6 +65,8 @@ class TradeLoopStack extends cdk.Stack {
       "BEDROCK_MODEL_ID",
       "WHATSAPP_PHONE_ID",
       "WHATSAPP_META_PHONE_ID",
+      "WHATSAPP_REGION",
+      "WHATSAPP_MEDIA_BUCKET",
       "CONTACT_BINDINGS_JSON",
       "FOLLOWUP_TEMPLATE",
       "SERVICE_TEMPLATE",
@@ -149,6 +151,38 @@ class TradeLoopStack extends cdk.Stack {
         conditions: { StringEquals: { "aws:SourceAccount": this.account } },
       }),
     );
+    const regionalTopicArn = process.env.WHATSAPP_EVENT_TOPIC_ARN;
+    if (regionalTopicArn && regionalTopicArn !== topic.topicArn) {
+      const permission = new lambda.CfnPermission(
+        this,
+        "RegionalWhatsAppPermission",
+        {
+          action: "lambda:InvokeFunction",
+          functionName: ingest.functionArn,
+          principal: "sns.amazonaws.com",
+          sourceArn: regionalTopicArn,
+          sourceAccount: this.account,
+        },
+      );
+      const subscription = new sns.CfnSubscription(
+        this,
+        "RegionalWhatsAppSubscription",
+        {
+          topicArn: regionalTopicArn,
+          protocol: "lambda",
+          endpoint: ingest.functionArn,
+          region: regionalTopicArn.split(":")[3],
+        },
+      );
+      subscription.addDependency(permission);
+    }
+    if (process.env.WHATSAPP_MEDIA_BUCKET) {
+      s3.Bucket.fromBucketName(
+        this,
+        "RegionalWhatsAppMedia",
+        process.env.WHATSAPP_MEDIA_BUCKET,
+      ).grantReadWrite(worker, "demofoods/incoming/*");
+    }
     worker.addToRolePolicy(
       new iam.PolicyStatement({
         actions: ["social-messaging:GetWhatsAppMessageMedia"],
@@ -186,6 +220,9 @@ class TradeLoopStack extends cdk.Stack {
     new cdk.CfnOutput(this, "TableName", { value: table.tableName });
     new cdk.CfnOutput(this, "EvidenceBucket", { value: bucket.bucketName });
     new cdk.CfnOutput(this, "WhatsAppTopicArn", { value: topic.topicArn });
+    new cdk.CfnOutput(this, "ActiveWhatsAppTopicArn", {
+      value: regionalTopicArn ?? topic.topicArn,
+    });
     new cdk.CfnOutput(this, "ApiFunctionName", { value: apiFn.functionName });
     new cdk.CfnOutput(this, "WorkerFunctionName", {
       value: worker.functionName,

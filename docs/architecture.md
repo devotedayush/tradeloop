@@ -4,15 +4,16 @@ TradeLoop is a new distributor communication application. Its initial workspace 
 
 ```mermaid
 flowchart TD
-  Customer[Customer or transporter] <--> Social[AWS End User Messaging Social]
-  Social --> SNS[Standard SNS topic]
+  Customer[Customer or transporter] <--> Social[AWS End User Messaging Social: Mumbai]
+  Social --> SNS[Standard SNS topic: Mumbai]
   SNS --> Normalize[Identity validation and normalization]
   Normalize --> FIFO[SQS FIFO: business and customer grouping]
   FIFO --> Worker[Conversation worker]
   Worker --> Model[Bedrock: bounded business action proposal]
   Worker --> Engine[Deterministic permission and state checks]
   Engine --> DB[DynamoDB entity records and transactional revision]
-  Worker --> Evidence[Private S3 evidence and Textract]
+  Worker --> Quarantine[Private temporary media: Mumbai]
+  Quarantine --> Evidence[Private S3 evidence and Textract: Virginia]
   DB --> Sender[Scheduled outbox sender]
   Sender --> Social
   Staff[Staff React dashboard] --> Auth[Cognito staff authentication]
@@ -46,6 +47,8 @@ One real WhatsApp business connection is supported by this stack. A second synth
 
 ## AWS deployment
 
-`infra/app.ts` deploys an authenticated dashboard/API, Cognito, DynamoDB, private S3, inbound SNS, FIFO queue and dead-letter queue, worker and sender Lambdas, CloudWatch alarms and a one-minute sender schedule. No notification recipient is attached to the alarms. WhatsApp remains dormant without a linked account, origin identity, current Meta version and authorized contact bindings. SES remains dormant without sender and test-recipient configuration.
+`infra/app.ts` deploys an authenticated dashboard/API, Cognito, DynamoDB, private S3, inbound SNS, FIFO queue and dead-letter queue, worker and sender Lambdas, CloudWatch alarms and a one-minute sender schedule. The application is in Virginia; the active WhatsApp account, its SNS topic and temporary media bucket are in Mumbai. `scripts/prepare-whatsapp-region.ts` prepares the regional resources. CDK owns the cross-region SNS subscription and scoped invocation permission. The regional resources are separate from the main stack and require explicit teardown. No notification recipient is attached to the alarms. WhatsApp requires the linked account, origin identity, current Meta version and authorized contact bindings. SES remains disabled in TradeLoop.
+
+On 28 October 2026, two real inbound text messages verified the Mumbai Social Messaging/SNS to Virginia ingestion, SQS FIFO, worker, Bedrock and DynamoDB path. After correcting outbound destinations to plus-prefixed E.164 and deploying that fix, the second enquiry also verified the scheduled cloud sender and visually confirmed reply receipt in the authorized user's desktop WhatsApp. This is actual AWS End User Messaging Social runtime use with synthetic business records. The [sanitized verification record](whatsapp-verification.json) distinguishes the initial controlled local sender check from the later automatic cloud round-trip. A `sent` database record alone still means provider acceptance; the receipt claim for this test additionally relies on observed WhatsApp UI evidence. Live attachment retrieval remains untested, and no production Kaysons connection or completed hackathon submission is claimed.
 
 Database, evidence and user-pool resources are retained on stack deletion to prevent accidental loss. Review them explicitly during eventual teardown. CloudWatch logs expire after seven days. The dedicated stack can incur AWS charges; no always-on VM or NAT gateway is created.

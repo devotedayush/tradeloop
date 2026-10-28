@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-28",
+  "scope": "Authorized personal WhatsApp text enquiries against synthetic business records",
+  "syntheticBusinessData": true,
+  "liveTextRoundTripVerified": true,
+  "regions": {
+    "whatsapp": "ap-south-1",
+    "sns": "ap-south-1",
+    "application": "us-east-1",
+    "mediaQuarantine": "ap-south-1"
+  },
+  "accountState": {
+    "registration": "COMPLETE",
+    "active": true
+  },
+  "counts": {
+    "realInboundTextMessagesProcessed": 2,
+    "repliesVisuallyConfirmedInDesktopWhatsApp": 2,
+    "automaticScheduledCloudSenderRoundTripsVerified": 1,
+    "liveAttachmentsTested": 0
+  },
+  "checks": [
+    {
+      "check": "Two authorized real text messages passed through Mumbai SNS, cross-region Virginia ingestion, SQS FIFO, worker, Bedrock and DynamoDB",
+      "passed": true
+    },
+    {
+      "check": "Initial outbound HTTP 400 was corrected by using a plus-prefixed E.164 destination",
+      "passed": true,
+      "initialProviderError": "Invalid destination phone number or message Id."
+    },
+    {
+      "check": "Controlled local invocation of the actual sender reached the provider and its reply was visually confirmed in desktop WhatsApp",
+      "passed": true
+    },
+    {
+      "check": "E.164 sender fix deployed to the cloud stack",
+      "passed": true,
+      "cloudFormationStatus": "UPDATE_COMPLETE"
+    },
+    {
+      "check": "Second text enquiry completed automatically through the deployed scheduled cloud sender",
+      "passed": true,
+      "inboundPersistedAtUtc": "2026-10-28T16:49:04.464Z",
+      "replyPersistedAtUtc": "2026-10-28T16:49:04.522Z",
+      "outboxStatus": "sent",
+      "providerMessageIdPresent": true,
+      "receiptVisuallyConfirmedInDesktopWhatsApp": true,
+      "desktopReceiptDisplayedTime": "10:19 PM",
+      "desktopReceiptLocalTime": "2026-10-28T22:19:00+05:30",
+      "desktopReceiptTimePrecision": "minute",
+      "desktopReceiptTimezone": "Asia/Kolkata"
+    }
+  ],
+  "regressionValidation": {
+    "typecheckPassed": true,
+    "testsPassed": 33,
+    "existingTestsPassed": 30,
+    "mockedWhatsAppRegressionsPassed": 3,
+    "mockedChecks": [
+      "Regional signed PUT pins the exact media key used for read and cleanup",
+      "Outbound service reply uses plus-prefixed E.164 in the WhatsApp region",
+      "Unmatched attachment opens the service window without fetching or assigning media"
+    ]
+  },
+  "limitations": [
+    "Live WhatsApp attachment retrieval has not been tested",
+    "Approved-template delivery has not been verified",
+    "Provider delivery-status reconciliation is not implemented; the receipt claim above also required direct WhatsApp UI observation",
+    "Kaysons production systems are not connected",
+    "SES remains disabled",
+    "This runtime verification does not establish hackathon eligibility or completed submission"
+  ],
+  "privacy": "Sanitized record excludes real phone numbers, account identifiers, provider message identifiers and customer contact data"
+}

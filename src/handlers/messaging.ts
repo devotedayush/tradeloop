@@ -8,7 +8,9 @@ import {
   S3Client,
   GetObjectCommand,
   DeleteObjectCommand,
+  PutObjectCommand,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { store } from "../adapters/store";
 import { interpret } from "../adapters/interpreter";
@@ -23,7 +25,10 @@ type Binding = {
 };
 const bindings = (): Record<string, Binding> =>
   JSON.parse(process.env.CONTACT_BINDINGS_JSON ?? "{}");
-const social = new SocialMessagingClient({ maxAttempts: 1 });
+const social = new SocialMessagingClient({
+  region: process.env.WHATSAPP_REGION || undefined,
+  maxAttempts: 1,
+});
 export function matchesPhoneIdentity(arn: string, configured: string): boolean {
   if (!configured) return false;
   if (configured.startsWith("arn:")) return arn === configured;
@@ -120,6 +125,11 @@ export async function worker(event: any) {
         if (candidates.length !== 1) {
           await store.change(b.tenantId, (s) => {
             if (s.processed.some((p) => p.id === m.messageId)) return;
+            if (b.kind === "customer")
+              s.customers.find((c) => c.id === b.customerId)!.lastInboundAt =
+                new Date(
+                  Math.min(Date.now(), Number(m.timestamp) * 1000),
+                ).toISOString();
             s.processed.push({ id: m.messageId, at: new Date().toISOString() });
             s.messages.push({
               id: m.messageId,
@@ -148,15 +158,32 @@ export async function worker(event: any) {
           continue;
         }
         // Retrieve into a quarantine prefix, enforce the application limit, then persist validated evidence.
-        const client = new S3Client({});
-        const tmp = `${b.tenantId}/incoming/${crypto.randomUUID()}`;
+        const client = new S3Client({
+          region: process.env.WHATSAPP_REGION || undefined,
+          requestChecksumCalculation: "WHEN_REQUIRED",
+        });
+        const mediaBucket =
+          process.env.WHATSAPP_MEDIA_BUCKET ?? process.env.EVIDENCE_BUCKET!;
+        // A signed PUT pins the exact object key. The prefix destination can add
+        // a media extension, so deriving that final filename is unreliable.
+        const prefix = `${b.tenantId}/incoming/${crypto.randomUUID()}/`;
+        const tmp = prefix + m.media.id;
+        const destinationUrl = await getSignedUrl(
+          client,
+          new PutObjectCommand({
+            Bucket: mediaBucket,
+            Key: tmp,
+            ContentType: m.media.mime,
+          }),
+          { expiresIn: 300 },
+        );
         await social.send(
           new GetWhatsAppMessageMediaCommand({
             mediaId: m.media.id,
             originationPhoneNumberId: process.env.WHATSAPP_PHONE_ID!,
-            destinationS3File: {
-              bucketName: process.env.EVIDENCE_BUCKET!,
-              key: tmp,
+            destinationS3PresignedUrl: {
+              url: destinationUrl,
+              headers: { "Content-Type": m.media.mime },
             },
           }),
         );
@@ -164,7 +191,7 @@ export async function worker(event: any) {
         try {
           const object = await client.send(
             new GetObjectCommand({
-              Bucket: process.env.EVIDENCE_BUCKET,
+              Bucket: mediaBucket,
               Key: tmp,
             }),
           );
@@ -180,7 +207,7 @@ export async function worker(event: any) {
         } finally {
           await client.send(
             new DeleteObjectCommand({
-              Bucket: process.env.EVIDENCE_BUCKET,
+              Bucket: mediaBucket,
               Key: tmp,
             }),
           );
@@ -331,7 +358,7 @@ export async function sender() {
       try {
         const payload = {
           messaging_product: "whatsapp",
-          to: destination,
+          to: destination.startsWith("+") ? destination : "+" + destination,
           ...(template
             ? {
                 type: "template",
@@ -373,7 +400,7 @@ export async function sender() {
         await store.change(tenant, (s) => {
           const o = s.outbox.find((x) => x.id === queued.id)!;
           o.status = "uncertain";
-          o.error = (e as Error).name;
+          o.error = `${(e as Error).name}: ${(e as Error).message}`.slice(0, 1000);
           audit(
             s,
             "sender",

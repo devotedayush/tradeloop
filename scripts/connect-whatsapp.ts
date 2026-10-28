@@ -21,7 +21,14 @@ const settings = z
 const outputs = JSON.parse(
   await readFile(".runtime/outputs.json", "utf8"),
 ).TradeLoopDemo;
-const region = process.env.DEPLOY_REGION ?? "us-east-1";
+const appRegion = process.env.DEPLOY_REGION ?? "us-east-1";
+const region = process.env.WHATSAPP_REGION ?? appRegion;
+const eventTopicArn =
+  process.env.WHATSAPP_EVENT_TOPIC_ARN ?? outputs.WhatsAppTopicArn;
+if (region !== appRegion && !process.env.WHATSAPP_MEDIA_BUCKET)
+  throw new Error(
+    "A regional WhatsApp media bucket is required for cross-region setup.",
+  );
 const client = new SocialMessagingClient({ region });
 const matches = [];
 let nextToken: string | undefined;
@@ -56,7 +63,7 @@ if (account.registrationStatus !== "COMPLETE")
     "The existing AWS account registration is incomplete. Finish the console setup first.",
   );
 const unrelated = (account.eventDestinations ?? []).filter(
-  (d) => d.eventDestinationArn !== outputs.WhatsAppTopicArn,
+  (d) => d.eventDestinationArn !== eventTopicArn,
 );
 if (unrelated.length)
   throw new Error(
@@ -64,7 +71,12 @@ if (unrelated.length)
   );
 const environment: Record<string, string> = {
   BEDROCK_MODEL_ID: process.env.BEDROCK_MODEL_ID ?? "us.amazon.nova-pro-v1:0",
-  DEPLOY_REGION: region,
+  DEPLOY_REGION: appRegion,
+  WHATSAPP_REGION: region,
+  WHATSAPP_EVENT_TOPIC_ARN: eventTopicArn,
+  ...(process.env.WHATSAPP_MEDIA_BUCKET
+    ? { WHATSAPP_MEDIA_BUCKET: process.env.WHATSAPP_MEDIA_BUCKET }
+    : {}),
   WHATSAPP_PHONE_ID: phone.phoneNumberId,
   WHATSAPP_META_PHONE_ID: phone.metaPhoneNumberId,
   CONTACT_BINDINGS_JSON: JSON.stringify({
@@ -83,7 +95,7 @@ console.log(
     senderLast4: settings.senderNumber.slice(-4),
     testCustomerLast4: settings.testCustomerNumber.slice(-4),
     eventDestinationMatches: (account.eventDestinations ?? []).some(
-      (d) => d.eventDestinationArn === outputs.WhatsAppTopicArn,
+      (d) => d.eventDestinationArn === eventTopicArn,
     ),
     apply: process.argv.includes("--apply"),
   }),
@@ -92,7 +104,7 @@ if (process.argv.includes("--apply")) {
   await client.send(
     new PutWhatsAppBusinessAccountEventDestinationsCommand({
       id: account.id,
-      eventDestinations: [{ eventDestinationArn: outputs.WhatsAppTopicArn }],
+      eventDestinations: [{ eventDestinationArn: eventTopicArn }],
     }),
   );
   await writeFile(
