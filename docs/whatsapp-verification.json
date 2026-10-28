@@ -1,8 +1,8 @@
 {
   "date": "2026-10-28",
-  "scope": "Authorized personal WhatsApp text enquiries against synthetic business records",
-  "syntheticBusinessData": true,
+  "scope": "Authorized personal WhatsApp text enquiries and forwarded synthetic PDF evidence, plus a separate private owner-authorized original invoice review",
   "liveTextRoundTripVerified": true,
+  "liveIncomingPdfProcessingVerified": true,
   "regions": {
     "whatsapp": "ap-south-1",
     "sns": "ap-south-1",
@@ -14,14 +14,18 @@
     "active": true
   },
   "counts": {
-    "realInboundTextMessagesProcessed": 2,
-    "repliesVisuallyConfirmedInDesktopWhatsApp": 2,
-    "automaticScheduledCloudSenderRoundTripsVerified": 1,
-    "liveAttachmentsTested": 0
+    "realInboundTextMessagesProcessed": 3,
+    "statusEnquiriesProcessed": 2,
+    "shortageComplaintsProcessed": 1,
+    "repliesVisuallyConfirmedInDesktopWhatsApp": 4,
+    "automaticScheduledCloudSenderRoundTripsVerified": 3,
+    "liveAttachmentsTested": 1,
+    "liveIncomingPdfsProcessed": 1,
+    "documentAcknowledgementsVisuallyConfirmed": 1
   },
   "checks": [
     {
-      "check": "Two authorized real text messages passed through Mumbai SNS, cross-region Virginia ingestion, SQS FIFO, worker, Bedrock and DynamoDB",
+      "check": "Three authorized real text messages passed through Mumbai SNS, cross-region Virginia ingestion, SQS FIFO, worker, Bedrock and DynamoDB",
       "passed": true
     },
     {
@@ -50,6 +54,39 @@
       "desktopReceiptLocalTime": "2026-10-28T22:19:00+05:30",
       "desktopReceiptTimePrecision": "minute",
       "desktopReceiptTimezone": "Asia/Kolkata"
+    },
+    {
+      "check": "Shortage complaint created the linked synthetic case and its text acknowledgement was visually confirmed in desktop WhatsApp",
+      "passed": true,
+      "desktopReceiptDisplayedTime": "10:28 PM",
+      "desktopReceiptLocalTime": "2026-10-28T22:28:00+05:30",
+      "desktopReceiptTimePrecision": "minute",
+      "desktopReceiptTimezone": "Asia/Kolkata"
+    },
+    {
+      "check": "Incoming forwarded synthetic PDF completed retrieval, private persistence, Textract extraction and linked-case review transition after queued retry",
+      "passed": true,
+      "processingCompletedAtUtc": "2026-10-28T17:14:32.556Z",
+      "documentName": "TradeLoop-synthetic-POD.pdf",
+      "documentBytes": 3258,
+      "extraction": "extracted",
+      "syntheticReferencesFound": [
+        "SHP-101",
+        "INV-200",
+        "LR-501"
+      ],
+      "quantitiesFound": {
+        "booked": 20,
+        "reportedReceived": 18,
+        "reportedShort": 2
+      },
+      "temporaryRetrieval": "300-second signed PUT to an exact private Mumbai S3 key",
+      "caseStatus": "review",
+      "caseExpected": 20,
+      "caseReported": 18,
+      "shipmentPodStatus": "missing",
+      "customerPaused": true,
+      "documentAcknowledgementReceiptObserved": true
     }
   ],
   "regressionValidation": {
@@ -57,6 +94,11 @@
     "testsPassed": 33,
     "existingTestsPassed": 30,
     "mockedWhatsAppRegressionsPassed": 3,
+    "ci": {
+      "runId": "40733361890",
+      "commit": "7d62e4c",
+      "conclusion": "success"
+    },
     "mockedChecks": [
       "Regional signed PUT pins the exact media key used for read and cleanup",
       "Outbound service reply uses plus-prefixed E.164 in the WhatsApp region",
@@ -64,12 +106,27 @@
     ]
   },
   "limitations": [
-    "Live WhatsApp attachment retrieval has not been tested",
     "Approved-template delivery has not been verified",
     "Provider delivery-status reconciliation is not implemented; the receipt claim above also required direct WhatsApp UI observation",
     "Kaysons production systems are not connected",
     "SES remains disabled",
     "This runtime verification does not establish hackathon eligibility or completed submission"
   ],
-  "privacy": "Sanitized record excludes real phone numbers, account identifiers, provider message identifiers and customer contact data"
+  "privacy": "Sanitized record excludes real phone numbers, account identifiers, provider message identifiers, original document references and customer or bank data. Original source documents can be reviewed privately with the owner's authorization, separately from the synthetic case.",
+  "documentAcknowledgement": {
+    "providerAccepted": true,
+    "receiptVisuallyConfirmedInDesktopWhatsApp": true,
+    "desktopDisplayedTime": "10:45 PM",
+    "text": "Document received and attached to the case. It is awaiting staff review; delivery acceptance has not changed."
+  },
+  "privateOriginalReview": {
+    "ownerAuthorized": true,
+    "invoicePageImported": true,
+    "textExtraction": "extracted",
+    "caseStatus": "review",
+    "reportedQuantityConfirmed": false,
+    "matchingCarrierReceiptVerified": false,
+    "originalExcludedFromRepository": true
+  },
+  "syntheticOperationalWorkflow": true
 }

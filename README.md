@@ -4,7 +4,7 @@
 
 TradeLoop is an AWS-hosted prototype for distributors. It captures repeat-order requests, records why a customer stopped ordering, connects delivery complaints to shipment evidence, and routes the next action to authorized staff.
 
-**Current business data is synthetic.** The deployed dashboard uses real Cognito, DynamoDB, Bedrock, S3 and Textract. **A live WhatsApp text round-trip was verified on 28 October 2026**, including the reply appearing in the authorized user's WhatsApp. The active AWS End User Messaging Social account is in Mumbai; the application runs in Virginia. Two real inbound text messages traversed SNS, cross-region ingestion, SQS FIFO, the worker, Bedrock and DynamoDB. The second reply was sent automatically by the scheduled cloud sender and its receipt was visually confirmed in desktop WhatsApp. See the sanitized [WhatsApp verification record](docs/whatsapp-verification.json). Live WhatsApp attachment retrieval remains untested. SES is not enabled in TradeLoop. This verifies actual CDS runtime use; it does not establish hackathon eligibility or completed submission.
+**Operational demo records are synthetic.** A separate private source-review case contains an owner-authorized original invoice, excluded from repository fixtures. The deployed dashboard uses real Cognito, DynamoDB, Bedrock, S3 and Textract. **Live WhatsApp text replies and PDF evidence processing were verified on 28 October 2026.** The active AWS End User Messaging Social account is in Mumbai; the application runs in Virginia. Three real inbound texts (two status enquiries and a shortage complaint) traversed SNS, cross-region ingestion, SQS FIFO, the worker, Bedrock and DynamoDB, and three text replies were visually confirmed in desktop WhatsApp. One incoming forwarded synthetic PDF was retrieved, stored privately and extracted by Textract; the linked case moved to staff review with 20 expected and 18 reported cartons. POD remains missing and follow-ups remain paused. The document acknowledgement was also visually confirmed in WhatsApp at 22:45 IST. See the sanitized [WhatsApp verification record](docs/whatsapp-verification.json). Approved-template delivery remains unverified, and SES is disabled. This verifies actual CDS runtime use; it does not establish hackathon eligibility or completed submission.
 
 ## Working application
 
@@ -38,7 +38,7 @@ npm run bundle
 npm run synth
 ```
 
-`tests/workflow.test.ts` covers workflow permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, business isolation, and the documented AWS event envelope. The suite has 33 passing tests, including three mocked WhatsApp regressions for regional media handling, the E.164 outbound destination and unmatched attachments. Type checking also passes. [Cloud verification](docs/cloud-verification.json) records cloud workflow checks, and [WhatsApp verification](docs/whatsapp-verification.json) records the live text round-trip. Mocked attachment checks do not establish live media delivery. These are not customer-impact or scale benchmarks.
+`tests/workflow.test.ts` covers workflow permissions, opt-outs, duplicate events, stale approvals, quantity ambiguity, persistence concurrency, business isolation, and the documented AWS event envelope. The suite has 33 passing tests, including three mocked WhatsApp regressions for regional media handling, the E.164 outbound destination and unmatched attachments. Type checking also passes. [CI run 40733361890](https://github.com/devotedayush/tradeloop/actions/runs/40733361890) succeeded at commit `7d62e4c`. [Cloud verification](docs/cloud-verification.json) records cloud workflow checks, and [WhatsApp verification](docs/whatsapp-verification.json) records the separate live text and PDF evidence checks. These are not customer-impact or scale benchmarks.
 
 After deploying and creating a private reviewer, `npx tsx scripts/cloud-smoke.ts` resets **only the synthetic workspace**, runs the connected workflow against AWS, uploads labelled synthetic evidence, and records results. Do not run it against real business data.
 
@@ -56,7 +56,7 @@ The stack uses region `us-east-1` by default. Change `DEPLOY_REGION` deliberatel
 
 ## Complete WhatsApp setup
 
-Follow [docs/messaging-setup.md](docs/messaging-setup.md). The current authorized test connection has completed a live text round-trip through AWS End User Messaging Social. For a new deployment, configure a dedicated number, the regional AWS SNS event destination, authorized test-contact bindings and approved templates, then verify receipt in WhatsApp. The current deployment still needs a live attachment retrieval test and approved-template verification. Do not label the simulator as WhatsApp.
+Follow [docs/messaging-setup.md](docs/messaging-setup.md). The current authorized test connection has completed live text round-trips and incoming synthetic PDF processing through AWS End User Messaging Social. For a new deployment, configure a dedicated number, the regional AWS SNS event destination, authorized test-contact bindings and approved templates, then verify receipt in WhatsApp and document processing in the linked case. Approved-template delivery still needs verification. Do not label the simulator as WhatsApp.
 
 ## Product boundaries
 
@@ -66,6 +66,7 @@ Follow [docs/messaging-setup.md](docs/messaging-setup.md). The current authorize
 - The Kaysons connector is an unconfigured integration contract, not a live connection.
 - Whole-business reads and revision locking are bounded prototype decisions, not evidence of enterprise load capacity.
 - Only printed supported documents are evaluated automatically; uncertain/unsupported extraction stays for staff review.
+- Original source documents can be reviewed privately with the owner's authorization, separately from the synthetic demonstration case. They are not included in this repository or its public evidence.
 
 See [architecture](docs/architecture.md), [demo walkthrough](docs/demo-walkthrough.md), and [existing-work disclosure](docs/existing-work.md).
 

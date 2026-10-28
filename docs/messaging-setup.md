@@ -1,14 +1,16 @@
 # Finish the AWS CDS connection
 
-## Verified live text connection, 28 October 2026
+## Verified live text and PDF processing, 28 October 2026
 
-The WhatsApp business account is active with AWS registration `COMPLETE` in Mumbai (`ap-south-1`). Two real text messages from the authorized user's personal WhatsApp reached the Mumbai SNS topic, crossed into the Virginia ingestion Lambda, and passed through SQS FIFO, the worker, Bedrock and DynamoDB. The application remains in `us-east-1`.
+The WhatsApp business account is active with AWS registration `COMPLETE` in Mumbai (`ap-south-1`). Three real text messages from the authorized user's personal WhatsApp (two status enquiries and a shortage complaint) reached the Mumbai SNS topic, crossed into the Virginia ingestion Lambda, and passed through SQS FIFO, the worker, Bedrock and DynamoDB. Three text replies were visually confirmed in desktop WhatsApp, including the complaint acknowledgement at 22:28 IST (10:28 PM). The application remains in `us-east-1`.
 
 The first outbound attempt received HTTP 400, `Invalid destination phone number or message Id.`, because its destination omitted the leading `+`. The sender now supplies a plus-prefixed E.164 destination. A controlled local invocation of the actual sender succeeded through the provider, and its reply was visually confirmed in desktop WhatsApp. The fix was then deployed with CloudFormation `UPDATE_COMPLETE`.
 
 A second real enquiry, `Please show latest recorded status of shipment SHP-101.`, verified the deployed path without a local sender invocation. DynamoDB persisted the inbound message at `16:49:04.464Z` and Bedrock-backed reply at `16:49:04.522Z`, and the scheduled cloud sender recorded `sent` with a provider message ID. The reply was also visually confirmed in desktop WhatsApp at 22:19 IST (the UI displayed 10:19 PM). This receipt check establishes the text round-trip beyond provider acceptance. See [whatsapp-verification.json](whatsapp-verification.json) for sanitized evidence, regions and checks.
 
-Live attachment retrieval and approved-template delivery have not yet been tested. The 33 passing tests include three mocked WhatsApp regression tests; those checks do not establish live media success. All business records remain synthetic, Kaysons is not connected, and this verification does not establish completed hackathon submission.
+One real incoming forwarded PDF, `TradeLoop-synthetic-POD.pdf` (3,258 bytes), completed processing after retry at `2026-10-28T17:14:32.556Z`. The worker retrieved it through a signed PUT into private Mumbai quarantine storage, persisted the evidence in Virginia and obtained Textract extraction. Extracted text contained synthetic references SHP-101, INV-200 and LR-501, with 20 booked, 18 reported received and 2 reported short. The same case moved to `review` with expected 20 and reported 18; shipment `podStatus` stayed `missing` and the customer remained paused. This is evidence received for staff review, not POD acceptance. The document acknowledgement was visually confirmed in WhatsApp at 22:45 IST (10:45 PM).
+
+Approved-template delivery remains untested. The 33 passing tests include three mocked WhatsApp regression tests in addition to the separate live evidence above. Operational demo records remain synthetic; a separate private review case contains an owner-authorized original invoice. Kaysons production systems are not connected, and this verification does not establish completed hackathon submission. The original invoice page was imported privately and extracted; its reported received quantity and matching carrier receipt remain unverified. It is separate from the synthetic case; public evidence contains no original document references or customer/bank data.
 
 ## WhatsApp, required for the intended demonstration
 
@@ -67,7 +69,7 @@ Transporter bindings are limited to their assigned shipment evidence. They canno
 
 ## Outstanding limitations
 
-- WhatsApp onboarding, the regional event destination and the text enquiry/reply path have passed a live test. Live attachment retrieval and approved-template delivery remain unverified.
+- WhatsApp onboarding, the regional event destination, text enquiry/reply path and incoming synthetic PDF retrieval/extraction have passed live tests. The document acknowledgement was visually confirmed; approved-template delivery remains unverified.
 - Outbound provider delivery-status reconciliation and automated recovery of abandoned `sending` items are not implemented. Investigate them manually before retrying.
 - The prototype queues follow-ups through staff actions; it does not autonomously contact every overdue customer.
 - A transporter attachment receipt may generate a customer-facing case acknowledgement; direct transporter acknowledgements need separate recipient/session handling.
