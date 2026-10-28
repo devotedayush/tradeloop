@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-28T10:39:07.121Z",
+  "synthetic": true,
+  "checks": [
+    {
+      "check": "Cloud uses DynamoDB and Bedrock",
+      "passed": true
+    },
+    {
+      "check": "Unauthenticated business data access denied",
+      "passed": true
+    },
+    {
+      "check": "Bedrock complaint links to authorized synthetic shipment",
+      "passed": true
+    },
+    {
+      "check": "Replayed inbound message is idempotent",
+      "passed": true
+    },
+    {
+      "check": "Private S3 evidence stored with real Textract reading",
+      "passed": true,
+      "detail": "extracted"
+    },
+    {
+      "check": "Approval keeps case action pending",
+      "passed": true
+    },
+    {
+      "check": "Reorder becomes a customer-confirmed request",
+      "passed": true
+    },
+    {
+      "check": "Staff approval does not create a fictional sale",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

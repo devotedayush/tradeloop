@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+cdk.out/
+.runtime/
+.env
+.env.*
+!.env.example
+coverage/
+test-results/

@@ -1,0 +1,24 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {CognitoIdentityProviderClient,InitiateAuthCommand} from '@aws-sdk/client-cognito-identity-provider';
+const access=JSON.parse(await readFile('.runtime/reviewer-access.json','utf8'));
+const auth=await new CognitoIdentityProviderClient({region:access.region}).send(new InitiateAuthCommand({AuthFlow:'USER_PASSWORD_AUTH',ClientId:access.clientId,AuthParameters:{USERNAME:access.username,PASSWORD:access.password}}));
+const token=auth.AuthenticationResult!.IdToken!;
+async function api(route:string,body?:unknown){const r=await fetch(access.url+'/api/'+route,{method:body===undefined?'GET':'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});const d=await r.json();if(!r.ok)throw new Error(`${route}: ${r.status} ${d.error}`);return d;}
+const outcomes:{check:string;passed:boolean;detail?:unknown}[]=[];
+const config=await api('config');outcomes.push({check:'Cloud uses DynamoDB and Bedrock',passed:config.storage==='dynamodb'&&config.interpreter==='bedrock'});
+const unauth=await fetch(access.url+'/api/state');outcomes.push({check:'Unauthenticated business data access denied',passed:unauth.status===401});
+await api('reset',{});
+await api('messages',{customerId:'C001',text:'Last delivery mein 2 cartons missing the',messageId:'cloud-smoke-shortage'});
+let state=await api('state');const record=state.cases[0];outcomes.push({check:'Bedrock complaint links to authorized synthetic shipment',passed:record.shipmentId==='SHP-101'&&record.reported===18&&state.customers[0].paused});
+await api('messages',{customerId:'C001',text:'Last delivery mein 2 cartons missing the',messageId:'cloud-smoke-shortage'});state=await api('state');outcomes.push({check:'Replayed inbound message is idempotent',passed:state.cases.length===1});
+const image=await readFile('demo-data/synthetic-pod-shortage.png');await api('evidence',{caseId:record.id,version:record.version,name:'synthetic-pod-shortage.png',mime:'image/png',base64:image.toString('base64')});
+state=await api('state');let c=state.cases[0];outcomes.push({check:'Private S3 evidence stored with real Textract reading',passed:c.evidence.length===1&&c.evidence[0].extraction==='extracted',detail:c.evidence[0].extraction});
+await api('cases/action',{caseId:c.id,version:c.version,action:'propose',note:'DEMO: dispatch to verify shortage and arrange an approved correction'});
+state=await api('state');c=state.cases[0];await api('cases/action',{caseId:c.id,version:c.version,action:'approve',note:'DEMO: next action approved by reviewer'});
+state=await api('state');c=state.cases[0];outcomes.push({check:'Approval keeps case action pending',passed:c.status==='action_pending'&&state.customers[0].paused});
+await api('cases/action',{caseId:c.id,version:c.version,action:'resolve',note:'DEMO: staff recorded correction and customer acceptance; no real goods moved'});
+await api('messages',{customerId:'C001',text:'Same order again, 5 cartons',messageId:'cloud-smoke-reorder'});await api('messages',{customerId:'C001',text:'Confirm',messageId:'cloud-smoke-confirm'});
+state=await api('state');const req=state.requests[0];outcomes.push({check:'Reorder becomes a customer-confirmed request',passed:req.status==='customer_confirmed'&&req.items[0].quantity===5});
+await api('requests/approve',{requestId:req.id,version:req.version});state=await api('state');outcomes.push({check:'Staff approval does not create a fictional sale',passed:state.requests[0].status==='approved'&&state.orders.length===10});
+const report={at:new Date().toISOString(),synthetic:true,checks:outcomes,passed:outcomes.every(o=>o.passed)};await writeFile('docs/cloud-verification.json',JSON.stringify(report,null,2));
+console.log(JSON.stringify(report,null,2));if(!report.passed)process.exit(1);
