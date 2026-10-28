@@ -15,7 +15,8 @@
     "desktopHorizontalOverflow": false,
     "tabletHorizontalOverflow": false,
     "mobileHorizontalOverflow": false,
-    "browserErrorsObserved": false
+    "browserErrorsObserved": false,
+    "authenticatedMobileSignOutVisible": true
   },
   "viewports": [
     {
@@ -34,5 +35,13 @@
   "limitations": [
     "The browser automation security policy blocked opening the local PDF preview; this action was not bypassed and is not claimed as verified by this UI check.",
     "Local UI rehearsal used the labelled simulator and synthetic records."
-  ]
+  ],
+  "deployedChecks": {
+    "htmlMatchesFinalBuild": true,
+    "localFontServedWithCorrectMime": true,
+    "readOnlyCloudChecksPassed": 12,
+    "ci": "https://github.com/devotedayush/tradeloop/actions/runs/40744000597",
+    "ciSourceCommit": "f237e81",
+    "conclusion": "success"
+  }
 }
