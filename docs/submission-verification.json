@@ -10,7 +10,7 @@
   "repositoryUrl": "https://github.com/devotedayush/tradeloop",
   "sourceArchiveCommit": "5be4772829813accbbacf10cf8fa72522815e190",
   "deployedApplicationCommit": "935e60799b5ef7f64857bab32647d016fd971a73",
-  "videoUrl": "https://www.youtube.com/watch?v=ROkGlIfyKMk",
+  "videoUrl": "https://www.youtube.com/watch?v=Jt7BoLEayKY",
   "privateUpload": "tradeloop-private-judge-package.zip",
   "privatePackageSha256": "f9e8700b598559b1f4c966db822bec3617070792b95f860b4fe7ff77e879875c",
   "architectureAttachment": "architecture.png",
@@ -20,5 +20,15 @@
   "finalAgreement": "User explicitly authorized accepting Official Rules and Devpost Terms and submitting; checked and submitted in UI.",
   "latestVerifiedCI": "https://github.com/devotedayush/tradeloop/actions/runs/40756491549",
   "signedOutPublicPageVerified": true,
-  "signedOutSidebar": "SUBMITTED TO"
+  "signedOutSidebar": "SUBMITTED TO",
+  "videoReplacement": {
+    "status": "saved and publicly verified",
+    "submissionId": "1269677-tradeloop",
+    "submissionStatus": "SUBMITTED",
+    "completion": "5/5",
+    "publicEmbedVerified": true,
+    "publicPlayback": "started, no error",
+    "customThumbnail": "saved and persisted after reload",
+    "replacedAt": "2026-10-29T01:18:12.325510+05:30"
+  }
 }

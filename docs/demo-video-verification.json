@@ -1,29 +1,33 @@
 {
   "applicationSource": "935e60799b5ef7f64857bab32647d016fd971a73",
-  "publicUrl": "https://www.youtube.com/watch?v=ROkGlIfyKMk",
-  "title": "TradeLoop | Know Why Customers Stop Reordering | AWS CDS Demo",
+  "publicUrl": "https://www.youtube.com/watch?v=Jt7BoLEayKY",
+  "title": "TradeLoop | Know Why Customers Stop Reordering | AWS CDS Demo (Narrated)",
   "visibility": "Public",
   "durationSeconds": 180.0,
-  "publicPlayerDurationSeconds": 180.021,
   "width": 1920,
   "height": 1080,
   "codec": "H.264",
   "framesPerSecond": 24,
-  "audio": false,
+  "audio": true,
   "englishCaptions": "Burned into video",
-  "sha256": "53258e761f5cb433112684c9318bb6e01c3cdb95ff8ac9e19ec1046dbfc16939",
+  "sha256": "07c329189187ecdba6d2322b431691d90f17f704eba43d72c377d6b26ff69fd6",
   "localPlayback": {
-    "ended": true,
-    "duration": 180,
-    "error": null
+    "status": "not yet visually played in this replacement verification",
+    "fullDecode": true,
+    "decodeExitCode": 0,
+    "decodeErrors": [],
+    "duration": 180
   },
   "publicPlayback": {
+    "status": "verified playback started",
     "titleAndChannelVerified": true,
+    "signedOut": true,
     "playbackStarted": true,
+    "observedCurrentTimeSeconds": 59.93499,
+    "durationSeconds": 180.021,
+    "muted": false,
     "error": null,
-    "ended": true,
-    "currentTimeSeconds": 180.021,
-    "durationSeconds": 180.021
+    "fullPlaybackObserved": false
   },
   "youtubeChecks": "Complete, no issues",
   "capture": {
@@ -36,5 +40,77 @@
     "Staff-queued updates, no automatic production order feed",
     "Approved proactive-template delivery unverified",
     "No measured adoption or revenue impact"
-  ]
+  ],
+  "audioMetadata": {
+    "codec": "AAC",
+    "sampleRateHz": 48000,
+    "channels": 1,
+    "durationSeconds": 180.0,
+    "narration": "AI narration"
+  },
+  "localFile": ".runtime/demo-film-large/tradeloop-demo-elevenlabs.mp4",
+  "fileSizeBytes": 9667023,
+  "visualComparison": {
+    "previousLocalFile": ".runtime/demo-film-large/tradeloop-demo-readable.mp4",
+    "method": "FFmpeg stream-copy video SHA256",
+    "videoStreamSha256": "d62bd88f8f6d3430d40a3064951d642e4cb2a356933a1a40d7171d37e01f9c86",
+    "identicalVideoStreams": true,
+    "change": "AI narration added; previous local file has no audio stream."
+  },
+  "devpostReplacement": {
+    "submissionId": "1269677-tradeloop",
+    "status": "replacement URL saved",
+    "submissionStatus": "SUBMITTED",
+    "completion": "5/5",
+    "publicEmbedVerified": true
+  },
+  "previousVersion": {
+    "applicationSource": "935e60799b5ef7f64857bab32647d016fd971a73",
+    "publicUrl": "https://www.youtube.com/watch?v=ROkGlIfyKMk",
+    "title": "TradeLoop | Know Why Customers Stop Reordering | AWS CDS Demo",
+    "visibility": "Public",
+    "durationSeconds": 180.0,
+    "publicPlayerDurationSeconds": 180.021,
+    "width": 1920,
+    "height": 1080,
+    "codec": "H.264",
+    "framesPerSecond": 24,
+    "audio": false,
+    "englishCaptions": "Burned into video",
+    "sha256": "53258e761f5cb433112684c9318bb6e01c3cdb95ff8ac9e19ec1046dbfc16939",
+    "localPlayback": {
+      "ended": true,
+      "duration": 180,
+      "error": null
+    },
+    "publicPlayback": {
+      "titleAndChannelVerified": true,
+      "playbackStarted": true,
+      "error": null,
+      "ended": true,
+      "currentTimeSeconds": 180.021,
+      "durationSeconds": 180.021
+    },
+    "youtubeChecks": "Complete, no issues",
+    "capture": {
+      "steps": 23,
+      "allExpectedStatesMatched": true,
+      "browserErrors": 0
+    },
+    "privacy": "Synthetic judge workspace and cropped authorized WhatsApp tests. No original invoices, credentials or private customer phone numbers.",
+    "limitations": [
+      "Staff-queued updates, no automatic production order feed",
+      "Approved proactive-template delivery unverified",
+      "No measured adoption or revenue impact"
+    ]
+  },
+  "publicPlayerDurationSeconds": 180.021,
+  "thumbnail": {
+    "file": "docs/tradeloop-youtube-thumbnail.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "def9853239964dcda2f128a4db2036c626845bdd3def4899c6dbfeaabe889247",
+    "savedInYouTubeStudio": true,
+    "persistedAfterReload": true
+  }
 }

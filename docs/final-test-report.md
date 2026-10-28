@@ -51,7 +51,7 @@ The pitch and official entry checklist are in [submission-readiness.md](submissi
 
 ACE opportunity **O30532571** exists with the exact campaign tag and **Pending approval** status; see [ACE verification](ace-verification.json). Its estimated MRR is not actual revenue or a contract. Eligibility and submission facts are recorded separately below; runtime verification itself is not evidence of APN contracts or a submitted entry.
 
-The older local video is a pre-improvement draft, not the current final demo. The second take is complete. The [180-second public demo](https://www.youtube.com/watch?v=ROkGlIfyKMk) is published on the Ayushman channel. The local H.264 export played to completion without error; signed-out public playback started successfully at 3:00 duration. English captions are burned into the video. See [video verification](demo-video-verification.json).
+The older local video is a pre-improvement draft, not the current final demo. The second take is complete. The replacement [180-second narrated demo](https://www.youtube.com/watch?v=Jt7BoLEayKY) adds AI narration to the unchanged, verified visuals and burned-in English captions. Its video-stream SHA256 matches the previous demo exactly, and the local H.264/AAC file passed a full decode without errors. The replacement URL is saved in the existing submitted Devpost entry. The narrated video is Public, SD and HD processing completed, copyright checks found no issues, and signed-out playback was verified. The same submitted Devpost page embeds the new video. A custom black-text/lime dashboard thumbnail is saved and persisted after reloading YouTube Studio. See [video verification](demo-video-verification.json).
 
 ## Current entry status
 
