@@ -6,6 +6,7 @@ import {
   type Intent,
   type Evidence,
   type ServiceCase,
+  type RetentionCategory,
 } from "./types";
 const stamp = () => new Date().toISOString();
 function statedQuantity(text: string) {
@@ -83,10 +84,67 @@ function message(
     });
   return text;
 }
+// Categories describe customer-reported feedback, never inferred churn or business facts.
+function statedFeedback(text: string): RetentionCategory | undefined {
+  const t = text.toLowerCase().replace(/[’]/g, "'");
+  const categories: RetentionCategory[] = [];
+  const priceNegated =
+    /(?:price|rate|cost|discount)\s+(?:(?:is|are)\s+)?(?:not\s+(?:the\s+)?(?:issue|problem|high|expensive)|isn't\s+(?:the\s+)?(?:issue|problem|high)|isnt\s+(?:the\s+)?(?:issue|problem|high)|no issue|fine|okay|ok\b|nahi|nahin)|(?:not|isn't|isnt|no).{0,10}(?:expensive|costly|price issue)|not (?:the )?(?:price|rate)|(?:mehenga|mahanga).{0,8}(?:nahi|nahin)/.test(
+      t,
+    );
+  if (
+    !priceNegated &&
+    /\b(expensive|costly|mehenga|mahanga)\b|(?:price|rate|cost|कीमत).{0,18}(?:high|issue|problem|concern|mehenga|mahanga|महंगा)|(?:high|increased).{0,10}(?:price|rate|cost)|महंगा/.test(
+      t,
+    )
+  )
+    categories.push("price");
+  if (
+    /\b(?:stock|inventory).{0,20}(?:left|remain|still|available|bacha|hai)|(?:still have|have enough|abhi).{0,15}stock|maal.{0,10}bacha|स्टॉक.{0,10}बचा/.test(
+      t,
+    ) &&
+    !/no stock|stock.{0,8}(?:nahi|nahin|not left|finished)/.test(t)
+  )
+    categories.push("stock_remaining");
+  if (
+    /(?:demand|sales?|business).{0,16}(?:low|slow|down|weak|kam|nahi)|(?:low|slow|no|less).{0,10}(?:demand|sales)|(?:bik|bikri).{0,12}(?:nahi|kam)|मांग.{0,8}कम/.test(
+      t,
+    ) &&
+    !/(?:demand|sales?).{0,12}(?:not low|not slow|isn't low|isnt low|kam nahi|no issue|no problem)|(?:not|isn't|isnt).{0,8}(?:low|slow).{0,8}(?:demand|sales)|no (?:demand|sales) (?:issue|problem)|no (?:issue|problem).{0,12}(?:demand|sales)/.test(
+      t,
+    )
+  )
+    categories.push("low_demand");
+  if (
+    /(?:quality|taste|smell|product).{0,18}(?:bad|poor|issue|problem|kharab|off)|(?:poor|bad).{0,8}quality|spoiled|गुणवत्ता.{0,10}खराब/.test(
+      t,
+    ) &&
+    !/(?:quality|taste|product).{0,12}(?:not bad|no issue|no problem|fine|good|kharab nahi)/.test(
+      t,
+    )
+  )
+    categories.push("product_quality");
+  return categories.length > 1
+    ? "other"
+    : (categories[0] ??
+        (priceNegated || /\b(demand|sales|quality|stock)\b/.test(t)
+          ? "other"
+          : undefined));
+}
 export function ruleIntent(text: string): Intent {
   const t = text.toLowerCase();
-  if (/\b(stop|unsubscribe|opt.?out)\b|मत भेज|message mat|band karo/.test(t))
+  if (
+    /^\s*stop[.!]?\s*$|\b(unsubscribe|opt.?out)\b|\bstop\s+(?:sending\s+)?(?:me\s+)?(?:messages?|messaging|contact(?:ing)?|reminders?|follow.?ups?|texts?|communications?)\b|\b(?:do not|don't|dont)\s+(?:message|contact|text)\b|मत भेज|message mat|^\s*band karo[.!]?\s*$|(?:message|followup|contact).{0,10}band karo/.test(
+      t,
+    )
+  )
     return { kind: "optout" };
+  const feedback = statedFeedback(text);
+  if (
+    feedback === "product_quality" &&
+    !/missing|short|damaged|broken|delivery|shipment/.test(t)
+  )
+    return { kind: "feedback", category: "product_quality" };
   if (
     /missing|short|damag|broken|complaint|kam mile|kam aaye|nahi mile|खराब|कम मिले|क्षतिग्रस्त/.test(
       t,
@@ -108,6 +166,29 @@ export function ruleIntent(text: string): Intent {
   }
   if (/\b(confirm|yes|haan|ha|okay|ok)\b|हाँ|ठीक/.test(t))
     return { kind: "confirm" };
+  if (
+    /what (?:did i|have i) order|what(?:'s| is) (?:in )?my (?:last )?order|(?:mera|mere) (?:last )?order (?:kya|mein)|order summary|मैंने क्या ऑर्डर/.test(
+      t,
+    )
+  )
+    return { kind: "order_summary" };
+  if (
+    !feedback &&
+    /\b(price|pricing|rate|discount|cost)\b|कीमत/.test(t) &&
+    !/\b(same|again|repeat|reorder)\b/.test(t)
+  )
+    return { kind: "price_enquiry" };
+  const explicitRepeat =
+    /\b(same|again|repeat|reorder)\b|pichla|वही|दोबारा/.test(t) &&
+    !/\b(no|not|don't|dont|nahi|nahin|cancel)\b|नहीं|मत/.test(t);
+  if (feedback && !explicitRepeat)
+    return feedback === "price"
+      ? { kind: "price" }
+      : {
+          kind: "feedback",
+          category: feedback as
+            "stock_remaining" | "low_demand" | "product_quality" | "other",
+        };
   if (/same|reorder|order|bhej|भेज|ऑर्डर/.test(t))
     return {
       kind: "reorder",
@@ -121,8 +202,6 @@ export function ruleIntent(text: string): Intent {
     return { kind: "status" };
   if (/later|stock|next week|baad|अगले/.test(t))
     return { kind: "defer", days: /week|अगले/.test(t) ? 7 : 14 };
-  if (/price|expensive|discount|rate|महंगा|कीमत/.test(t))
-    return { kind: "price" };
   return { kind: "other" };
 }
 export function receive(
@@ -162,6 +241,31 @@ export function receive(
     `Intent: ${intent.kind}; interpreter: ${engine}`,
     cid,
   );
+  const recordFeedback = (category: RetentionCategory, nextAction: string) => {
+    c.reason = text;
+    c.retention = {
+      category,
+      statement: text,
+      recordedAt: stamp(),
+      nextAction,
+    };
+    audit(
+      s,
+      `customer:${cid}`,
+      "retention.feedback_recorded",
+      `Customer-reported ${category}; ${nextAction}`,
+      cid,
+    );
+  };
+  const suppressFollowups = () => {
+    for (const o of s.outbox)
+      if (
+        o.customerId === cid &&
+        o.kind === "followup" &&
+        o.status === "pending"
+      )
+        o.status = "suppressed";
+  };
   const active = s.cases.find(
     (x) => x.customerId === cid && x.status !== "resolved",
   );
@@ -220,6 +324,10 @@ export function receive(
     }
   }
   if (intent.kind === "complaint") {
+    recordFeedback(
+      "delivery_issue",
+      `Dispatch staff to review the customer claim; ${c.owner} to keep sales follow-ups paused until resolution.`,
+    );
     c.paused = true;
     c.reason = text;
     const explicit = text
@@ -317,6 +425,11 @@ export function receive(
         : "I have opened a case and paused sales reminders. Which shipment or invoice is this about? Please share its reference; I will not guess.",
     );
   }
+  if (intent.kind === "order_summary")
+    return reply(
+      orderSummary(s, cid) ??
+        "I do not have a recorded purchase for you. Your salesperson can confirm the order details; I will not treat an unapproved request as an order.",
+    );
   if (intent.kind === "reorder") {
     if (active)
       return reply(
@@ -443,11 +556,73 @@ export function receive(
       `${sh.id}: ${sh.status}. Last recorded update: ${new Date(sh.updatedAt).toLocaleString("en-GB", { timeZone: "Asia/Kolkata" })} IST. This is a recorded status, not a live vehicle location.`,
     );
   }
+  if (intent.kind === "price_enquiry") {
+    audit(
+      s,
+      "workflow",
+      "sales.price_enquiry",
+      "Pricing information requested; no stopped-order reason inferred",
+      cid,
+    );
+    return reply(
+      "Your salesperson can confirm the current price list and your approved commercial terms. I have not recorded this enquiry as a reason for stopped orders or promised a discount.",
+    );
+  }
+  if (intent.kind === "feedback") {
+    const category = intent.category ?? "other";
+    if (category === "stock_remaining" || category === "low_demand") {
+      recordFeedback(
+        category,
+        `${c.owner} to review the reported reason and check delivery needs after 7 days; no order created.`,
+      );
+      c.nextFollowupAt = new Date(Date.now() + 7 * 86400000).toISOString();
+      suppressFollowups();
+      return reply(
+        "Thanks. I have recorded your reason in your own words and moved the next follow-up by 7 days. Your salesperson will review it; no order has been placed.",
+      );
+    }
+    if (category === "product_quality") {
+      recordFeedback(
+        category,
+        `${c.owner} to arrange authorized staff review of the product-quality concern; clarify product and batch before any action.`,
+      );
+      c.paused = true;
+      suppressFollowups();
+      if (active) {
+        active.claim += `\nAdditional customer-reported product-quality feedback: ${text}`;
+        invalidateCaseDecision(active);
+        active.version++;
+        active.updatedAt = stamp();
+        audit(
+          s,
+          "workflow",
+          "case.updated",
+          "Customer-reported product-quality concern added for fresh staff review",
+          cid,
+          active.id,
+        );
+      }
+      return reply(
+        "I have recorded your product-quality concern for staff review and paused sales follow-ups. Please share the product and batch details. No shipment, credit or replacement has been assumed.",
+      );
+    }
+    recordFeedback(
+      "other",
+      `${c.owner} to clarify the customer's reported reason before deciding the next action.`,
+    );
+    suppressFollowups();
+    return reply(
+      "I have saved your exact feedback for your salesperson. Please clarify the main reason for waiting and when you might need your next delivery.",
+    );
+  }
   if (intent.kind === "defer") {
     c.nextFollowupAt = new Date(
       Date.now() + (intent.days ?? 7) * 86400000,
     ).toISOString();
-    c.reason = text;
+    recordFeedback(
+      "other",
+      `${c.owner} to review the requested deferral on ${c.nextFollowupAt}; no reason for stopped orders has been established.`,
+    );
     for (const o of s.outbox)
       if (
         o.customerId === cid &&
@@ -467,7 +642,11 @@ export function receive(
     );
   }
   if (intent.kind === "price") {
-    c.reason = text;
+    recordFeedback(
+      "price",
+      `${c.owner} to review approved commercial terms; no discount promised or authorized.`,
+    );
+    suppressFollowups();
     audit(
       s,
       "workflow",
@@ -479,11 +658,84 @@ export function receive(
       "I have recorded your price concern for your salesperson. They will review the approved commercial terms; I cannot promise a discount.",
     );
   }
+  if (
+    !active &&
+    s.outbox.some((o) => o.customerId === cid && o.kind === "followup")
+  ) {
+    recordFeedback(
+      "other",
+      `${c.owner} to clarify this reply; no cause for stopped orders has been established.`,
+    );
+    suppressFollowups();
+    return reply(
+      "I have recorded your reply for your salesperson. Do you need your next delivery, or what is the main reason for waiting?",
+    );
+  }
   return reply(
     active
       ? "Your case is open. Please share the shipment reference, what was received, or supporting evidence. A staff member will review."
       : "I can help with a repeat-order request, the latest recorded shipment status, or a delivery complaint. What would you like help with?",
   );
+}
+function orderSummary(s: State, cid: string): string | undefined {
+  const order = s.orders
+    .filter((o) => o.customerId === cid)
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+  if (!order) return undefined;
+  const items = order.items
+    .map((item) => {
+      const product = s.products.find((p) => p.id === item.productId);
+      return `${item.quantity} ${product?.unit ?? "recorded unit"}${item.quantity === 1 ? "" : "s"} of ${product?.name ?? item.productId}${product ? ` (${product.pack})` : ""}`;
+    })
+    .join(", ");
+  const shipments = s.shipments.filter(
+    (sh) => sh.customerId === cid && sh.orderId === order.id,
+  );
+  const delivery =
+    shipments.length === 1
+      ? ` Recorded shipment ${shipments[0].id}: ${shipments[0].status}. This is the last recorded status, not live vehicle tracking or confirmed receipt.`
+      : shipments.length > 1
+        ? " Multiple shipments are linked to this purchase; please share a shipment reference only if you need one specific shipment's status."
+        : " No linked shipment status is recorded yet.";
+  return `${s.business.synthetic ? "DEMO / synthetic record. " : ""}Your latest recorded purchase (${order.invoice}, ${order.date.slice(0, 10)}): ${items}.${delivery} Pending repeat-order requests are separate and are not confirmed sales.`;
+}
+export function queueOrderUpdate(s: State, a: Actor, cid: string) {
+  permit(s, a, ["admin", "sales", "logistics"]);
+  const c = customer(s, cid);
+  if (!c.consent) throw new DomainError(409, "Order update blocked by consent");
+  const text = orderSummary(s, cid);
+  if (!text)
+    throw new DomainError(
+      409,
+      "No recorded purchase available for an order update",
+    );
+  if (
+    s.outbox.some(
+      (o) =>
+        o.customerId === cid &&
+        o.kind === "service" &&
+        o.text === text &&
+        ["pending", "sending"].includes(o.status),
+    )
+  )
+    throw new DomainError(409, "An order update is already queued");
+  s.outbox.push({
+    id: id("order-update"),
+    customerId: cid,
+    text,
+    status: "pending",
+    kind: "service",
+    requiresConsent: true,
+    createdAt: stamp(),
+  });
+  audit(
+    s,
+    a.id,
+    "order_update.queued",
+    "Factual recorded purchase summary queued; consent, template and session checks still required before delivery",
+    cid,
+  );
+  return text;
 }
 export function queueFollowup(s: State, a: Actor, cid: string) {
   permit(s, a, ["admin", "sales"]);
@@ -509,7 +761,7 @@ export function queueFollowup(s: State, a: Actor, cid: string) {
   )
     throw new DomainError(409, "A follow-up is already queued");
   c.nextFollowupAt = new Date(Date.now() + 7 * 86400000).toISOString();
-  const text = `Hello ${c.name}, would you like to place another order? If there is a problem with your last delivery, please tell us so the team can help.`;
+  const text = `Hello ${c.name}, would you like your next delivery? If not, what is the main reason for waiting or stopping orders? Your salesperson can help with price, remaining stock, low demand, product quality or delivery concerns.`;
   s.outbox.push({
     id: id("followup"),
     customerId: cid,

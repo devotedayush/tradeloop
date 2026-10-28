@@ -3547,3 +3547,116 @@ td {
     overflow-wrap: anywhere;
   }
 }
+
+/* Sales follow-ups reuse the CRM cards with readable, wrapping content. */
+.sales-followups {
+  min-width: 0;
+  color: #111;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.sales-followups :is(p, small, h1, h2, h3) {
+  color: #111;
+  overflow-wrap: anywhere;
+}
+.sales-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.sales-summary > .card {
+  min-width: 0;
+  min-height: 0;
+  margin-bottom: 0;
+}
+.sales-summary > .card > span {
+  font-size: 16px;
+  font-weight: 600;
+}
+.sales-summary .stat-value {
+  margin: 12px 0 0;
+}
+.sales-customer-list {
+  display: grid;
+  gap: 0;
+}
+.sales-customer-row {
+  min-width: 0;
+}
+.sales-customer-row > .card-title {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sales-customer-row > .card-title > div {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+.sales-customer-row > p + p,
+.sales-feedback-summary > p {
+  margin-top: 10px;
+}
+.sales-customer-row .customer-reason {
+  padding: 16px;
+}
+.sales-customer-row .customer-reason p {
+  margin-top: 10px;
+}
+.sales-customer-row .suggestions {
+  gap: 10px;
+  margin-top: 16px;
+  padding-bottom: 0;
+}
+.sales-customer-row .suggestions button {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 16px;
+  white-space: normal;
+  text-align: center;
+}
+.sales-customer-row .suggestions .primary {
+  color: #fff;
+  border-color: #111;
+}
+.sales-customer-row .suggestions .primary:disabled {
+  border-color: #4b4b4b;
+}
+.sales-feedback-summary .sales-reason-counts {
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sales-feedback-summary .sales-reason-counts > .pill {
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: #111;
+}
+.sales-feedback-summary .sales-feedback-action {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+.sales-feedback-summary .sales-feedback-action p + p {
+  margin-top: 6px;
+}
+.sales-feedback-summary .sales-feedback-action .text-button {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #111;
+  text-align: left;
+}
+@media (max-width: 900px) {
+  .sales-summary {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+@media (max-width: 540px) {
+  .sales-customer-row .suggestions button {
+    width: 100%;
+  }
+  .sales-customer-row .customer-reason {
+    padding: 12px;
+  }
+}

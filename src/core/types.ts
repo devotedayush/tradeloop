@@ -1,5 +1,12 @@
 export type Role = "admin" | "sales" | "logistics";
 export type Actor = { id: string; role: Role; tenantId: string };
+export type RetentionCategory =
+  | "price"
+  | "stock_remaining"
+  | "low_demand"
+  | "product_quality"
+  | "delivery_issue"
+  | "other";
 export type Customer = {
   id: string;
   name: string;
@@ -11,6 +18,12 @@ export type Customer = {
   consent: boolean;
   paused: boolean;
   reason?: string;
+  retention?: {
+    category: RetentionCategory;
+    statement: string;
+    recordedAt: string;
+    nextAction: string;
+  };
   lastInboundAt?: string;
 };
 export type Product = {
@@ -114,6 +127,7 @@ export type Outbound = {
   status:
     "pending" | "sending" | "sent" | "failed" | "uncertain" | "suppressed";
   kind: "service" | "followup";
+  requiresConsent?: boolean;
   createdAt: string;
   providerId?: string;
   error?: string;
@@ -140,10 +154,14 @@ export type Intent = {
     | "reorder"
     | "confirm"
     | "status"
+    | "order_summary"
     | "defer"
     | "optout"
     | "price"
+    | "price_enquiry"
+    | "feedback"
     | "other";
+  category?: "stock_remaining" | "low_demand" | "product_quality" | "other";
   quantity?: number;
   reported?: number;
   shipmentId?: string;

@@ -123,6 +123,24 @@ describe("Explicit reorder quantity validation before Bedrock", () => {
     expect(state.requests[0].version).toBe(version);
   });
 
+  it.each([
+    ["Price nahi, demand kam hai", "feedback", "low_demand"],
+    ["Price is not the issue, demand is not low", "feedback", "other"],
+    ["Stock remaining", "feedback", "stock_remaining"],
+    ["What is the price?", "price_enquiry", undefined],
+    ["We will stop ordering because price is high", "price", undefined],
+    ["What did I order?", "order_summary", undefined],
+  ])(
+    "keeps explicit feedback and summary guards during a provider outage: %s",
+    async (text, kind, category) => {
+      mocks.send.mockRejectedValue(new Error("Provider unavailable"));
+      const parsed = await interpret(text, seed(), "C001");
+      expect(parsed.engine).toBe("rules");
+      expect(parsed.intent.kind).toBe(kind);
+      expect(parsed.intent.category).toBe(category);
+      expect(mocks.send).not.toHaveBeenCalled();
+    },
+  );
   it("keeps strict validation of invalid model-generated quantities", async () => {
     mocks.send.mockResolvedValue(modelResult(0));
     await expect(

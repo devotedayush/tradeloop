@@ -8,6 +8,7 @@ import { saveEvidence, evidenceUrl, localEvidence } from "../adapters/evidence";
 import {
   receive,
   queueFollowup,
+  queueOrderUpdate,
   caseAction,
   approveRequest,
   attach,
@@ -161,6 +162,13 @@ export async function dispatch(req: Input): Promise<Output> {
       return json({
         text: await store.change(tenant, (s) =>
           queueFollowup(s, actor, follow[1]),
+        ),
+      });
+    const orderUpdate = route.match(/^\/api\/order-updates\/([^/]+)$/);
+    if (req.method === "POST" && orderUpdate)
+      return json({
+        text: await store.change(tenant, (s) =>
+          queueOrderUpdate(s, actor, orderUpdate[1]),
         ),
       });
     if (req.method === "POST" && route === "/api/cases/action") {

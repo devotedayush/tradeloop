@@ -338,18 +338,19 @@ export async function sender() {
         if (!o || o.status !== "pending") return;
         const c = s.customers.find((x) => x.id === o.customerId)!;
         if (
-          o.kind === "followup" &&
-          (!c.consent ||
-            c.paused ||
-            s.cases.some(
-              (x) => x.customerId === c.id && x.status !== "resolved",
-            ))
+          (o.requiresConsent && !c.consent) ||
+          (o.kind === "followup" &&
+            (!c.consent ||
+              c.paused ||
+              s.cases.some(
+                (x) => x.customerId === c.id && x.status !== "resolved",
+              )))
         ) {
           o.status = "suppressed";
           audit(
             s,
             "sender",
-            "followup.suppressed",
+            o.kind === "followup" ? "followup.suppressed" : "message.suppressed",
             "Consent or service case changed before send",
             c.id,
           );

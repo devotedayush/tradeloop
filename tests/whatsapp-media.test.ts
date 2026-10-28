@@ -231,6 +231,22 @@ describe("WhatsApp regional inbound media", () => {
     });
   });
 
+  it("suppresses an order update when consent is withdrawn after queuing, even inside the reply window", async () => {
+    vi.stubEnv("META_API_VERSION", "v23.0");
+    vi.stubEnv("TENANT_IDS", "demofoods");
+    state.customers[0].lastInboundAt = inboundAt;
+    state.customers[0].consent = true;
+    const { queueOrderUpdate } = await import("../src/core/engine");
+    queueOrderUpdate(state, { id: "sales", role: "sales", tenantId: "demofoods" }, "C001");
+    state.customers[0].consent = false;
+    const { sender } = await import("../src/handlers/messaging");
+
+    expect(await sender()).toEqual({ configured: true, sent: 0 });
+    expect(mocks.socialSend).not.toHaveBeenCalled();
+    expect(state.outbox[0].status).toBe("suppressed");
+    expect(state.audit.at(-1)?.action).toBe("message.suppressed");
+  });
+
   it("opens the service window for an unmatched attachment without fetching or assigning media", async () => {
     expect(state.cases).toHaveLength(0);
     const { worker } = await import("../src/handlers/messaging");

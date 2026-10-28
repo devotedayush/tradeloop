@@ -4,6 +4,7 @@ import type { State, Actor } from "../core/types";
 import { hasImportedRecords, hasProtectedActivity } from "../core/provenance";
 import Icon from "./Icon";
 import Overview from "./Overview";
+import SalesFollowups, { CustomerFeedback } from "./retention";
 import "./style.css";
 type Config = {
   region: string;
@@ -19,6 +20,7 @@ type Config = {
 type Workspace = State & { actor: Actor };
 const nav = [
   ["today", "overview", "Overview"],
+  ["followups", "activity", "Sales follow-ups"],
   ["customers", "customers", "Customers"],
   ["cases", "cases", "Delivery cases"],
   ["orders", "orders", "Order requests"],
@@ -176,6 +178,14 @@ function App() {
         ].some((value) => value.toLowerCase().includes(normalizedSearch));
       })
       .slice(0, 5) ?? [];
+  const latestRecordedOrder = state?.orders
+    .filter((order) => order.customerId === selected)
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))[0];
+  const latestOrderShipments = latestRecordedOrder
+    ? (state?.shipments.filter(
+        (shipment) => shipment.orderId === latestRecordedOrder.id,
+      ) ?? [])
+    : [];
   const openCustomer = (cid: string) => {
     setSelected(cid);
     setSearchQuery("");
@@ -527,6 +537,20 @@ function App() {
               searchQuery={searchQuery}
             />
           ) : null}
+          {tab === "followups" ? (
+            <SalesFollowups
+              state={state}
+              busy={busy}
+              canQueue={canApproveOrder}
+              onOpenCustomer={openCustomer}
+              onQueue={(customerId) =>
+                act(
+                  () => api("followups/" + customerId, {}),
+                  "Check-in queued. WhatsApp delivery still requires an eligible session or approved template and a mapped test number.",
+                )
+              }
+            />
+          ) : null}
           {tab === "customers" && c ? (
             <>
               <div className="page-heading compact">
@@ -624,6 +648,9 @@ function App() {
                       <div className="suggestions">
                         <span>TRY A CUSTOMER MESSAGE</span>
                         {[
+                          "I still have stock left, check next week",
+                          "The price is too high",
+                          "What did I order?",
                           "Where is my delivery?",
                           "2 cartons missing from my last delivery",
                           "Same order again, 5 cartons",
@@ -701,12 +728,7 @@ function App() {
                         }
                       />
                     </div>
-                    {c.reason ? (
-                      <div className="customer-reason">
-                        <small>CUSTOMER-STATED REASON</small>
-                        <p>“{c.reason}”</p>
-                      </div>
-                    ) : null}
+                    <CustomerFeedback customer={c} />
                     <button
                       className="outline full"
                       disabled={
@@ -727,6 +749,68 @@ function App() {
                         ? "Follow-up scheduled"
                         : "Queue sales follow-up"}
                     </button>
+                  </section>
+                  <section className="card">
+                    <div className="card-title">
+                      <h2>What the customer ordered</h2>
+                      <span className="pill">Recorded purchase</span>
+                    </div>
+                    {latestRecordedOrder ? (
+                      <>
+                        <p>
+                          {latestRecordedOrder.invoice} ·{" "}
+                          {date(latestRecordedOrder.date)}
+                        </p>
+                        {latestRecordedOrder.items.map((item) => {
+                          const product = state.products.find(
+                            (record) => record.id === item.productId,
+                          );
+                          return (
+                            <p key={item.productId}>
+                              <strong>
+                                {item.quantity} {product?.unit ?? "unit"}
+                                {item.quantity === 1 ? "" : "s"}
+                              </strong>{" "}
+                              of {product?.name ?? item.productId}
+                              {product?.pack ? ` (${product.pack})` : ""}
+                            </p>
+                          );
+                        })}
+                        {latestOrderShipments.length ? (
+                          latestOrderShipments.map((shipment) => (
+                            <p key={shipment.id}>
+                              {shipment.id} · {shipment.status}
+                            </p>
+                          ))
+                        ) : (
+                          <p>No shipment linked to this recorded purchase.</p>
+                        )}
+                        <p className="micro">
+                          A factual order update. New reorder requests stay
+                          separate and require customer confirmation and staff
+                          approval.
+                        </p>
+                        <button
+                          className="outline full"
+                          disabled={
+                            busy ||
+                            !c.consent ||
+                            importedCustomer ||
+                            !(canReview || canApproveOrder)
+                          }
+                          onClick={() =>
+                            act(
+                              () => api("order-updates/" + c.id, {}),
+                              "Order update queued. Provider acceptance and customer receipt are separate; delivery requires an eligible WhatsApp session or approved template.",
+                            )
+                          }
+                        >
+                          Queue order update
+                        </button>
+                      </>
+                    ) : (
+                      <p>No recorded purchase to summarize yet.</p>
+                    )}
                   </section>
                   {customerOutbox.length ? (
                     <section className="card delivery-log">
