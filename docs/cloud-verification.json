@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-28T10:52:56.243Z",
+  "at": "2026-10-28T10:58:38.840Z",
   "synthetic": true,
   "checks": [
     {
@@ -33,6 +33,14 @@
     },
     {
       "check": "Staff approval does not create a fictional sale",
+      "passed": true
+    },
+    {
+      "check": "Conditional confirmation does not approve a draft",
+      "passed": true
+    },
+    {
+      "check": "Different quantity units are not silently equated",
       "passed": true
     }
   ],
