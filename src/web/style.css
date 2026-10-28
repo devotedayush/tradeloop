@@ -3683,3 +3683,81 @@ td {
 .sidebar nav button {
   flex-shrink: 0;
 }
+
+@media (min-width: 731px) and (max-height: 760px) {
+  .sidebar {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  .sidebar > .brand {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+  .sidebar .workspace-name {
+    margin: 12px 0;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .sidebar .workspace-name small,
+  .sidebar .workspace-name > .avatar,
+  .sidebar .nav-label,
+  .sidebar-bottom .demo-note,
+  .sidebar-bottom .user > div {
+    display: none;
+  }
+  .sidebar .workspace-name > div {
+    overflow: hidden;
+  }
+  .sidebar .workspace-name strong {
+    display: block;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar nav {
+    margin-top: 0;
+    gap: 3px;
+  }
+  .sidebar nav button {
+    min-height: 43px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .sidebar-bottom {
+    margin-top: 8px;
+  }
+  .sidebar-bottom .user {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 4px;
+    min-height: 44px;
+  }
+  .sidebar-bottom .user > .avatar {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+  }
+  .sidebar-bottom .user button {
+    width: 36px;
+    min-height: 36px;
+    margin-left: auto;
+  }
+}
+@media (min-width: 731px) and (max-width: 900px) and (max-height: 760px) {
+  .sidebar nav button {
+    font-size: 0;
+  }
+  .sidebar-bottom .user {
+    justify-content: center;
+  }
+  .sidebar-bottom .user > .avatar {
+    display: none;
+  }
+  .sidebar-bottom .user button {
+    margin: 0;
+  }
+}

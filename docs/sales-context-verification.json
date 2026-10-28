@@ -1,0 +1,375 @@
+{
+  "checkedAt": "2026-10-28T19:14:29.933Z",
+  "mode": "read-only cloud verification after parent GUI rehearsal",
+  "source": {
+    "applicationCommit": "a91fdd2",
+    "subsequentCssAndDocumentationCommit": "a5fb12c",
+    "localValidation": "109 tests plus typecheck, production build and Lambda bundle passed as reported by parent; current-source CI success independently read with gh run view. This task did not rerun npm verify.",
+    "currentSourceCi": [
+      {
+        "runId": "40750699606",
+        "sourceCommit": "a91fdd244ecd10977a4000236d219ad1315cf7fd",
+        "conclusion": "success",
+        "url": "https://github.com/devotedayush/tradeloop/actions/runs/40750699606",
+        "verificationSource": "Read-only gh run view in this task"
+      },
+      {
+        "runId": "40751686831",
+        "sourceCommit": "a5fb12cc83a7473b2e3dc87fa5347b7e0dd7ba67",
+        "conclusion": "success",
+        "url": "https://github.com/devotedayush/tradeloop/actions/runs/40751686831",
+        "verificationSource": "Read-only gh run view in this task"
+      }
+    ],
+    "authentication": "Cognito us-east-1 with private gitignored judge access; credentials omitted",
+    "applicationReads": [
+      "authenticated judge GET /api/state twice",
+      "synthetic evidence URL GET",
+      "signed synthetic PDF GET",
+      "unsigned synthetic object GET",
+      "unauthenticated synthetic evidence endpoint GET"
+    ],
+    "infrastructureReads": "CloudFormation Lambda inventory and selected contact-binding/active-tenant configuration; private values not disclosed"
+  },
+  "applicationMutations": false,
+  "messagesSentByThisVerification": 0,
+  "resetsPerformed": 0,
+  "ownerWorkspace": {
+    "accessedThroughApi": false,
+    "mutatedByThisVerification": false,
+    "originalDocumentsRead": false
+  },
+  "checks": [
+    {
+      "check": "authenticated isolated synthetic judge tenant",
+      "passed": true
+    },
+    {
+      "check": "Olive Kitchen exact stock statement preserved",
+      "passed": true
+    },
+    {
+      "check": "stock category and staff next action recorded",
+      "passed": true
+    },
+    {
+      "check": "stock reply defers follow-up seven days",
+      "passed": true
+    },
+    {
+      "check": "previous pending check-in is now suppressed",
+      "passed": true
+    },
+    {
+      "check": "factual latest recorded purchase summary replied",
+      "passed": true
+    },
+    {
+      "check": "unique SHP-101 status answered without requesting reference",
+      "passed": true
+    },
+    {
+      "check": "one unsent consent-required order update pending",
+      "passed": true
+    },
+    {
+      "check": "case resolved with exact fictional completion note",
+      "passed": true
+    },
+    {
+      "check": "shortage expected 20 and reported 18 preserved",
+      "passed": true
+    },
+    {
+      "check": "synthetic PDF extracted and accessible privately",
+      "passed": true
+    },
+    {
+      "check": "unsigned synthetic PDF denied and API requires authentication",
+      "passed": true
+    },
+    {
+      "check": "proposal approval and completion ordered separately",
+      "passed": true
+    },
+    {
+      "check": "POD remains missing",
+      "passed": true
+    },
+    {
+      "check": "five-carton request approved after customer confirmation",
+      "passed": true
+    },
+    {
+      "check": "recorded order IDs invoices and items match ten-order synthetic fixture",
+      "passed": true
+    },
+    {
+      "check": "brand counts show one delivery issue and one stock reason",
+      "passed": true
+    },
+    {
+      "check": "outbox exactly one pending order update and one suppressed follow-up",
+      "passed": true
+    },
+    {
+      "check": "no live judge destination binding or active sender tenant",
+      "passed": true
+    },
+    {
+      "check": "no judge WhatsApp messages or provider-send evidence",
+      "passed": true
+    },
+    {
+      "check": "judge state revision unchanged during verification",
+      "passed": true
+    }
+  ],
+  "observed": {
+    "tenantId": "judgedemo",
+    "revision": 60,
+    "stockFeedback": {
+      "customerId": "C003",
+      "customerName": "Olive Kitchen",
+      "statement": "I still have stock left, check next week",
+      "category": "stock_remaining",
+      "recordedAt": "2026-10-28T19:11:07.150Z",
+      "nextFollowupAt": "2026-11-04T19:11:07.150Z",
+      "deferralMilliseconds": 604800000,
+      "owner": "Amit",
+      "nextAction": "Amit to review the reported reason and check delivery needs after 7 days; no order created."
+    },
+    "brandCounts": {
+      "delivery_issue": 1,
+      "stock_remaining": 1
+    },
+    "orderContextReplies": {
+      "purchase": {
+        "at": "2026-10-28T19:11:33.560Z",
+        "text": "DEMO / synthetic record. Your latest recorded purchase (INV-200, 2026-10-14): 20 cartons of Tomato pizza sauce (6 \u00d7 1 kg). Recorded shipment SHP-101: Delivery reported; POD missing. This is the last recorded status, not live vehicle tracking or confirmed receipt. Pending repeat-order requests are separate and are not confirmed sales.",
+        "channel": "simulator",
+        "engine": "rules"
+      },
+      "status": {
+        "at": "2026-10-28T19:11:35.264Z",
+        "text": "SHP-101: Delivery reported; POD missing. Last recorded update: 27/10/2026, 00:38:54 IST. This is a recorded status, not a live vehicle location.",
+        "channel": "simulator",
+        "engine": "bedrock"
+      }
+    },
+    "outbox": [
+      {
+        "customerId": "C003",
+        "kind": "followup",
+        "status": "suppressed",
+        "requiresConsent": false,
+        "hasProviderId": false
+      },
+      {
+        "customerId": "C001",
+        "kind": "service",
+        "status": "pending",
+        "requiresConsent": true,
+        "hasProviderId": false
+      }
+    ],
+    "infrastructure": {
+      "verified": true,
+      "functionsChecked": 4,
+      "judgeContactBindingCount": 0,
+      "functionsWithJudgeInActiveTenantIds": 0
+    },
+    "case": {
+      "shipmentId": "SHP-101",
+      "status": "resolved",
+      "expected": 20,
+      "reported": 18,
+      "podStatus": "missing",
+      "resolution": "DEMO ONLY: Fictional staff completion recorded for this test. No real correction or customer acceptance verified.",
+      "privateSyntheticEvidence": {
+        "name": "synthetic-bilty-pod-shortage.pdf",
+        "extraction": "extracted",
+        "privatePdfRead": true,
+        "unsignedDenied": true,
+        "authenticationRequired": true,
+        "textractAttribution": "Repository saveEvidence marks extraction as extracted after Textract succeeds; this verification did not invoke Textract."
+      }
+    },
+    "request": {
+      "status": "approved",
+      "items": [
+        {
+          "productId": "P01",
+          "quantity": 5
+        }
+      ]
+    },
+    "recordedOrders": {
+      "count": 10,
+      "idsInvoicesAndItemsMatchSeed": true,
+      "note": "Matches ten seeded recorded purchases; repeat-order request remains separate. No pre-GUI full-state snapshot was read, so this is not a byte-for-byte before/after comparison of all fields."
+    },
+    "auditSequence": [
+      {
+        "at": "2026-10-28T19:08:54.300Z",
+        "action": "demo.reset",
+        "detail": "Synthetic workspace reset"
+      },
+      {
+        "at": "2026-10-28T19:10:48.326Z",
+        "action": "followup.queued",
+        "customerId": "C003",
+        "detail": "Recheck consent, service cases, template and session before delivery"
+      },
+      {
+        "at": "2026-10-28T19:11:07.150Z",
+        "action": "message.received",
+        "customerId": "C003",
+        "detail": "Intent: feedback; interpreter: rules"
+      },
+      {
+        "at": "2026-10-28T19:11:07.150Z",
+        "action": "retention.feedback_recorded",
+        "customerId": "C003",
+        "detail": "Customer-reported stock_remaining; Amit to review the reported reason and check delivery needs after 7 days; no order created."
+      },
+      {
+        "at": "2026-10-28T19:11:33.504Z",
+        "action": "message.received",
+        "customerId": "C001",
+        "detail": "Intent: order_summary; interpreter: rules"
+      },
+      {
+        "at": "2026-10-28T19:11:35.219Z",
+        "action": "message.received",
+        "customerId": "C001",
+        "detail": "Intent: status; interpreter: bedrock"
+      },
+      {
+        "at": "2026-10-28T19:11:56.303Z",
+        "action": "order_update.queued",
+        "customerId": "C001",
+        "detail": "Factual recorded purchase summary queued; consent, template and session checks still required before delivery"
+      },
+      {
+        "at": "2026-10-28T19:11:58.367Z",
+        "action": "message.received",
+        "customerId": "C001",
+        "detail": "Intent: complaint; interpreter: bedrock"
+      },
+      {
+        "at": "2026-10-28T19:11:58.367Z",
+        "action": "retention.feedback_recorded",
+        "customerId": "C001",
+        "detail": "Customer-reported delivery_issue; Dispatch staff to review the customer claim; Amit to keep sales follow-ups paused until resolution."
+      },
+      {
+        "at": "2026-10-28T19:11:58.368Z",
+        "action": "case.opened",
+        "customerId": "C001",
+        "detail": "Customer claim recorded separately from accepted delivery facts; sales follow-up paused"
+      },
+      {
+        "at": "2026-10-28T19:12:09.540Z",
+        "action": "evidence.received",
+        "customerId": "C001",
+        "detail": "Document is evidence pending review, not delivery acceptance"
+      },
+      {
+        "at": "2026-10-28T19:12:25.993Z",
+        "action": "case.propose",
+        "customerId": "C001",
+        "detail": "DEMO: Dispatch to verify shortage and contact the customer with an approved arrangement."
+      },
+      {
+        "at": "2026-10-28T19:12:27.168Z",
+        "action": "case.approve",
+        "customerId": "C001",
+        "detail": "Approved: DEMO: Dispatch to verify shortage and contact the customer with an approved arrangement."
+      },
+      {
+        "at": "2026-10-28T19:12:28.205Z",
+        "action": "case.resolve",
+        "customerId": "C001",
+        "detail": "DEMO ONLY: Fictional staff completion recorded for this test. No real correction or customer acceptance verified."
+      },
+      {
+        "at": "2026-10-28T19:12:37.000Z",
+        "action": "message.received",
+        "customerId": "C001",
+        "detail": "Intent: reorder; interpreter: bedrock"
+      },
+      {
+        "at": "2026-10-28T19:12:37.000Z",
+        "action": "order.drafted",
+        "customerId": "C001",
+        "detail": "Copied latest recorded purchase; stock and delivery not confirmed"
+      },
+      {
+        "at": "2026-10-28T19:12:38.199Z",
+        "action": "message.received",
+        "customerId": "C001",
+        "detail": "Intent: confirm; interpreter: rules"
+      },
+      {
+        "at": "2026-10-28T19:12:38.200Z",
+        "action": "order.customer_confirmed",
+        "customerId": "C001",
+        "detail": "Request sent to sales review; not a fulfilled order"
+      },
+      {
+        "at": "2026-10-28T19:12:39.284Z",
+        "action": "order.approved",
+        "customerId": "C001",
+        "detail": "Approved for processing; invoicing, reservation and fulfillment remain in the selling system"
+      }
+    ]
+  },
+  "separateLiveOwnerEvidence": {
+    "source": "Private .runtime/order-update-live-verification.json plus parent direct WhatsApp UI observation; no owner API or original document access by this task",
+    "privateRecord": {
+      "checkedAt": "2026-10-28T19:04:47.274Z",
+      "outboxStatus": "sent",
+      "requiresConsent": true,
+      "providerAccepted": true,
+      "recipientReceiptObservedInPrivateRecord": false,
+      "originalDocumentsChanged": false,
+      "receiptObservationBoundary": "This earlier provider-verification file recorded receipt as not yet observed. Subsequent direct parent WhatsApp UI observation establishes receipt; the older false flag is historical."
+    },
+    "parentObservedOrderUpdate": {
+      "localDate": "2026-10-29",
+      "time": "00:34",
+      "timezone": "Asia/Kolkata",
+      "recipientReceiptObserved": true,
+      "note": "One authorized factual recorded-purchase update, not automatic order-event integration."
+    },
+    "parentObservedPriceFeedback": {
+      "localDate": "2026-10-29",
+      "time": "00:38",
+      "timezone": "Asia/Kolkata",
+      "syntheticDemoMessage": true,
+      "backendCategory": "price",
+      "replyProviderAccepted": true,
+      "recipientReceiptObserved": true,
+      "note": "Parent directly observed recipient receipt in the native WhatsApp capture. This supersedes the earlier provider-only caveat; the synthetic DEMO feedback does not establish an actual customer price concern.",
+      "replyObservedAtLocalTime": "00:39",
+      "observedReply": "I have recorded your price concern for your salesperson. They will review the approved commercial terms; I cannot promise a discount."
+    },
+    "receiptObservationSource": "Parent directly viewed native WhatsApp UI capture: recorded-purchase summary at 00:34 IST and price-feedback reply at 00:39 IST on 29 October. This task did not inspect or publish the raw screenshot, which includes unrelated private chat-list content."
+  },
+  "guiCaptureNotes": {
+    "source": "Parent GUI observation, not this API verification",
+    "uploadCapturePollingTimedOut": true,
+    "laterUiShowedActualReviewAndExtraction": true,
+    "failedResubmissionPerformed": false,
+    "note": "The capture poll timed out before upload processing completed. A later UI view showed actual REVIEW and extracted text; no failed resubmission was used."
+  },
+  "limitations": [
+    "Synthetic judge workflow is separate from actual WhatsApp owner evidence. Judge outbox is intentionally not zero.",
+    "Resolved means explicitly fictional DEMO ONLY completion, not a corrected real shortage or accepted delivery.",
+    "A queued update is not sent or delivered; neither production order-event integration nor an automatic campaign is claimed.",
+    "Approved proactive template delivery, production business-feed integration, measured impact and scale remain unverified.",
+    "Current state and audit corroborate the completed rehearsal; this task did not itself perform the GUI actions."
+  ],
+  "updatedAt": "2026-10-28T19:15:02Z"
+}

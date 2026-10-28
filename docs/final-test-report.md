@@ -2,14 +2,24 @@
 
 ## Current source and local verification
 
-Application source **`a91fdd2`** adds sales-feedback insights and contextual order updates. Local `npm run verify` passed **109 tests**, TypeScript checking, production React build and Lambda bundle. Current-source CI evidence and fresh cloud/browser rehearsal of these additions are pending; the earlier records below must not be used to claim they have already passed.
+Application source **`a91fdd2`** adds sales-feedback insights and contextual order updates. Local `npm run verify` passed **109 tests**, TypeScript checking, production React build and Lambda bundle. Fresh GUI rehearsal was followed by **21 passing read-only cloud checks** in [sales/context verification](sales-context-verification.json). The [application CI run 40750699606](https://github.com/devotedayush/tradeloop/actions/runs/40750699606) (`a91fdd2`) and [CSS/documentation CI run 40751686831](https://github.com/devotedayush/tradeloop/actions/runs/40751686831) (`a5fb12c`) succeeded. Earlier records below retain their own source/date.
 
 - **Sales follow-ups:** a dedicated tab shows due staff check-ins asking about the next delivery and reasons for waiting. Consent, unresolved cases, due dates and queued duplicates gate new check-ins.
 - **Customer-stated feedback:** `Customer.retention` keeps the exact statement, category, timestamp and next action. The customer's existing owner remains visible. Brand-team counts use one latest categorized reason per customer in the workspace.
 - **Careful routing:** remaining stock and low demand defer seven days; price enquiries do not establish price concerns; stopped ordering alone does not imply messaging opt-out. Workflow categories and next actions remain staff-reviewable interpretation.
 - **Factual order context:** the latest recorded purchase includes invoice, date, items and available recorded shipment status. `queueOrderUpdate` and authenticated `POST /api/order-updates/:customerId` queue that summary for staff; no production order event is ingested. Exactly one authorized shipment can answer a status question without asking repeatedly for its ID; ambiguous records still need a reference.
 
-These are local functional checks, not measured adoption, recovered revenue, production integration or load capacity. Production order-event automation and an inactivity cadence need a business feed and agreed rules. Approved proactive templates remain unverified.
+These local and fresh cloud functional checks do not establish measured adoption, recovered revenue, production integration or load capacity. Production order-event automation and an inactivity cadence need a business feed and agreed rules. Approved proactive templates remain unverified.
+
+## Fresh sales/context cloud rehearsal
+
+[Sales/context verification](sales-context-verification.json) records **21 passing read-only checks** at judge revision **60**. Olive Kitchen's exact stock statement is preserved with `stock_remaining`, owner and next action; follow-up is deferred exactly seven days and its prior check-in is suppressed. Sunrise Café receives a factual purchase summary and unique-SHP-101 status without a repeated-reference request. Brand counts are one delivery issue and one stock reason.
+
+The judge outbox is intentionally **not zero**: one unsent `pending` recorded-purchase update (`requiresConsent: true`) and one `suppressed` check-in. Read-only configuration checks found no judge contact binding and no `judgedemo` entry in active sender tenants across all four Lambdas. No judge WhatsApp send is claimed.
+
+Private synthetic PDF extraction, access restrictions, expected 20/reported 18, POD still missing, separate staff proposal/approval/explicit DEMO ONLY completion and a customer-confirmed five-carton processing request were verified. The ten recorded-order IDs, invoices and items match the synthetic fixture; the request is separate. No pre-GUI full snapshot was compared. The upload-capture poll timed out before completion; a later UI view showed actual REVIEW and extracted text, with no failed resubmission.
+
+Separate authorized owner evidence records an observed WhatsApp purchase-summary receipt at **00:34 IST**, then synthetic DEMO price feedback at **00:38** and its observed reply at **00:39** on 29 October. The earlier private provider record's not-yet-observed flag was superseded by the parent's direct UI observation. This does not establish a real customer concern, automatic order-event integration or proactive-template delivery. Raw screenshots and private contacts are excluded from the public report.
 
 ## Historical cloud and browser evidence
 
@@ -41,4 +51,4 @@ The pitch and official entry checklist are in [submission-readiness.md](submissi
 
 ACE opportunity **O30532571** exists with the exact campaign tag and **Pending approval** status; see [ACE verification](ace-verification.json). Its estimated MRR is not actual revenue or a contract. Runtime verification does not establish APN eligibility, private repository organizer access, public demo-video publication or final Devpost submission.
 
-The older local video is a pre-improvement draft, not the current final demo. A new rehearsal and capture is planned under ignored `.runtime/demo-film-large/`. Fresh cloud verification and public playback must be recorded before claiming completion. Proactive approved-template delivery remains unverified.
+The older local video is a pre-improvement draft, not the current final demo. A new rehearsal and capture is planned under ignored `.runtime/demo-film-large/`. Fresh sales/context cloud checks are now recorded above; replacement-video export and public playback must still be verified before claiming completion. Proactive approved-template delivery remains unverified.
