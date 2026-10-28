@@ -5,15 +5,15 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #171717;
+  color: #111;
   background: #f7f7f7;
   font-synthesis: none;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   --green: #111111;
-  --muted: #171717;
+  --muted: #111;
   --line: #ededed;
-  --orange: #171717;
+  --orange: #111;
 }
 * {
   box-sizing: border-box;
@@ -73,24 +73,24 @@ h2 {
   letter-spacing: -0.3px;
 }
 p {
-  color: #171717;
+  color: #111;
   line-height: 1.65;
 }
 small {
-  font-size: 11px;
+  font-size: 14px;
 }
 input,
 textarea {
   border: 1px solid #e6e6e6;
   border-radius: 8px;
   padding: 11px 12px;
-  color: #171717;
+  color: #111;
   background: #fff;
   resize: vertical;
   width: 100%;
 }
 label {
-  font-size: 12px;
+  font-size: 14px;
   display: block;
   font-weight: 500;
 }
@@ -102,7 +102,7 @@ textarea {
 }
 pre {
   white-space: pre-wrap;
-  font-size: 11px;
+  font-size: 14px;
   max-height: 220px;
   overflow: auto;
 }
@@ -123,7 +123,7 @@ strong {
   inset: 0 auto 0 0;
   background: #151515;
   width: 235px;
-  color: #171717;
+  color: #111;
   padding: 28px 18px 16px;
   display: flex;
   flex-direction: column;
@@ -150,11 +150,11 @@ strong {
   border-radius: 9px;
   padding: 12px 9px;
   margin: 35px 0 29px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .workspace-name > span:last-child {
   margin-left: auto;
-  color: #171717;
+  color: #111;
 }
 .workspace-name strong,
 .workspace-name small,
@@ -164,9 +164,9 @@ strong {
 }
 .workspace-name small,
 .user small {
-  color: #171717;
+  color: #111;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .avatar {
   width: 32px;
@@ -177,8 +177,8 @@ strong {
   flex-shrink: 0;
   border-radius: 8px;
   background: #dfebd7;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   font-weight: 700;
 }
 .avatar.small {
@@ -191,12 +191,12 @@ strong {
   width: 33px;
   height: 33px;
   background: #f0f1ec;
-  font-size: 11px;
+  font-size: 14px;
 }
 .nav-label {
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1.6px;
-  color: #171717;
+  color: #111;
   padding-left: 14px;
   margin-bottom: 14px;
 }
@@ -211,26 +211,26 @@ nav button {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   border-radius: 7px;
 }
 nav button > span {
   font-size: 18px;
   width: 20px;
-  color: #171717;
+  color: #111;
 }
 nav button.active {
   background: #e7efdf;
-  color: #171717;
+  color: #111;
   font-weight: 600;
 }
 nav button.active > span {
-  color: #171717;
+  color: #111;
 }
 nav b {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   background: #cbd9bd;
   border-radius: 5px;
   padding: 2px 5px;
@@ -242,13 +242,13 @@ nav b {
 .demo-note {
   padding: 20px 12px;
   border-top: 1px solid #385247;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .demo-note p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #171717;
+  color: #111;
   margin: 7px 0 0 12px;
 }
 .dot,
@@ -272,7 +272,7 @@ nav b {
   gap: 9px;
   padding: 16px 8px 0;
   border-top: 1px solid #385247;
-  font-size: 11px;
+  font-size: 14px;
 }
 .user button {
   margin-left: auto;
@@ -291,15 +291,15 @@ nav b {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .topbar strong {
-  color: #171717;
+  color: #111;
 }
 .slash {
   margin: 0 10px;
-  color: #171717;
+  color: #111;
 }
 .topbar > div {
   display: flex;
@@ -319,25 +319,25 @@ nav b {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
+  font-size: 14px;
   border: 1px solid #e4e7d8;
   border-radius: 7px;
   background: #f0f3e8;
   padding: 10px 13px;
-  color: #171717;
+  color: #111;
 }
 .demo-banner > span:first-child {
-  font-size: 15px;
-  color: #171717;
+  font-size: 16px;
+  color: #111;
 }
 .demo-banner strong {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .demo-banner button {
   margin-left: auto;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   white-space: nowrap;
 }
 .page-heading {
@@ -349,24 +349,24 @@ nav b {
 }
 .page-heading p {
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .page-heading.compact {
   margin-bottom: 20px;
 }
 .eyebrow {
   display: block;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1.7px;
   font-weight: 600;
-  color: #171717;
+  color: #111;
   margin-bottom: 10px;
 }
 .primary,
 .outline {
   border-radius: 7px;
   padding: 10px 14px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -381,7 +381,7 @@ nav b {
 .outline {
   border: 1px solid #dce2d8;
   background: #fff;
-  color: #171717;
+  color: #111;
 }
 .full {
   width: 100%;
@@ -402,8 +402,8 @@ nav b {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .metric-icon {
   width: 27px;
@@ -413,7 +413,7 @@ nav b {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #171717;
+  color: #111;
   font-size: 17px;
 }
 .metric > strong {
@@ -425,8 +425,8 @@ nav b {
   margin: 3px 0;
 }
 .metric > small {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .metric.warm {
   background: #faf5ed;
@@ -434,7 +434,7 @@ nav b {
 }
 .metric.warm .metric-icon {
   background: #efe5d3;
-  color: #171717;
+  color: #111;
 }
 .card {
   border: 1px solid var(--line);
@@ -452,7 +452,7 @@ nav b {
   margin-bottom: 20px;
 }
 .card-title p {
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 6px;
 }
 .pill {
@@ -461,17 +461,17 @@ nav b {
   white-space: nowrap;
   background: #f3f7e8;
   border: 1px solid #e6edda;
-  color: #171717;
+  color: #111;
   border-radius: 5px;
   padding: 5px 7px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.6px;
   max-width: 100%;
 }
 .pill.orange {
   background: #fbefe4;
-  color: #171717;
+  color: #111;
   border-color: #f0dfce;
 }
 .orange {
@@ -492,11 +492,11 @@ table {
   border-collapse: collapse;
   width: 100%;
   text-align: left;
-  font-size: 11px;
+  font-size: 14px;
 }
 th {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 500;
   padding: 0 10px 13px;
   border-bottom: 1px solid var(--line);
@@ -505,7 +505,7 @@ th {
 td {
   padding: 16px 10px;
   border-bottom: 1px solid #f0f0f0;
-  color: #171717;
+  color: #111;
   white-space: nowrap;
 }
 th:first-child,
@@ -524,18 +524,18 @@ tr:last-child td {
 }
 .customer-link strong {
   display: block;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .customer-link small {
   display: block;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   margin-top: 5px;
 }
 .text-button {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   padding: 0;
   font-weight: 600;
 }
@@ -552,7 +552,7 @@ tr:last-child td {
   margin: 12px 0;
 }
 .journey p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.8;
 }
 .journey ol {
@@ -565,20 +565,20 @@ tr:last-child td {
   align-items: center;
   gap: 11px;
   margin-bottom: 14px;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .journey li b {
-  font-size: 11px;
+  font-size: 14px;
   background: #e1e8d7;
-  color: #171717;
+  color: #111;
   padding: 6px;
   border-radius: 50%;
   font-weight: 500;
 }
 .journey .primary {
   width: 100%;
-  font-size: 11px;
+  font-size: 14px;
 }
 .activity-preview {
   margin-top: 23px;
@@ -589,7 +589,7 @@ tr:last-child td {
   gap: 13px;
   padding: 15px 0;
   border-bottom: 1px solid #eef1e9;
-  font-size: 11px;
+  font-size: 14px;
 }
 .event:last-child {
   border: 0;
@@ -603,26 +603,26 @@ tr:last-child td {
   flex-shrink: 0;
   background: #eef3e6;
   border-radius: 50%;
-  color: #171717;
+  color: #111;
 }
 .event p {
-  font-size: 11px;
+  font-size: 14px;
   margin: 5px 0;
 }
 .event small {
-  color: #171717;
+  color: #111;
 }
 .event time {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #171717;
+  color: #111;
   margin-left: auto;
   text-align: right;
   white-space: nowrap;
 }
 .empty-inline {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   padding: 17px 0;
 }
 .customer-tabs {
@@ -634,15 +634,15 @@ tr:last-child td {
 }
 .customer-tabs button {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 14px;
   border: 1px solid #e0e5d9;
   border-radius: 7px;
   padding: 9px 13px;
-  color: #171717;
+  color: #111;
 }
 .customer-tabs .selected {
   background: #eef5da;
-  color: #171717;
+  color: #111;
   border-color: #dce8c7;
 }
 .customer-grid {
@@ -676,23 +676,23 @@ tr:last-child td {
   align-self: flex-end;
 }
 .bubble small {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 600;
 }
 .bubble small span {
-  font-weight: 400;
-  color: #171717;
+  font-weight: 500;
+  color: #111;
 }
 .bubble p {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   margin: 7px 0;
   white-space: pre-wrap;
 }
 .bubble time {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   display: block;
   text-align: right;
 }
@@ -704,7 +704,7 @@ tr:last-child td {
 }
 .chat-empty > div {
   font-size: 31px;
-  color: #171717;
+  color: #111;
   background: #f0f5e8;
   border-radius: 50%;
   width: 58px;
@@ -718,7 +718,7 @@ tr:last-child td {
   font-size: 16px;
 }
 .chat-empty p {
-  font-size: 11px;
+  font-size: 14px;
   margin: 10px 0;
 }
 .suggestions {
@@ -729,9 +729,9 @@ tr:last-child td {
   border-top: 1px solid var(--line);
 }
 .suggestions > span {
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1px;
-  color: #171717;
+  color: #111;
   display: block;
   width: 100%;
   margin-bottom: 4px;
@@ -740,8 +740,8 @@ tr:last-child td {
   border: 1px solid #e0e6d9;
   border-radius: 20px;
   padding: 6px 9px;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .composer {
   display: flex;
@@ -750,19 +750,19 @@ tr:last-child td {
 }
 .composer textarea {
   background: #fafafa;
-  font-size: 11px;
+  font-size: 14px;
   min-height: 63px;
 }
 .composer .primary {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 14px;
 }
 .context-stack > .card {
   padding: 20px;
 }
 .subtle-icon {
   font-size: 22px;
-  color: #171717;
+  color: #111;
 }
 .detail-list > div {
   display: flex;
@@ -770,22 +770,22 @@ tr:last-child td {
   gap: 15px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
-  font-size: 11px;
+  font-size: 14px;
 }
 .detail-list > div:last-child {
   border: 0;
 }
 .detail-list span {
-  color: #171717;
+  color: #111;
 }
 .detail-list strong {
   text-align: right;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .context-stack .full {
   margin-top: 17px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .shipment-id {
   font-size: 20px;
@@ -793,12 +793,12 @@ tr:last-child td {
   letter-spacing: -0.5px;
 }
 .shipment > p {
-  font-size: 11px;
+  font-size: 14px;
   margin: 7px 0 10px;
 }
 .micro {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   line-height: 1.7;
   display: block;
 }
@@ -812,13 +812,13 @@ tr:last-child td {
   border-radius: 7px;
 }
 .customer-reason small {
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1px;
-  color: #171717;
+  color: #111;
 }
 .customer-reason p {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   margin-top: 6px;
 }
 .case-columns {
@@ -827,14 +827,14 @@ tr:last-child td {
   gap: 30px;
 }
 .field-label {
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1.2px;
-  color: #171717;
+  color: #111;
 }
 .claim {
   font-size: 14px;
   margin: 13px 0;
-  color: #171717;
+  color: #111;
 }
 .quantity-pair {
   display: flex;
@@ -849,8 +849,8 @@ tr:last-child td {
 }
 .quantity-pair small {
   display: block;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .quantity-pair strong {
   font-size: 24px;
@@ -865,9 +865,9 @@ tr:last-child td {
   border-radius: 7px;
   padding: 13px;
   margin: 18px 0 7px;
-  color: #171717;
+  color: #111;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 14px;
 }
 .upload input {
   display: none;
@@ -882,7 +882,7 @@ tr:last-child td {
   border-radius: 8px;
 }
 .review-box label {
-  font-size: 11px;
+  font-size: 14px;
   margin: 15px 0 7px;
 }
 .button-row {
@@ -892,18 +892,18 @@ tr:last-child td {
   margin: 12px 0;
 }
 .button-row button {
-  font-size: 11px;
+  font-size: 14px;
 }
 .proposal {
   padding: 12px;
   background: #eff5df;
   border-radius: 7px;
   margin-top: 15px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .proposal p {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   margin-top: 5px;
 }
 .evidence {
@@ -911,26 +911,26 @@ tr:last-child td {
   border-radius: 7px;
   padding: 12px;
   margin-top: 10px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .evidence button {
   display: block;
   padding: 0;
-  color: #171717;
+  color: #111;
   text-align: left;
 }
 .evidence small {
   display: block;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   margin-top: 6px;
 }
 .evidence details {
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 10px;
 }
 .order-card > p {
-  font-size: 12px;
+  font-size: 14px;
   margin-bottom: 10px;
 }
 .order-card .primary {
@@ -949,10 +949,10 @@ tr:last-child td {
   gap: 16px;
 }
 .case-list-item p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .case-list-item small {
-  color: #171717;
+  color: #111;
 }
 .case-list-item .text-button {
   margin-top: auto;
@@ -964,14 +964,14 @@ tr:last-child td {
 .empty > span {
   display: block;
   font-size: 40px;
-  color: #171717;
+  color: #111;
   margin-bottom: 15px;
 }
 .empty h2 {
   font-size: 22px;
 }
 .empty p {
-  font-size: 12px;
+  font-size: 14px;
   max-width: 430px;
   margin: 14px auto 24px;
 }
@@ -987,11 +987,11 @@ tr:last-child td {
   gap: 20px;
 }
 .connection p {
-  font-size: 12px;
+  font-size: 14px;
   overflow-wrap: anywhere;
 }
 .source-note {
-  font-size: 12px;
+  font-size: 14px;
   padding: 15px;
   background: #f8f1e7;
   border-radius: 8px;
@@ -1001,7 +1001,7 @@ tr:last-child td {
   border-bottom: 1px solid var(--line);
 }
 .delivery-item p {
-  font-size: 11px;
+  font-size: 14px;
   margin: 8px 0;
 }
 .delivery-item small {
@@ -1017,12 +1017,12 @@ tr:last-child td {
   margin-bottom: 22px;
 }
 .danger {
-  color: #171717;
+  color: #111;
   margin-top: 18px;
 }
 .error,
 .success {
-  font-size: 12px;
+  font-size: 14px;
   padding: 12px 15px;
   border-radius: 8px;
   margin: 14px 0;
@@ -1030,7 +1030,7 @@ tr:last-child td {
 }
 .error {
   background: #fbe9e2;
-  color: #171717;
+  color: #111;
   border: 1px solid #f1cbbb;
   display: flex;
   justify-content: space-between;
@@ -1038,18 +1038,18 @@ tr:last-child td {
 }
 .success {
   background: #eaf3df;
-  color: #171717;
+  color: #111;
   border: 1px solid #d2e4bf;
 }
 .separator {
   margin: 0 8px;
-  color: #171717;
+  color: #111;
 }
 footer {
   display: flex;
   gap: 9px;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   padding: 25px 0;
   border-top: 1px solid #e8ecdf;
   margin-top: 12px;
@@ -1063,7 +1063,7 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  color: #171717;
+  color: #111;
 }
 .login {
   min-height: 100vh;
@@ -1100,7 +1100,7 @@ footer {
 .login-loop {
   display: flex;
   gap: 16px;
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 35px;
   color: #c6d7b4;
 }
@@ -1118,7 +1118,7 @@ footer {
   margin: 27px 0 10px;
 }
 .login-form > p {
-  font-size: 12px;
+  font-size: 14px;
   margin-bottom: 30px;
 }
 .login-form .primary {
@@ -1127,7 +1127,7 @@ footer {
 }
 .login-form > .micro {
   margin-top: 20px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .sr-only {
   position: absolute;
@@ -1190,7 +1190,7 @@ footer {
     padding: 15px 13px;
   }
   .metric > small {
-    font-size: 11px;
+    font-size: 14px;
   }
   .customer-grid {
     grid-template-columns: minmax(0, 1.4fr) minmax(230px, 1fr);
@@ -1247,7 +1247,7 @@ footer {
   }
   .topbar {
     height: 60px;
-    font-size: 11px;
+    font-size: 14px;
     padding: 0 18px;
   }
   .top-date {
@@ -1261,13 +1261,13 @@ footer {
     gap: 12px;
   }
   .metric > small {
-    font-size: 11px;
+    font-size: 14px;
   }
   .page-heading h1 {
     font-size: 29px;
   }
   .page-heading p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .customer-grid {
     grid-template-columns: 1fr;
@@ -1319,7 +1319,7 @@ footer {
     height: 56px;
   }
   .topbar > div {
-    font-size: 11px;
+    font-size: 14px;
   }
   .topbar .slash {
     margin: 0 6px;
@@ -1327,17 +1327,17 @@ footer {
   .demo-banner {
     padding: 9px;
     gap: 5px;
-    font-size: 11px;
+    font-size: 14px;
   }
   .demo-banner strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .demo-banner > span:nth-of-type(2) {
-    font-size: 11px;
+    font-size: 14px;
     min-width: 180px;
   }
   .demo-banner button {
-    font-size: 11px;
+    font-size: 14px;
   }
   .page-heading {
     margin: 26px 0 22px;
@@ -1348,12 +1348,12 @@ footer {
     letter-spacing: -0.8px;
   }
   .page-heading .outline {
-    font-size: 11px;
+    font-size: 14px;
     padding: 7px 9px;
     min-height: 30px;
   }
   .eyebrow {
-    font-size: 11px;
+    font-size: 14px;
     letter-spacing: 1.3px;
   }
   .metrics {
@@ -1363,13 +1363,13 @@ footer {
     padding: 13px 12px;
   }
   .metric > div {
-    font-size: 11px;
+    font-size: 14px;
   }
   .metric > strong {
     font-size: 31px;
   }
   .metric > small {
-    font-size: 11px;
+    font-size: 14px;
   }
   .metric-icon {
     width: 23px;
@@ -1387,10 +1387,10 @@ footer {
     font-size: 14px;
   }
   .card-title p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .card-title .pill {
-    font-size: 7px;
+    font-size: 14px;
     padding: 4px 5px;
   }
   .overview-grid {
@@ -1405,17 +1405,17 @@ footer {
   .avatar.mini {
     width: 26px;
     height: 26px;
-    font-size: 11px;
+    font-size: 14px;
   }
   td {
     padding: 14px 8px;
-    font-size: 11px;
+    font-size: 14px;
   }
   .customer-link strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .customer-link small {
-    font-size: 11px;
+    font-size: 14px;
   }
   .context-stack {
     grid-template-columns: 1fr;
@@ -1427,7 +1427,7 @@ footer {
     flex-wrap: wrap;
   }
   .page-heading.compact > .pill {
-    font-size: 7px;
+    font-size: 14px;
   }
   .composer {
     flex-direction: column;
@@ -1444,7 +1444,7 @@ footer {
     padding: 11px;
   }
   .bubble p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .case-list,
   .connections {
@@ -1466,10 +1466,10 @@ footer {
     display: none;
   }
   .event time {
-    font-size: 11px;
+    font-size: 14px;
   }
   .event p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .event {
     gap: 9px;
@@ -1492,7 +1492,7 @@ footer {
     font-size: 32px;
   }
   .login-story p {
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 12px;
   }
   .login-loop,
@@ -1511,12 +1511,12 @@ footer {
 /* TradeLoop CRM visual system. */
 :root {
   --green: #111;
-  --muted: #171717;
+  --muted: #111;
   --line: #ededed;
   --lime: #b8e637;
-  color: #171717;
+  color: #111;
   background: #f6f6f6;
-  font-size: 14px;
+  font-size: 16px;
 }
 body {
   min-width: 320px;
@@ -1542,7 +1542,7 @@ h2 {
   letter-spacing: -0.6px;
 }
 p {
-  color: #171717;
+  color: #111;
 }
 button {
   transition:
@@ -1566,7 +1566,7 @@ textarea:focus-visible {
   width: 218px;
   padding: 30px 19px 22px;
   background: #f7f7f7;
-  color: #171717;
+  color: #111;
   z-index: 10;
 }
 .sidebar .brand {
@@ -1576,7 +1576,7 @@ textarea:focus-visible {
   font-size: 25px;
   letter-spacing: -1.1px;
   gap: 7px;
-  color: #171717;
+  color: #111;
 }
 .brand svg {
   color: #b1da32;
@@ -1593,26 +1593,26 @@ textarea:focus-visible {
   margin: 31px 0 28px;
   padding: 10px 9px;
   gap: 8px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .workspace-name > span:last-child {
-  color: #171717;
+  color: #111;
 }
 .workspace-name small,
 .user small {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   line-height: 1.5;
 }
 .avatar,
 .avatar.small {
   background: #ecf1df;
-  color: #171717;
+  color: #111;
   border-radius: 50%;
 }
 .nav-label {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   letter-spacing: 1.5px;
   margin-bottom: 14px;
   padding-left: 12px;
@@ -1622,16 +1622,16 @@ nav {
 }
 nav button {
   position: relative;
-  color: #171717;
+  color: #111;
   padding: 13px 13px;
   border-radius: 9px;
   gap: 11px;
-  font-size: 12px;
+  font-size: 14px;
   min-height: 43px;
-  font-weight: 400;
+  font-weight: 500;
 }
 nav button > span {
-  color: #171717;
+  color: #111;
   width: 20px;
   font-size: 20px;
   display: inline-flex;
@@ -1667,21 +1667,21 @@ nav button.active > span {
 }
 nav b {
   background: #e5efcb;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   border-radius: 20px;
   min-width: 19px;
   text-align: center;
 }
 .demo-note {
   border-color: #e9e9e9;
-  color: #171717;
+  color: #111;
   padding: 18px 10px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .demo-note p {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   line-height: 1.7;
 }
 .dot {
@@ -1693,7 +1693,7 @@ nav b {
   background: #fafafa;
   padding: 10px 8px;
   gap: 8px;
-  color: #171717;
+  color: #111;
 }
 .shell {
   margin-left: 218px;
@@ -1705,17 +1705,17 @@ nav b {
   border: 0;
   padding: 0 27px;
   gap: 25px;
-  color: #171717;
+  color: #111;
 }
 .topbar-title {
   min-width: 0;
   display: flex;
   gap: 10px;
   align-items: center;
-  font-size: 11px;
+  font-size: 14px;
 }
 .topbar-title strong {
-  color: #171717;
+  color: #111;
 }
 .topbar > .global-search,
 .global-search {
@@ -1730,7 +1730,7 @@ nav b {
   padding: 0 17px;
   height: 43px;
   background: #fafafa;
-  color: #171717;
+  color: #111;
 }
 .global-search svg {
   flex-shrink: 0;
@@ -1741,7 +1741,7 @@ nav b {
   margin: 0;
   border: 0;
   background: transparent;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0;
   min-width: 0;
   outline: 0;
@@ -1771,7 +1771,7 @@ nav b {
   background: transparent;
   border: 1px solid #e5e5e5;
   border-radius: 50%;
-  color: #171717;
+  color: #111;
   flex-shrink: 0;
 }
 .icon-button:hover {
@@ -1785,7 +1785,7 @@ nav b {
 .outline {
   border-radius: 24px;
   min-height: 39px;
-  font-size: 11px;
+  font-size: 14px;
   padding: 10px 17px;
   font-weight: 500;
   gap: 8px;
@@ -1804,7 +1804,7 @@ nav b {
 }
 .outline {
   border-color: #e4e4e4;
-  color: #171717;
+  color: #111;
 }
 .outline:hover:not(:disabled) {
   background: #f5f5f5;
@@ -1821,33 +1821,33 @@ nav b {
 .demo-banner {
   background: #f7f9f3;
   border-color: #edf0e6;
-  color: #171717;
+  color: #111;
   border-radius: 9px;
   padding: 9px 12px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .demo-banner strong {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   font-weight: 500;
 }
 .demo-banner > span:first-child {
-  color: #171717;
+  color: #111;
 }
 .demo-banner button {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .page-heading {
   margin: 29px 0 25px;
 }
 .page-heading p {
   margin-top: 7px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .eyebrow {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   letter-spacing: 1.4px;
 }
 .card,
@@ -1863,32 +1863,32 @@ nav b {
   margin-bottom: 22px;
 }
 .card-title p {
-  font-size: 11px;
+  font-size: 14px;
 }
 .card-title h2 {
   font-size: 18px;
 }
 .metric > strong {
-  color: #171717;
+  color: #111;
 }
 .pill {
   border-radius: 20px;
   letter-spacing: 0;
   font-weight: 500;
-  font-size: 11px;
+  font-size: 14px;
   padding: 5px 9px;
   border-color: transparent;
 }
 .text-button {
-  color: #171717;
+  color: #111;
 }
 .customer-tabs button {
   border-radius: 20px;
-  color: #171717;
+  color: #111;
   border-color: #e5e5e5;
 }
 .customer-tabs .selected {
-  color: #171717;
+  color: #111;
   background: #eef4df;
   border-color: #e5edcf;
 }
@@ -1898,39 +1898,39 @@ nav b {
 .micro,
 .detail-list span,
 .case-list-item small {
-  color: #171717;
+  color: #111;
 }
 .detail-list strong {
-  color: #171717;
+  color: #111;
 }
 input,
 textarea {
-  color: #171717;
+  color: #111;
   border-color: #e5e5e5;
   border-radius: 10px;
 }
 .chat-empty > div,
 .event-mark {
   background: #f0f4e6;
-  color: #171717;
+  color: #111;
 }
 .suggestions button {
-  color: #171717;
+  color: #111;
   border-color: #e4e7dd;
 }
 .bubble small {
-  color: #171717;
+  color: #111;
 }
 .bubble small span,
 .bubble time {
-  color: #171717;
+  color: #111;
 }
 footer {
   border-color: #efefef;
-  color: #171717;
+  color: #111;
   padding: 21px 0;
   margin-top: 20px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .login-story {
   background: #161616;
@@ -1962,7 +1962,7 @@ footer {
   letter-spacing: -1.3px;
 }
 .overview-heading p {
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 7px;
   line-height: 1.6;
 }
@@ -1974,8 +1974,8 @@ footer {
   border-radius: 25px;
   padding: 11px 16px;
   white-space: nowrap;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .overview-date svg {
   width: 16px;
@@ -2008,8 +2008,8 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 12px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 600;
 }
 .stat-top > span:last-child {
@@ -2022,7 +2022,7 @@ footer {
   font-size: 32px;
   font-weight: 500;
   letter-spacing: -1.4px;
-  color: #171717;
+  color: #111;
   margin: 20px 0 10px;
   line-height: 1.15;
 }
@@ -2030,14 +2030,14 @@ footer {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   line-height: 1.5;
 }
 .stat-foot svg {
   width: 13px;
   height: 13px;
-  color: #171717;
+  color: #111;
   flex-shrink: 0;
 }
 .overview-panels {
@@ -2079,14 +2079,14 @@ footer {
   margin-top: 16px;
 }
 .gauge-caption strong {
-  color: #171717;
-  font-size: 12px;
+  color: #111;
+  font-size: 14px;
   display: flex;
   gap: 8px;
   align-items: center;
 }
 .gauge-caption p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.65;
   margin-top: 9px;
 }
@@ -2114,18 +2114,18 @@ footer {
   justify-content: center;
   border-radius: 50%;
   background: #eef1e6;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
 }
 .owner-row:nth-child(3n) .owner-avatar {
   background: #f5eae4;
-  color: #171717;
+  color: #111;
 }
 .owner-row:nth-child(3n + 1) .owner-avatar {
   background: #ececf2;
-  color: #171717;
+  color: #111;
 }
 .owner-info {
   min-width: 0;
@@ -2133,25 +2133,25 @@ footer {
 }
 .owner-info strong {
   display: block;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 600;
   line-height: 1.5;
 }
 .owner-info small,
 .owner-info p {
   display: block;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   margin-top: 3px;
   line-height: 1.5;
 }
 .owner-count {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
-  color: #171717;
+  color: #111;
 }
 .documents-panel {
   min-width: 0;
@@ -2178,18 +2178,18 @@ footer {
   min-width: 0;
 }
 .document-card h3 {
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: -0.2px;
   line-height: 1.5;
   margin: 13px 0 5px;
 }
 .document-card > p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
 .document-card .pill {
-  font-size: 11px;
+  font-size: 14px;
   padding: 6px 10px;
 }
 .document-meta {
@@ -2205,15 +2205,15 @@ footer {
 .document-meta small,
 .document-meta dt {
   display: block;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   line-height: 1.5;
   margin-bottom: 5px;
 }
 .document-meta strong,
 .document-meta dd {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -2230,15 +2230,15 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
 }
 .doc-placeholder {
   display: flex;
   flex-direction: column;
   gap: 7px;
   margin: 17px 0;
-  color: #171717;
+  color: #111;
 }
 .doc-placeholder span {
   height: 6px;
@@ -2257,18 +2257,18 @@ footer {
   margin-top: 20px;
 }
 .reconnect-card h3 {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 .reconnect-card p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #171717;
+  color: #111;
   margin-bottom: 15px;
 }
 .reconnect-card .primary {
-  font-size: 11px;
+  font-size: 14px;
   min-height: 35px;
 }
 
@@ -2346,13 +2346,13 @@ footer {
     padding: 16px;
   }
   .stat-top {
-    font-size: 11px;
+    font-size: 14px;
   }
   .stat-value {
     font-size: 28px;
   }
   .stat-foot {
-    font-size: 11px;
+    font-size: 14px;
   }
   .overview-panels {
     grid-template-columns: 1fr;
@@ -2428,10 +2428,10 @@ footer {
   }
   .header-actions .primary {
     padding: 10px 13px;
-    font-size: 11px;
+    font-size: 14px;
   }
   .overview-date {
-    font-size: 11px;
+    font-size: 14px;
     padding: 10px 12px;
   }
 }
@@ -2463,7 +2463,7 @@ footer {
     gap: 12px;
   }
   .overview-date {
-    font-size: 11px;
+    font-size: 14px;
   }
   .global-search {
     max-width: none;
@@ -2491,11 +2491,11 @@ footer {
     height: 31px;
   }
   .owner-info strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .owner-info small,
   .owner-info p {
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 @media (max-width: 540px) {
@@ -2531,7 +2531,7 @@ footer {
     height: 36px;
   }
   .global-search input {
-    font-size: 11px;
+    font-size: 14px;
   }
   .global-search svg {
     width: 15px;
@@ -2549,19 +2549,19 @@ footer {
     width: 16px;
   }
   .topbar > div {
-    font-size: 11px;
+    font-size: 14px;
   }
   .demo-banner {
-    font-size: 11px;
+    font-size: 14px;
     padding: 8px;
     gap: 5px;
   }
   .demo-banner strong,
   .demo-banner button {
-    font-size: 11px;
+    font-size: 14px;
   }
   .demo-banner > span:nth-of-type(2) {
-    font-size: 11px;
+    font-size: 14px;
     min-width: 150px;
   }
   .overview-page {
@@ -2577,12 +2577,12 @@ footer {
     font-size: 26px;
   }
   .overview-heading p {
-    font-size: 11px;
+    font-size: 14px;
     max-width: 210px;
   }
   .overview-date {
     min-height: 31px;
-    font-size: 11px;
+    font-size: 14px;
     padding: 7px 10px;
   }
   .overview-stats {
@@ -2596,14 +2596,14 @@ footer {
     position: relative;
   }
   .stat-top {
-    font-size: 11px;
+    font-size: 14px;
   }
   .stat-value {
     font-size: 29px;
     margin: 9px 0 0;
   }
   .stat-foot {
-    font-size: 11px;
+    font-size: 14px;
     position: absolute;
     right: 16px;
     bottom: 18px;
@@ -2627,11 +2627,11 @@ footer {
     padding: 12px 0;
   }
   .owner-info strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .owner-info small,
   .owner-info p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .documents-panel {
     grid-template-columns: 1fr;
@@ -2648,7 +2648,7 @@ footer {
   }
   .document-meta strong,
   .document-meta dd {
-    font-size: 11px;
+    font-size: 14px;
   }
   .reconnect-card {
     padding: 19px;
@@ -2658,7 +2658,7 @@ footer {
   }
   footer {
     flex-wrap: wrap;
-    font-size: 11px;
+    font-size: 14px;
     gap: 5px;
   }
 }
@@ -2682,7 +2682,7 @@ footer {
   gap: 10px;
 }
 .section-heading p {
-  font-size: 11px;
+  font-size: 14px;
   margin: 7px 0 0;
 }
 .section-heading .pill {
@@ -2691,7 +2691,7 @@ footer {
 .stat-top svg {
   width: 17px;
   height: 17px;
-  color: #171717;
+  color: #111;
   flex-shrink: 0;
 }
 .stat-indicator {
@@ -2703,7 +2703,7 @@ footer {
   flex-shrink: 0;
 }
 .gauge-caption h3 {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.25px;
 }
@@ -2712,8 +2712,8 @@ footer {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 17px;
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .gauge-legend span {
   display: inline-flex;
@@ -2726,13 +2726,13 @@ footer {
   border-radius: 50%;
 }
 .owner-subtitle {
-  font-size: 11px;
+  font-size: 14px;
   margin: 10px 0 9px;
 }
 .owner-info > span {
   display: block;
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   line-height: 1.5;
   margin-top: 3px;
 }
@@ -2741,14 +2741,14 @@ footer {
 }
 .owner-count strong {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 .owner-count > span {
   display: block;
-  font-size: 11px;
-  color: #171717;
-  font-weight: 400;
+  font-size: 14px;
+  color: #111;
+  font-weight: 500;
   margin-top: 3px;
 }
 .owner-activity {
@@ -2769,22 +2769,22 @@ footer {
 }
 .document-card .document-meta > .pill {
   margin: 0;
-  color: #171717;
+  color: #111;
   background: #eef6e9;
   line-height: 1.4;
-  font-size: 11px;
+  font-size: 14px;
 }
 .document-card .document-meta > .pill:nth-child(2) {
-  color: #171717;
+  color: #111;
   background: #faf5e9;
 }
 .document-name {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  color: #171717;
-  font-size: 11px;
-  font-weight: 400;
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
   overflow-wrap: anywhere;
   text-align: left;
   line-height: 1.6;
@@ -2808,20 +2808,20 @@ footer {
   text-align: right;
 }
 .document-details dt {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   margin-bottom: 6px;
 }
 .document-details dd {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 500;
   margin: 0;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .document-footer .text-button {
-  font-size: 11px;
+  font-size: 14px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -2831,20 +2831,20 @@ footer {
   height: 12px;
 }
 .documents-empty-note {
-  font-size: 11px;
+  font-size: 14px;
   margin: -5px 0 15px;
-  color: #171717;
+  color: #111;
 }
 .doc-placeholder h3 {
-  color: #171717;
+  color: #111;
 }
 .doc-placeholder p {
-  font-size: 11px;
+  font-size: 14px;
 }
 .doc-placeholder > svg {
   width: 25px;
   height: 25px;
-  color: #171717;
+  color: #111;
 }
 .reconnect-card {
   background: #fff;
@@ -2858,23 +2858,23 @@ footer {
 }
 .reconnect-card td > small {
   display: block;
-  color: #171717;
+  color: #111;
   margin-top: 5px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .reconnect-card .customer-link {
-  font-size: 11px;
-  color: #171717;
+  font-size: 14px;
+  color: #111;
   font-weight: 500;
 }
 .reconnect-card .outline {
   padding: 6px 11px;
   min-height: 30px;
-  font-size: 11px;
+  font-size: 14px;
 }
 @media (max-width: 730px) {
   .owner-info > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .section-heading {
     flex-wrap: wrap;
@@ -2885,7 +2885,7 @@ footer {
 }
 @media (max-width: 540px) {
   .owner-info > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .stat-foot {
     position: static;
@@ -2896,7 +2896,7 @@ footer {
     min-height: 122px;
   }
   .section-heading .pill {
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 
@@ -2938,9 +2938,9 @@ footer {
   text-align: left;
 }
 .search-results h3 {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
-  color: #171717;
+  color: #111;
   letter-spacing: 0.7px;
   text-transform: uppercase;
   padding: 7px 9px;
@@ -2959,16 +2959,16 @@ footer {
   background: #f4f7ed;
 }
 .search-results strong {
-  color: #171717;
+  color: #111;
   font-weight: 500;
-  font-size: 11px;
+  font-size: 14px;
 }
 .search-results small {
-  color: #171717;
-  font-size: 11px;
+  color: #111;
+  font-size: 14px;
 }
 .search-results p {
-  font-size: 11px;
+  font-size: 14px;
   padding: 10px;
 }
 .header-actions .icon-button {
@@ -2998,23 +2998,23 @@ nav button {
   font-size: 14px;
 }
 .workspace-name {
-  font-size: 12px;
+  font-size: 14px;
 }
 .workspace-name small,
 .user small {
-  font-size: 11px;
+  font-size: 14px;
 }
 .nav-label {
-  font-size: 11px;
+  font-size: 14px;
 }
 .user {
-  font-size: 12px;
+  font-size: 14px;
 }
 .demo-note {
-  font-size: 11px;
+  font-size: 14px;
 }
 .demo-note p {
-  font-size: 11px;
+  font-size: 14px;
 }
 .topbar > .global-search {
   height: 46px;
@@ -3033,12 +3033,12 @@ nav button {
 .search-results small,
 .search-results h3,
 .search-results p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .demo-banner,
 .demo-banner strong,
 .demo-banner button {
-  font-size: 11px;
+  font-size: 14px;
 }
 .overview-heading h1 {
   font-size: 34px;
@@ -3047,10 +3047,10 @@ nav button {
   font-size: 14px;
 }
 .overview-date {
-  font-size: 13px;
+  font-size: 14px;
 }
 .stat-top {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 }
 .stat-top svg {
@@ -3062,7 +3062,7 @@ nav button {
   margin-top: 22px;
 }
 .stat-foot {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
   gap: 6px;
 }
@@ -3075,62 +3075,62 @@ nav button {
   font-size: 22px;
 }
 .section-heading .pill {
-  font-size: 11px;
+  font-size: 14px;
 }
 .owner-subtitle,
 .section-heading p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .owner-info strong {
-  font-size: 15px;
+  font-size: 16px;
 }
 .owner-info > span {
-  font-size: 12px;
+  font-size: 14px;
 }
 .owner-count strong {
   font-size: 19px;
 }
 .owner-count > span {
-  font-size: 11px;
+  font-size: 14px;
 }
 .owner-avatar {
   width: 42px;
   height: 42px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .owner-row {
   gap: 12px;
   padding: 18px 0;
 }
 .owner-activity {
-  font-size: 12px;
+  font-size: 14px;
 }
 .gauge-caption h3 {
-  font-size: 15px;
+  font-size: 16px;
 }
 .gauge-caption p {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
 }
 .gauge-legend {
-  font-size: 11px;
+  font-size: 14px;
 }
 .documents-heading h2 {
   font-size: 23px;
 }
 .document-card h3 {
-  font-size: 15px;
+  font-size: 16px;
   margin-top: 17px;
 }
 .document-card .customer-link {
-  font-size: 15px;
+  font-size: 16px;
 }
 .document-card > p,
 .document-name {
-  font-size: 12px;
+  font-size: 14px;
 }
 .document-card .document-meta > .pill {
-  font-size: 11px;
+  font-size: 14px;
   padding: 6px 9px;
 }
 .document-details {
@@ -3138,45 +3138,45 @@ nav button {
 }
 .document-details dt,
 .document-details dd {
-  font-size: 12px;
+  font-size: 14px;
 }
 .document-footer,
 .document-footer .text-button {
-  font-size: 11px;
+  font-size: 14px;
 }
 .documents-empty-note {
-  font-size: 12px;
+  font-size: 14px;
 }
 .reconnect-card .section-heading h2 {
   font-size: 21px;
 }
 .reconnect-card .section-heading p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .reconnect-card .customer-link,
 .reconnect-card td {
-  font-size: 13px;
+  font-size: 14px;
 }
 .reconnect-card td > small,
 .reconnect-card th {
-  font-size: 11px;
+  font-size: 14px;
 }
 .reconnect-card .pill,
 .reconnect-card .outline {
-  font-size: 11px;
+  font-size: 14px;
 }
 @media (max-width: 1190px) and (min-width: 901px) {
   nav button {
-    font-size: 13px;
+    font-size: 14px;
   }
   .stat-top {
-    font-size: 13px;
+    font-size: 14px;
   }
   .stat-foot {
-    font-size: 11px;
+    font-size: 14px;
   }
   .document-card .document-meta > .pill {
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 @media (max-width: 900px) {
@@ -3184,13 +3184,13 @@ nav button {
     font-size: 0;
   }
   .header-actions .primary {
-    font-size: 12px;
+    font-size: 14px;
   }
   .stat-top {
-    font-size: 13px;
+    font-size: 14px;
   }
   .stat-foot {
-    font-size: 11px;
+    font-size: 14px;
   }
   .performance-card h2,
   .owner-card h2 {
@@ -3203,10 +3203,10 @@ nav button {
     font-size: 18px;
   }
   .owner-info strong {
-    font-size: 13px;
+    font-size: 14px;
   }
   .owner-info > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .owner-avatar {
     width: 34px;
@@ -3216,16 +3216,16 @@ nav button {
     gap: 9px;
   }
   .global-search input {
-    font-size: 12px;
+    font-size: 14px;
   }
   .overview-heading p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .overview-date {
-    font-size: 12px;
+    font-size: 14px;
   }
   .gauge-caption p {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 @media (max-width: 540px) {
@@ -3238,22 +3238,22 @@ nav button {
     height: 36px;
   }
   .global-search input {
-    font-size: 11px;
+    font-size: 14px;
   }
   .demo-banner,
   .demo-banner strong,
   .demo-banner button,
   .demo-banner > span:nth-of-type(2) {
-    font-size: 11px;
+    font-size: 14px;
   }
   .overview-heading h1 {
     font-size: 28px;
   }
   .overview-heading p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .overview-date {
-    font-size: 11px;
+    font-size: 14px;
   }
   .stat-card {
     min-height: 145px;
@@ -3266,30 +3266,30 @@ nav button {
     margin-top: 12px;
   }
   .stat-foot {
-    font-size: 12px;
+    font-size: 14px;
   }
   .owner-info strong {
     font-size: 14px;
   }
   .owner-info > span {
-    font-size: 12px;
+    font-size: 14px;
   }
   .owner-count strong {
     font-size: 18px;
   }
   .document-details dt,
   .document-details dd {
-    font-size: 12px;
+    font-size: 14px;
   }
   .document-card .document-meta > .pill {
-    font-size: 11px;
+    font-size: 14px;
   }
   .reconnect-card .section-heading h2 {
     font-size: 19px;
   }
   .reconnect-card .customer-link,
   .reconnect-card td {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -3314,7 +3314,7 @@ nav button {
     text-align: center;
   }
   .sidebar-bottom .user small {
-    font-size: 11px;
+    font-size: 14px;
     white-space: normal;
   }
   .sidebar-bottom .user button {
@@ -3334,13 +3334,13 @@ nav button {
 
 input::placeholder,
 textarea::placeholder {
-  color: #373737;
+  color: #111;
   opacity: 1;
 }
 
 button:disabled,
 .upload.disabled {
-  color: #242424;
+  color: #111;
   background: #ededed;
   opacity: 1;
   box-shadow: inset 0 0 0 1px #b7b7b7;
@@ -3353,14 +3353,14 @@ button:disabled,
 
 input:disabled,
 textarea:disabled {
-  color: #242424;
+  color: #111;
   -webkit-text-fill-color: #242424;
   background: #ededed;
   opacity: 1;
 }
 
 .performance-gauge text {
-  fill: #171717;
+  fill: #111;
 }
 
 .login-story,
@@ -3369,4 +3369,181 @@ textarea:disabled {
 .login-story small,
 .login-story .brand {
   color: #fff;
+}
+
+/* Dashboard reading sizes: 16px body and controls, 14px supporting text. */
+
+p,
+input,
+textarea,
+button,
+.customer-link,
+.customer-link strong,
+.workspace-name,
+.user,
+.metric > div,
+.customer-tabs button,
+.bubble p,
+.composer textarea,
+.composer .primary,
+.detail-list > div,
+.detail-list strong,
+.claim,
+.proposal,
+.proposal p,
+.evidence,
+.case-list-item p,
+.chat-empty p,
+.shipment > p,
+.customer-reason p,
+.event p,
+.journey p,
+.doc-placeholder p,
+.order-card > p,
+.connection p,
+.source-note,
+.delivery-item p,
+.error,
+.success,
+.page-heading p,
+.overview-heading p,
+.stat-top,
+.owner-info strong,
+.document-card .customer-link,
+.document-card > p,
+.document-details dd,
+.document-meta strong,
+.document-meta dd,
+.reconnect-card .customer-link,
+.reconnect-card td,
+.search-results strong,
+.search-results p,
+.login-form > p {
+  font-size: 16px;
+}
+
+.primary,
+.outline,
+.button-row button,
+.context-stack .full,
+.journey .primary,
+.reconnect-card .outline,
+.reconnect-card .primary,
+.suggestions button,
+.header-actions .primary,
+.global-search input {
+  font-size: 16px;
+}
+
+small,
+label,
+.field-label,
+.pill,
+.document-card .pill,
+.document-card .document-meta > .pill,
+.section-heading .pill,
+.reconnect-card .pill,
+.micro,
+.stat-foot,
+.owner-info > span,
+.owner-info small,
+.owner-info p,
+.owner-count > span,
+.document-name,
+.document-details dt,
+.document-footer,
+.document-footer .text-button,
+.gauge-caption p,
+.gauge-legend,
+.search-results small,
+.search-results h3,
+.section-heading p,
+.owner-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+label,
+.field-label,
+th,
+.pill,
+.nav-label,
+.document-details dt {
+  font-weight: 600;
+}
+
+.bubble p,
+.proposal p,
+.document-card > p,
+.detail-list,
+.order-card > p {
+  line-height: 1.6;
+}
+
+td {
+  font-size: 16px;
+}
+
+.card-title h2,
+.section-heading h2,
+.reconnect-card .section-heading h2 {
+  font-size: 20px;
+}
+
+.document-card h3,
+.gauge-caption h3 {
+  font-size: 18px;
+}
+
+.pill {
+  white-space: normal;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.document-name,
+.detail-list strong,
+.workspace-name > div,
+.user > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.performance-gauge text:last-of-type {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+@media (min-width: 901px) {
+  .sidebar nav button {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 540px) {
+  .header-actions .primary {
+    font-size: 0;
+  }
+  .quantity-pair {
+    flex-wrap: wrap;
+  }
+  .card-title,
+  .documents-heading,
+  .document-footer {
+    flex-wrap: wrap;
+  }
+  .detail-list > div {
+    flex-wrap: wrap;
+  }
+  .detail-list strong {
+    text-align: left;
+  }
+  .page-heading > .primary,
+  .page-heading > .outline {
+    white-space: normal;
+  }
+  .sidebar-bottom .user small {
+    overflow-wrap: anywhere;
+  }
 }
