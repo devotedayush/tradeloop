@@ -59,14 +59,16 @@ View the [architecture PNG](architecture.png), [editable SVG](architecture.svg) 
 
 The [official rubric](https://aws-cds-partner.devpost.com/) weights Potential Value/Impact **20%**, Creativity **10%**, Technical Execution **40%**, Functionality **10%**, and Demo Presentation **20%**. The workflow and evidence above support inspection against those criteria; they are not official scores. No adoption, time savings or recovered revenue has been measured. Whole-business reads and business-wide revision locking are prototype choices, with no scale benchmark. The Kaysons production connector is not configured.
 
+Current readability source is [`5ecb6a3`](https://github.com/devotedayush/tradeloop/commit/5ecb6a3); [CI run 40748471874](https://github.com/devotedayush/tradeloop/actions/runs/40748471874) passed all 66 tests, type checking and production build.
+
 The subsequent [text readability update](text-readability-verification.json) changed CSS only: near-black text, stronger body weight and larger small labels. It was deployed with all four Lambda environments unchanged. [Desktop](screenshots/crm-contrast-desktop.jpg) and [mobile](screenshots/crm-contrast-mobile.jpg) screenshots show the updated text. The local captioned demo draft was captured before this CSS update and is not yet published.
 
 ## Submission gates, separate from software evidence
 
-Recorded preparation status at this guide's creation, not independently changed or completed by this document:
+Recorded preparation status, with ACE updated from a signed-in Partner Central observation on 29 October 2026. These records do not establish final submission:
 
 - APN organization access exists, but signed terms, entrant authority and full eligibility are **not proven**.
-- An ACE opportunity is **absent from the last recorded portal check**. It needs accurate prospective-customer fields and the exact campaign tag `AWS CDS Agentic AI Hackathon -Sept. 2026.`; do not invent an ID or business details.
+- **ACE opportunity `O30532571` exists** for Kay Sons Oils Pvt Ltd / Dr Smith. Signed-in Partner Central UI showed stage **Prospect**, status **Pending approval**, **$50 estimated MRR**, and Social among six selected products, with exact marketing campaign `AWS CDS Agentic AI Hackathon -Sept. 2026.`. The user reports creating it on 29 October 2026; the creation timestamp was not directly observed. This preliminary estimate does not establish actual revenue, a customer contract or AWS approval. See the [sanitized ACE verification](ace-verification.json).
 - The repository is private; required organizer access is **not yet granted**.
 - A public approximately three-minute demo video and a **confirmed submitted Devpost entry are missing** from the verified record.
 

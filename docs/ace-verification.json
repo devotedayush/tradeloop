@@ -1,0 +1,56 @@
+{
+  "recordedAt": "2026-10-28T18:49:24Z",
+  "mode": "sanitized record of read-only signed-in UI observation supplied by the parent agent",
+  "source": {
+    "service": "AWS Partner Central ACE",
+    "surface": "Signed-in Chrome opportunity UI",
+    "observer": "Parent agent directly read the opportunity UI; this documentation task did not independently reopen it",
+    "observedLocalDate": "2026-10-29",
+    "timezone": "Asia/Kolkata",
+    "exactObservationTimestampCaptured": false
+  },
+  "verifiedUiFacts": {
+    "opportunityId": "O30532571",
+    "businessName": "Kay Sons Oils Pvt Ltd / Dr Smith",
+    "stage": "Prospect",
+    "approvalStatus": "Pending approval",
+    "estimatedMonthlyRecurringRevenue": {
+      "amount": 50,
+      "currencyDisplay": "$",
+      "nature": "preliminary estimate, not actual revenue"
+    },
+    "selectedProductCount": 6,
+    "selectedProductsIncludeSocial": true,
+    "projectMarketingCampaign": "AWS CDS Agentic AI Hackathon -Sept. 2026."
+  },
+  "userReportedFacts": {
+    "creationLocalDate": "2026-10-29",
+    "timezone": "Asia/Kolkata",
+    "statement": "User states the opportunity was just created on 29 October 2026",
+    "creationDateDirectlyObserved": false
+  },
+  "notEstablished": [
+    "The opportunity creation timestamp was not directly observed in the UI.",
+    "Pending approval does not establish AWS approval.",
+    "Estimated MRR does not establish actual revenue, a signed contract or a completed customer sale.",
+    "This record does not independently establish APN signed terms, entrant authority, all eligibility requirements or final Devpost submission."
+  ],
+  "privacy": {
+    "included": "Only opportunity ID, user-provided business name and sanitized status, estimate, product count and campaign facts",
+    "excluded": [
+      "private customer contact details",
+      "customer addresses",
+      "login credentials",
+      "session tokens",
+      "private opportunity description or internal notes"
+    ]
+  },
+  "changesMade": {
+    "localDocumentationOnly": true,
+    "cloudMutations": false,
+    "opportunityCreatedOrEditedByThisTask": false,
+    "messagesSent": false,
+    "committed": false,
+    "deployed": false
+  }
+}

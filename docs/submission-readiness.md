@@ -1,6 +1,6 @@
 # TradeLoop submission readiness
 
-Checked against the official Devpost pages on 28 October 2026. Software evidence below comes from the current repository and its recorded verification; this audit did not repeat the live WhatsApp tests or inspect private Partner Central records.
+Rules checked against the official Devpost pages on 28 October 2026. Software evidence below comes from the current repository and its recorded verification; this audit did not repeat the live WhatsApp tests. ACE status was updated on 29 October from a recorded direct observation of the signed-in Partner Central opportunity UI; see [ACE verification](ace-verification.json).
 
 ## Deadline and requirements
 
@@ -74,7 +74,7 @@ The judge tenant has no live WhatsApp binding. Label its simulator clearly; demo
 ## External gates still to verify
 
 - **APN eligibility:** inspect actual organization membership, signed terms and entrant authority. Devpost registration or an ordinary AWS login does not prove this.
-- **ACE:** Partner Central organization access and the opportunity wizard were verified in signed-in Chrome. The all-status list showed zero opportunities updated in the last six months. A new opportunity still needs accurate prospective customer details, the campaign tag and ID.
+- **ACE:** opportunity **`O30532571`** for **Kay Sons Oils Pvt Ltd / Dr Smith** exists in the signed-in Partner Central UI, with stage **Prospect**, status **Pending approval**, **$50 estimated MRR**, and Social among six selected products. The marketing campaign is exactly `AWS CDS Agentic AI Hackathon -Sept. 2026.`. The user reports creating it on 29 October 2026; a creation timestamp was not directly observed. This is a preliminary opportunity estimate, not actual revenue, a customer contract or AWS approval. Include this ID in Devpost; see [sanitized ACE verification](ace-verification.json).
 - **Judge access:** the dedicated synthetic workspace and private access file exist. Test the actual login, then supply credentials through private testing instructions. Do not publish them in repository files.
 - **Repository access:** GitHub CLI confirms `isPrivate: true`. Grant the specified organizer accounts access. An MIT license exists locally.
 - **Video and architecture attachment:** record, publish and verify the actual YouTube/Vimeo link. Attach the prepared [architecture PNG](architecture.png) to the form; [SVG](architecture.svg) is also available. A recording script does not establish video publication.
